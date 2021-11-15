@@ -177,19 +177,6 @@ const RegisterRequestSuccessfully = props => {
         )
     };
 
-    const renderItemSeparatorComponent = _ => {
-        return (
-            <View
-                style={{
-                    marginVertical: 15
-                }}
-            >
-
-            </View>
-        )
-    }
-
-
 
     const openCallPad = phoneNumber => {
 
@@ -292,12 +279,12 @@ const RegisterRequestSuccessfully = props => {
                 <Card
                     style={{
                         paddingVertical: 5,
-                        borderColor: active_pakage_type == 3 ? '#00C569' : '#CCC',
-                        borderTopWidth: 2,
-                        borderBottomWidth: 2,
+                        borderColor: active_pakage_type == 3 ? '#00C569' : 'rgba(0,0,0,0.15)',
+                        borderTopWidth: 1,
+                        borderBottomWidth: 1,
                         elevation: 0,
-                        borderRightWidth: 2,
-                        borderLeftWidth: 2,
+                        borderRightWidth: 1,
+                        borderLeftWidth: 1,
                         borderRadius: 8,
                         width: deviceWidth * 0.96,
                         alignSelf: 'center'
@@ -310,7 +297,7 @@ const RegisterRequestSuccessfully = props => {
                         activeOpacity={1}
                         onPress={() => props.navigation.navigate('ProductDetails', { productId: id })}
                     >
-                        <View
+                        {/* <View
                             style={{
                                 flexDirection: 'row-reverse',
                                 alignItems: 'flex-start',
@@ -344,7 +331,7 @@ const RegisterRequestSuccessfully = props => {
                                 </Text>
                                 {is_verified ? <ValidatedUserIcon {...props} /> : null}
                             </View>
-                        </View>
+                        </View> */}
 
                         {active_pakage_type == 3 && <Svg
                             style={{ position: 'absolute', left: 5, top: 37, zIndex: 1 }}
@@ -389,15 +376,20 @@ const RegisterRequestSuccessfully = props => {
                         </Svg>}
                         <View
                             style={{
-                                flexDirection: 'row-reverse', justifyContent: 'flex-start',
-                                alignItems: 'flex-start', paddingHorizontal: 10, paddingVertical: 20
+                                flexDirection: 'row-reverse',
+                                justifyContent: 'flex-start',
+                                alignItems: 'flex-start',
+                                paddingHorizontal: 10,
+                                paddingVertical: 5
                             }}>
                             <FastImage
                                 resizeMethod='resize'
                                 style={{
                                     backgroundColor: "#f0f3f6",
-                                    width: deviceWidth * 0.25,
-                                    borderColor: '#BEBEBE', height: deviceWidth * 0.25, borderRadius: 4
+                                    width: deviceWidth * 0.26,
+                                    borderColor: '#BEBEBE',
+                                    height: deviceWidth * 0.21,
+                                    borderRadius: 4
                                 }}
                                 source={{
                                     uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${photo}`,
@@ -408,8 +400,8 @@ const RegisterRequestSuccessfully = props => {
                             />
                             <View
                                 style={{
-                                    marginTop: 5,
-                                    marginHorizontal: 10
+                                    marginHorizontal: 10,
+                                    top: -3,
                                 }}
                             >
                                 <View
@@ -434,10 +426,10 @@ const RegisterRequestSuccessfully = props => {
                                     <Text
                                         numberOfLines={1}
                                         style={{
-                                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
                                             fontSize: 18,
                                             fontWeight: '200',
-                                            color: '#474747',
+                                            color: 'black',
                                         }}
                                     >
                                         {` ${product_name}`}
@@ -458,21 +450,19 @@ const RegisterRequestSuccessfully = props => {
                                             width: '100%'
                                         }}
                                     >
-                                        <Image
-                                            style={{
-                                                borderRadius: 100,
-                                                width: deviceWidth * 0.05,
-                                                height: deviceWidth * 0.05
-                                            }}
-                                            source={require('../../../assets/icons/user.png')}
+                                        <FontAwesome5
+                                            name='user-circle'
+                                            color='black'
+                                            size={19}
+                                            solid
                                         />
                                         <Text
                                             numberOfLines={1}
                                             style={{
-                                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                                fontSize: 16,
+                                                fontFamily: 'IRANSansWeb(FaNum)',
+                                                fontSize: 15,
                                                 marginHorizontal: 5,
-                                                color: '#474747',
+                                                color: 'black',
                                                 width: '75%'
                                             }}
                                         >
@@ -499,15 +489,15 @@ const RegisterRequestSuccessfully = props => {
                                         <FontAwesome5
                                             name='box-open'
                                             size={15}
-                                            color='#777'
+                                            color='black'
                                         />
                                         <Text
                                             numberOfLines={1}
                                             style={{
-                                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                                fontSize: 16,
+                                                fontFamily: 'IRANSansWeb(FaNum)',
+                                                fontSize: 15,
                                                 marginHorizontal: 5,
-                                                color: '#474747',
+                                                color: 'black',
                                                 width: '65%'
                                             }}
                                         >
@@ -531,7 +521,7 @@ const RegisterRequestSuccessfully = props => {
                                 marginVertical: 15,
                                 flexDirection: 'row-reverse',
                                 alignItems: 'center',
-                                width: deviceWidth * 0.89,
+                                width: '97%',
                                 paddingHorizontal: 5,
                                 alignSelf: 'center',
                                 justifyContent: 'space-between'
@@ -542,7 +532,7 @@ const RegisterRequestSuccessfully = props => {
                                     onPress={() => fetchContactInfo(item, index)}
                                     style={{
                                         borderColor: item.isContactInfoShown ? '#c7a84f' : '#00C569',
-                                        width: '50%',
+                                        width: '49%',
                                         zIndex: 1000,
                                         position: 'relative',
                                         alignSelf: 'center',
@@ -561,6 +551,7 @@ const RegisterRequestSuccessfully = props => {
                                             textAlign: 'center',
                                             justifyContent: 'center',
                                             borderRadius: 8,
+                                            height: 47,
                                             paddingLeft: 20,
                                             padding: 8,
                                             elevation: 0
@@ -582,13 +573,18 @@ const RegisterRequestSuccessfully = props => {
                                                 solid
                                                 name='phone-alt'
                                                 color='white'
-                                                size={17} />
+                                                size={14}
+                                                style={{
+                                                    position: 'absolute',
+                                                    left: '15%'
+                                                }}
+                                            />
                                         }
                                         <Text
                                             style={{
                                                 fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                                 marginHorizontal: 3,
-                                                fontSize: 17,
+                                                fontSize: 16,
                                                 color: 'white',
                                                 paddingHorizontal: 3
                                             }}
@@ -600,14 +596,11 @@ const RegisterRequestSuccessfully = props => {
 
                                 </Button>
 
-
-
-
                                 <Button
                                     small
                                     onPress={event => navigateToChat(event, item, id)}
                                     style={{
-                                        width: has_phone ? '47%' : '70%',
+                                        width: '49%',
                                         zIndex: 1000,
                                         elevation: 0,
                                         position: 'relative',
@@ -617,10 +610,10 @@ const RegisterRequestSuccessfully = props => {
                                     <LinearGradient
                                         start={{ x: 0, y: 0.51, z: 1 }}
                                         end={{ x: 0.8, y: 0.2, z: 1 }}
-                                        colors={has_phone ? ['#fff', '#fff'] : ['#c7a84f', '#f9f29f', '#c7a84f']}
+                                        colors={['#fff', '#fff']}
                                         style={{
                                             width: '100%',
-                                            borderColor: has_phone ? '#556080' : '#00C569',
+                                            borderColor: '#556080',
                                             paddingHorizontal: 10,
                                             flexDirection: 'row-reverse',
                                             borderWidth: 1,
@@ -635,15 +628,15 @@ const RegisterRequestSuccessfully = props => {
 
                                         <MaterialCommunityIcons
                                             name='message'
-                                            color={has_phone ? '#556080' : 'white'}
-                                            size={20}
+                                            color='#556080'
+                                            size={15}
                                         />
                                         <Text
                                             onPress={event => navigateToChat(event, item, id)}
                                             style={{
                                                 fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                                fontSize: 18,
-                                                color: has_phone ? '#556080' : 'white',
+                                                fontSize: 16,
+                                                color: '#556080',
                                                 paddingHorizontal: 3
                                             }}
                                         >
@@ -652,10 +645,12 @@ const RegisterRequestSuccessfully = props => {
                                         <ActivityIndicator
                                             size="small"
                                             animating={loading && selectedContact.contact_id && selectedContact.contact_id == item.myuser_id}
-                                            color={has_phone ? '#556080' : 'white'}
+                                            color='#556080'
                                             style={{
                                                 position: 'relative',
-                                                width: 10, height: 10, borderRadius: 5,
+                                                width: 10,
+                                                height: 10,
+                                                borderRadius: 5,
                                                 marginLeft: -10,
                                                 marginRight: 5
                                             }}
@@ -701,8 +696,13 @@ const RegisterRequestSuccessfully = props => {
                                             fontSize: 20,
                                             marginHorizontal: 3,
                                             fontFamily: 'IRANSansWeb(FaNum)_Bold'
-                                        }}>{locales('labels.sendMessageToSeller')}</Text>
-                                    <MaterialCommunityIcons name='message' size={22} color='#FFFFFF'
+                                        }}>
+                                        {locales('labels.sendMessageToSeller')}
+                                    </Text>
+                                    <MaterialCommunityIcons
+                                        name='message'
+                                        size={22}
+                                        color='#FFFFFF'
                                         onPress={event => navigateToChat(event, item, id)}
                                     />
                                 </View>
@@ -958,9 +958,9 @@ const RegisterRequestSuccessfully = props => {
                         <Text
                             style={{
                                 textAlign: 'center',
-                                color: 'rgba(38,70,83,80)',
-                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                fontSize: 16
+                                color: 'rgba(38,70,83,0.8)',
+                                fontFamily: 'IRANSansWeb(FaNum)',
+                                fontSize: 15
                             }}
                         >
                             {locales('titles.registerRequestFullDescription')}
@@ -1087,9 +1087,9 @@ const RegisterRequestSuccessfully = props => {
 
                 {products && products.length ?
                     <LinearGradient
-                        start={{ x: 0, y: 0.51, z: 1 }}
-                        end={{ x: 0.8, y: 0.2, z: 1 }}
-                        colors={showBox ? ['#79a6b8', '#79a6b8'] : ['white', 'white']}
+                        start={{ x: 0, y: 0 }}
+                        end={{ x: 1, y: 1 }}
+                        colors={showBox ? ['#9FBDCA', '#548DA5'] : ['white', 'white']}
                         style={{
                             borderRadius: 8,
                             alignSelf: 'center',
@@ -1108,7 +1108,6 @@ const RegisterRequestSuccessfully = props => {
                             data={products}
                             ref={flatListRef}
                             renderItem={renderItem}
-                            ItemSeparatorComponent={renderItemSeparatorComponent}
                         />
                     </LinearGradient>
                     : null}

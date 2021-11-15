@@ -167,7 +167,7 @@ class RegisterProductSuccessfully extends Component {
                     padding: 20,
                     borderColor: !!item.is_golden ? '#c7a84f' : '#BEBEBE',
                     borderWidth: !!item.is_golden ? 2 : 0.5,
-                    marginVertical: 20,
+                    marginVertical: 5,
                     borderRadius: 8
                 }}
                 key={item.id}
@@ -181,22 +181,23 @@ class RegisterProductSuccessfully extends Component {
                         marginLeft: -20
                     }}>
 
-                        <Image source={require('../../../assets/images/blur-items-2.jpg')}
+                        <Image
+                            source={require('../../../assets/images/blur-items-2.jpg')}
                             style={{
                                 zIndex: 0,
-                                width: deviceWidth,
+                                width: '100%',
                                 height: '100%',
                                 position: 'absolute',
-                                left: 0,
-                                top: '35%'
+                                borderWidth: 0,
+                                top: '55%'
                             }}
+                            resizeMode='cover'
                         />
                         <View
                             style={{
                                 alignItems: 'center',
                                 marginVertical: 10,
                                 right: 0,
-
                                 flexDirection: 'row-reverse'
                             }}
                         >
@@ -220,12 +221,12 @@ class RegisterProductSuccessfully extends Component {
                         </View>
                         <View
                             style={{
-                                top: 0,
+                                top: -10,
                                 zIndex: 1000,
                                 width: deviceWidth,
                                 alignItems: 'center',
                                 justifyContent: 'center',
-                                left: 0,
+                                left: -12,
                                 right: 0,
                                 marginVertical: 5,
                             }}
@@ -427,7 +428,7 @@ class RegisterProductSuccessfully extends Component {
                             }}
                             style={{
                                 borderColor: !!item.is_golden ? '#c7a84f' : '#00C569',
-                                width: '52%',
+                                width: '50%',
                                 zIndex: 1000,
                                 marginHorizontal: 10,
                                 position: 'relative',
@@ -452,27 +453,32 @@ class RegisterProductSuccessfully extends Component {
                                     borderRadius: 8,
                                     paddingLeft: 20,
                                     padding: 8,
+                                    height: 47,
                                     elevation: 0
                                 }}
                             >
                                 {buyerMobileNumberLoading && selectedButton == item.id ?
                                     <ActivityIndicator
-                                        size={18}
+                                        size={16}
                                         color={(!item.is_golden ? 'white' : '#333')}
                                         animating={selectedButton == item.id && !!buyerMobileNumberLoading}
                                     />
                                     :
                                     <FontAwesome5
                                         solid
+                                        style={{
+                                            position: 'absolute',
+                                            left: '18%'
+                                        }}
                                         name='phone-alt'
                                         color={!item.isContactInfoShown ? (!item.is_golden ? 'white' : '#333') : 'white'}
-                                        size={18} />
+                                        size={14} />
                                 }
                                 <Text
                                     style={{
                                         fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                         marginHorizontal: 3,
-                                        fontSize: 17,
+                                        fontSize: 16,
                                         color: !item.isContactInfoShown ? (!item.is_golden ? 'white' : '#333') : 'white',
                                         paddingHorizontal: 3
                                     }}
@@ -522,19 +528,22 @@ class RegisterProductSuccessfully extends Component {
                             <MaterialCommunityIcons
                                 name='message'
                                 color={item.has_phone ? '#556080' : (!item.is_golden ? 'white' : '#333')}
-                                size={20}
+                                size={16}
+                                style={{
+                                    marginLeft: 3
+                                }}
                             />
                             <Text style={{
                                 fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                fontSize: 18,
+                                fontSize: 16,
                                 color: item.has_phone ? '#556080' : (!item.is_golden ? 'white' : '#333'),
-                                paddingHorizontal: 3
                             }}>
                                 {locales('labels.messageToBuyer')}
 
 
                             </Text>
-                            <ActivityIndicator size={20}
+                            <ActivityIndicator
+                                size={16}
                                 color={item.has_phone ? '#556080' : (!item.is_golden ? 'white' : '#333')}
                                 animating={selectedButton == item.id &&
                                     !!isUserAllowedToSendMessageLoading}
@@ -1225,10 +1234,10 @@ class RegisterProductSuccessfully extends Component {
                             <Text
                                 style={{
                                     textAlign: 'center',
-                                    color: 'rgba(38,70,83,80)',
+                                    color: 'rgba(38,70,83,0.8)',
                                     paddingHorizontal: 10,
-                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                    fontSize: 16
+                                    fontFamily: 'IRANSansWeb(FaNum)',
+                                    fontSize: 15
                                 }}
                             >
                                 {locales('titles.productdAccepted')}
@@ -1240,9 +1249,9 @@ class RegisterProductSuccessfully extends Component {
 
                     {this.chooseBuyadsList(buyAds, buyAdsFromParams, buyAdsAfterPaymentList).length ?
                         <LinearGradient
-                            start={{ x: 0, y: 0.51, z: 1 }}
-                            end={{ x: 0.8, y: 0.2, z: 1 }}
-                            colors={showBox ? ['#79a6b8', '#79a6b8'] : ['white', 'white']}
+                            start={{ x: 0, y: 0 }}
+                            end={{ x: 1, y: 1 }}
+                            colors={showBox ? ['#9FBDCA', '#548DA5'] : ['white', 'white']}
                             style={{
                                 borderRadius: 8,
                                 alignSelf: 'center',
