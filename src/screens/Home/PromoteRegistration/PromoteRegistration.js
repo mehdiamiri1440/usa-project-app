@@ -1554,10 +1554,6 @@ class PromoteRegistration extends React.Component {
                     {this.renderPackagesDetails()}
                     <ShadowView
                         style={{
-                            shadowColor: 'black',
-                            shadowOpacity: 0.1,
-                            shadowRadius: 1,
-                            shadowOffset: { width: 0, height: 4 },
                             backgroundColor: '#E2F0F5',
                             width: '95%',
                             borderRadius: 12,
@@ -1570,7 +1566,7 @@ class PromoteRegistration extends React.Component {
                                 borderRadius: 12,
                                 borderWidth: 1,
                                 width: '100%',
-                                borderColor: '#e0e0e0',
+                                borderColor: 'rgba(39, 182, 238, 0.1)',
                                 padding: 10,
                             }}
                         >
@@ -1618,10 +1614,6 @@ class PromoteRegistration extends React.Component {
 
                     <ShadowView
                         style={{
-                            shadowColor: 'black',
-                            shadowOpacity: 0.1,
-                            shadowRadius: 1,
-                            shadowOffset: { width: 0, height: 4 },
                             backgroundColor: '#E2F0F5',
                             width: '95%',
                             borderRadius: 12,
@@ -1634,7 +1626,7 @@ class PromoteRegistration extends React.Component {
                                 borderRadius: 12,
                                 borderWidth: 1,
                                 width: '100%',
-                                borderColor: '#e0e0e0',
+                                borderColor: 'rgba(39, 182, 238, 0.1)',
                                 padding: 10,
                             }}
                         >
@@ -1681,10 +1673,6 @@ class PromoteRegistration extends React.Component {
 
                     <ShadowView
                         style={{
-                            shadowColor: 'black',
-                            shadowOpacity: 0.1,
-                            shadowRadius: 1,
-                            shadowOffset: { width: 0, height: 4 },
                             backgroundColor: '#E2F0F5',
                             width: '95%',
                             borderRadius: 12,
@@ -1697,7 +1685,7 @@ class PromoteRegistration extends React.Component {
                                 borderRadius: 12,
                                 borderWidth: 1,
                                 width: '100%',
-                                borderColor: '#e0e0e0',
+                                borderColor: 'rgba(39, 182, 238, 0.1)',
                                 padding: 10,
                             }}
                         >
