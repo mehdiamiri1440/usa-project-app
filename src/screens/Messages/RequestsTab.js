@@ -682,11 +682,11 @@ class RequestsTab extends Component {
                         }}
                     >
 
-                        <Image source={require('../../../assets/images/blur-items.jpg')}
+                        <Image
+                            source={require('../../../assets/images/blur-items.jpg')}
                             style={{
                                 height: '100%',
                                 position: 'absolute',
-                                top: -45,
                                 right: 10,
                                 width: '100%',
                                 zIndex: -1
