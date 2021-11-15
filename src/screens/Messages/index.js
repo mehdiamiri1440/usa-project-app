@@ -144,6 +144,7 @@ const Messages = props => {
 
                 <Header
                     title={locales('titles.messanger')}
+                    shouldShowBackButton={false}
                     {...props}
                 />
 

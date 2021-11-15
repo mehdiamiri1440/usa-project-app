@@ -1897,6 +1897,7 @@ class ProductsList extends PureComponent {
 
                 <Header
                     title={locales('labels.products')}
+                    shouldShowBackButton={false}
                     {...this.props}
                 />
 

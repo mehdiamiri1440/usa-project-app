@@ -590,6 +590,7 @@ class Home extends React.Component {
 
                 <Header
                     title={locales('labels.myBuskool')}
+                    shouldShowBackButton={false}
                     shouldShowAuthenticationRibbonFromProps
                     {...this.props}
                 />

@@ -1063,6 +1063,7 @@ class Requests extends PureComponent {
 
                 <Header
                     title={locales('labels.buyRequests')}
+                    shouldShowBackButton={false}
                     onBackButtonPressed={() => {
                         this.updateFlag.current.close();
                         this.props.navigation.goBack()

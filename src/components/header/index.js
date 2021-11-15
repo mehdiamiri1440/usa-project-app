@@ -16,7 +16,6 @@ if (
 }
 
 const Header = (props = {}) => {
-
     const {
         title = '',
         navigation = {},
@@ -25,6 +24,7 @@ const Header = (props = {}) => {
         isVerified,
         containerStyle = {},
         shouldShowAuthenticationRibbonFromProps = false,
+        shouldShowBackButton = true,
         userProfile = {},
         iconName = 'arrow-right'
     } = props;
@@ -72,61 +72,65 @@ const Header = (props = {}) => {
                 borderBottomWidth: 1,
                 ...containerStyle
             }}>
-                <TouchableOpacity
-                    style={{
-                        flexDirection: 'row-reverse',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        position: 'absolute',
-                        right: 0,
-                        minWidth: 40,
-                    }}
-                    onPress={onBackButtonPressed ?? goBack}
-                >
-                    <FontAwesome5
-                        name={iconName}
-                        size={20}
-                        color='#313A43'
-                        solid
-                    />
-                    {image
-                        ?
-                        <>
-                            <Image
-                                style={{
-                                    borderRadius: 20,
-                                    width: 40,
-                                    height: 40,
-                                    marginHorizontal: 5
-                                }}
-                                source={image}
-                            />
-                            <View style={{
-                                alignItems: 'center',
+                {
+                    shouldShowBackButton ?
+                        <TouchableOpacity
+                            style={{
+                                flexDirection: 'row-reverse',
                                 justifyContent: 'center',
-                                flexDirection: 'row-reverse'
-                            }}>
-                                <Text
-                                    style={{
-                                        fontSize: 18,
-                                        fontFamily: 'IRANSansWeb(FaNum)_Light',
-                                        marginHorizontal: 5
-                                    }}
-                                >
-                                    {title}
-                                </Text>
-                                {isVerified
-                                    ?
-                                    <ValidatedUserIcon
-                                        {...props}
+                                alignItems: 'center',
+                                position: 'absolute',
+                                right: 0,
+                                minWidth: 40,
+                            }}
+                            onPress={onBackButtonPressed ?? goBack}
+                        >
+                            <FontAwesome5
+                                name={iconName}
+                                size={20}
+                                color='#313A43'
+                                solid
+                            />
+                            {image
+                                ?
+                                <>
+                                    <Image
+                                        style={{
+                                            borderRadius: 20,
+                                            width: 40,
+                                            height: 40,
+                                            marginHorizontal: 5
+                                        }}
+                                        source={image}
                                     />
-                                    :
-                                    null}
-                            </View>
-                        </>
+                                    <View style={{
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        flexDirection: 'row-reverse'
+                                    }}>
+                                        <Text
+                                            style={{
+                                                fontSize: 18,
+                                                fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                                marginHorizontal: 5
+                                            }}
+                                        >
+                                            {title}
+                                        </Text>
+                                        {isVerified
+                                            ?
+                                            <ValidatedUserIcon
+                                                {...props}
+                                            />
+                                            :
+                                            null}
+                                    </View>
+                                </>
+                                : null
+                            }
+                        </TouchableOpacity>
                         : null
-                    }
-                </TouchableOpacity>
+                }
 
                 {!image
                     ?
