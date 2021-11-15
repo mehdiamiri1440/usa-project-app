@@ -131,7 +131,8 @@ const BuyAdList = props => {
                     <Image source={require('../../../assets/images/blur-items.jpg')}
                         style={{
                             width: deviceWidth * 0.915,
-                            height: '80%'
+                            height: '80%',
+                            top: '5%'
                         }}
                     />
 
