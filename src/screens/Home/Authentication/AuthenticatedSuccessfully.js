@@ -91,7 +91,8 @@ const AuthenticatedSuccessfully = props => {
                     <Svg
                         xmlns="http://www.w3.org/2000/svg"
                         style={{
-                            left: 20
+                            left: 20,
+                            top: -10
                         }}
                         width="46"
                         height="42"
@@ -121,9 +122,9 @@ const AuthenticatedSuccessfully = props => {
                 <Text
                     style={{
                         textAlign: 'center',
-                        color: 'rgba(38,70,83,80)',
-                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                        fontSize: 16
+                        color: 'rgba(38,70,83,0.8)',
+                        fontFamily: 'IRANSansWeb(FaNum)',
+                        fontSize: 15
                     }}
                 >
                     {locales('labels.willBeAuthenticatedAfterApprovment')}
@@ -186,10 +187,6 @@ const AuthenticatedSuccessfully = props => {
                 {!!!is_seller ?
                     <ShadowView
                         style={{
-                            shadowColor: 'black',
-                            shadowOpacity: 0.1,
-                            shadowRadius: 1,
-                            shadowOffset: { width: 0, height: 4 },
                             backgroundColor: '#E2F0F5',
                             width: '95%',
                             borderRadius: 12,
@@ -202,7 +199,7 @@ const AuthenticatedSuccessfully = props => {
                             }}
                             style={{
                                 width: '100%',
-                                borderColor: '#e0e0e0',
+                                borderColor: 'rgba(39, 182, 238, 0.1)',
                                 padding: 10,
                                 borderRadius: 12,
                                 borderWidth: 1,
@@ -254,16 +251,16 @@ const AuthenticatedSuccessfully = props => {
                             <View>
                                 <Text
                                     style={{
-                                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                        fontSize: 16
+                                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                        fontSize: 17
                                     }}
                                 >
                                     {locales('labels.suggestedProducts')}
                                 </Text>
                                 <Text
                                     style={{
-                                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                        fontSize: 16
+                                        fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                        fontSize: 15
                                     }}
                                 >
                                     {locales('labels.seeSellersProductsList')}
@@ -272,7 +269,7 @@ const AuthenticatedSuccessfully = props => {
                             <FontAwesome5
                                 name='angle-left'
                                 size={20}
-                                color='#bebebe'
+                                color='#15313C'
                             />
                         </Pressable>
                     </ShadowView>
@@ -280,10 +277,6 @@ const AuthenticatedSuccessfully = props => {
                         {active_pakage_type == 0 ?
                             <ShadowView
                                 style={{
-                                    shadowColor: 'black',
-                                    shadowOpacity: 0.1,
-                                    shadowRadius: 1,
-                                    shadowOffset: { width: 0, height: 4 },
                                     backgroundColor: '#E2F0F5',
                                     width: '95%',
                                     borderRadius: 12,
@@ -296,7 +289,7 @@ const AuthenticatedSuccessfully = props => {
                                     }}
                                     style={{
                                         width: '100%',
-                                        borderColor: '#e0e0e0',
+                                        borderColor: 'rgba(39, 182, 238, 0.1)',
                                         padding: 10,
                                         borderRadius: 12,
                                         borderWidth: 1,
@@ -349,16 +342,16 @@ const AuthenticatedSuccessfully = props => {
                                     <View>
                                         <Text
                                             style={{
-                                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                                fontSize: 16
+                                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                                fontSize: 17
                                             }}
                                         >
                                             {locales('titles.promoteRegistration')}
                                         </Text>
                                         <Text
                                             style={{
-                                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                                fontSize: 16
+                                                fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                                fontSize: 15
                                             }}
                                         >
                                             {locales('labels.accessToMoreFeaturesOfBuskool')}
@@ -367,7 +360,7 @@ const AuthenticatedSuccessfully = props => {
                                     <FontAwesome5
                                         name='angle-left'
                                         size={20}
-                                        color='#bebebe'
+                                        color='#15313C'
                                     />
                                 </Pressable>
                             </ShadowView>
@@ -375,10 +368,6 @@ const AuthenticatedSuccessfully = props => {
                         }
                         <ShadowView
                             style={{
-                                shadowColor: 'black',
-                                shadowOpacity: 0.1,
-                                shadowRadius: 1,
-                                shadowOffset: { width: 0, height: 4 },
                                 backgroundColor: '#E2F0F5',
                                 width: '95%',
                                 borderRadius: 12,
@@ -392,7 +381,7 @@ const AuthenticatedSuccessfully = props => {
                                 }}
                                 style={{
                                     width: '100%',
-                                    borderColor: '#e0e0e0',
+                                    borderColor: 'rgba(39, 182, 238, 0.1)',
                                     padding: 10,
                                     borderRadius: 12,
                                     borderWidth: 1,
@@ -446,16 +435,16 @@ const AuthenticatedSuccessfully = props => {
                                 >
                                     <Text
                                         style={{
-                                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                            fontSize: 16
+                                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                            fontSize: 17
                                         }}
                                     >
                                         {locales('titles.buyAdRequests')}
                                     </Text>
                                     <Text
                                         style={{
-                                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                            fontSize: 16
+                                            fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                            fontSize: 15
                                         }}
                                     >
                                         {locales('titles.seeBuyAdsRequests')}
@@ -464,7 +453,7 @@ const AuthenticatedSuccessfully = props => {
                                 <FontAwesome5
                                     name='angle-left'
                                     size={20}
-                                    color='#bebebe'
+                                    color='#15313C'
                                 />
                             </Pressable>
                         </ShadowView>
