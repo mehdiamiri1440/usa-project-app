@@ -331,6 +331,7 @@ class RegisterProductSuccessfully extends Component {
                         style={{
                             justifyContent: 'center',
                             alignItems: 'center',
+                            paddingHorizontal: 5,
                             flexDirection: 'row-reverse',
                             marginVertical: 10,
                         }}
@@ -466,10 +467,6 @@ class RegisterProductSuccessfully extends Component {
                                     :
                                     <FontAwesome5
                                         solid
-                                        style={{
-                                            position: 'absolute',
-                                            left: '18%'
-                                        }}
                                         name='phone-alt'
                                         color={!item.isContactInfoShown ? (!item.is_golden ? 'white' : '#333') : 'white'}
                                         size={14} />
