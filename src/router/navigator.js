@@ -47,6 +47,7 @@ import * as profileActions from '../redux/profile/actions';
 import * as requestActions from '../redux/buyAdRequest/actions';
 import { navigationRef, isReadyRef } from './rootNavigation';
 import linking from './linking';
+import { responsiveScreenHeight } from 'react-native-responsive-dimensions';
 
 let currentRoute = '',
     promotionModalTimeout,
@@ -1378,7 +1379,11 @@ const routes = props => {
                             shifting={false}
                             activeColor="#00C569"
                             inactiveColor="#FFFFFF"
-                            barStyle={{ backgroundColor: '#313A43', display: shouldShowBottomMenu ? 'flex' : 'none' }}
+                            barStyle={{
+                                backgroundColor: '#313A43',
+                                height: responsiveScreenHeight(6.5),
+                                display: shouldShowBottomMenu ? 'flex' : 'none'
+                            }}
                         >
                             {unSignedInRoutes.map((item) => (
                                 <Tab.Screen
