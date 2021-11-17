@@ -9,12 +9,15 @@ import { Dialog, Portal, Paragraph } from 'react-native-paper';
 import { Navigation } from 'react-native-navigation';
 import analytics from '@react-native-firebase/analytics';
 import { connect } from 'react-redux';
+import {
+    responsiveScreenHeight
+} from "react-native-responsive-dimensions";
 import { Input, Label, Item, Button, Toast } from 'native-base';
 import { REACT_APP_API_ENDPOINT_RELEASE, REACT_APP_API_ENDPOINT_BLOG_RELEASE } from '@env';
 import * as productListActions from '../../redux/productsList/actions';
 import ShadowView from '@vikasrg/react-native-simple-shadow-view'
 import * as profileActions from '../../redux/profile/actions';
-import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
+import { deviceWidth, deviceHeight, screenHeight } from '../../utils/deviceDimenssions';
 import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
 import EvilIcons from 'react-native-vector-icons/dist/EvilIcons';
 import ContentLoader, { Rect, Circle } from "react-content-loader/native"
@@ -112,7 +115,7 @@ class ProductDetails extends PureComponent {
 
             isScrollForButtonsReached: false,
 
-            animatedValue: new Animated.Value(deviceHeight + 140)
+            animatedValue: new Animated.Value(screenHeight + 140)
         }
     }
 
@@ -1929,11 +1932,9 @@ class ProductDetails extends PureComponent {
                                     this.setState({
                                         isScrollForButtonsReached: true,
                                     }, _ => {
+                                        console.log(screenHeight)
                                         Animated.timing(this.state.animatedValue, {
-                                            toValue: deviceHeight - (
-                                                deviceHeight > 710 ? 140 :
-                                                    deviceHeight < 680 ? 140 : 115
-                                            ),
+                                            toValue: responsiveScreenHeight(77.3),
                                             duration: 500,
                                             useNativeDriver: true
                                         }).start()
@@ -1943,7 +1944,7 @@ class ProductDetails extends PureComponent {
                                         isScrollForButtonsReached: false
                                     }, _ => {
                                         Animated.timing(this.state.animatedValue, {
-                                            toValue: deviceHeight + 140,
+                                            toValue: screenHeight + 140,
                                             duration: 500,
                                             useNativeDriver: true
                                         }).start()
