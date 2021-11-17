@@ -16,8 +16,10 @@ import LinearGradient from 'react-native-linear-gradient';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
+import { StackActions } from '@react-navigation/native';
 
 import * as productListActions from '../../redux/productsList/actions';
+import * as productActions from '../../redux/registerProduct/actions';
 import { dataGenerator, formatter, deviceWidth, validator, deviceHeight } from '../../utils';
 import ValidatedUserIcon from '../../components/validatedUserIcon';
 import Header from '../../components/header';
@@ -54,10 +56,8 @@ const RegisterRequestSuccessfully = props => {
     const [scrollOffset, setOffset] = useState(0);
 
     const handleBack = () => {
-        if (props.route && props.route.params) {
-            props.navigation.goBack();
-        }
-
+        props.resetRegisterRequest(true)
+        return props.navigation.dispatch(StackActions.popToTop());
     }
 
     const keyExtractor = item => `${dataGenerator.generateKey('request_')}${item?.id.toString()}`;
@@ -575,8 +575,6 @@ const RegisterRequestSuccessfully = props => {
                                                 color='white'
                                                 size={14}
                                                 style={{
-                                                    position: 'absolute',
-                                                    left: '15%'
                                                 }}
                                             />
                                         }
@@ -1325,6 +1323,7 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = dispatch => {
     return {
+        resetRegisterRequest: resetTab => dispatch(productActions.resetRegisterRequest(resetTab)),
         fetchSellerMobileNumber: contactInfoObject => dispatch(productListActions.fetchSellerMobileNumber(contactInfoObject)),
     }
 }
