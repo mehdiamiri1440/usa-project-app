@@ -841,6 +841,11 @@ class ProductDetails extends PureComponent {
     };
 
     handleScrollChange = event => {
+
+        const {
+            isScrollForButtonsReached
+        } = this.state;
+
         if (
             event.nativeEvent.contentOffset.y > 60
             && !isScrollForButtonsReached
