@@ -855,11 +855,12 @@ class ProductDetails extends PureComponent {
             this.setState({
                 isScrollForButtonsReached: true,
             }, _ => {
+                console.log(deviceHeight)
                 Animated.timing(this.state.animatedValue, {
                     toValue: responsiveScreenHeight(
-                        deviceHeight > 650 && deviceHeight < 780
-                            ? 75
-                            : 77.6
+                        deviceHeight < 650 || deviceHeight > 780
+                            ? 77.6
+                            : deviceHeight < 736 ? 75 : 77
                     ),
                     duration: 500,
                     useNativeDriver: true
