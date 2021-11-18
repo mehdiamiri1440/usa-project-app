@@ -23,7 +23,7 @@ const ProductImages = props => {
                     alignItems: 'center',
                     justifyContent: 'center',
                     alignSelf: 'center',
-                    height: '12%',
+                    height: deviceHeight * 0.29,
                     borderWidth: 2,
                     borderColor: 'rgba(0, 0, 0, 0.05)',
                     marginTop: 10
