@@ -5,14 +5,6 @@ export const requestCameraPermission = () => {
         try {
             PermissionsAndroid.request(
                 PermissionsAndroid.PERMISSIONS.CAMERA,
-                {
-                    title: "مجوز دسترسی به دوربین",
-                    message:
-                        "باسکول برای انتخاب تصویر نیاز به دسترسی دوربین دارد. اجازه می‌دهید ؟",
-                    buttonNeutral: "بعدا دوباره بپرس",
-                    buttonNegative: "خیر",
-                    buttonPositive: "مجاز است"
-                }
             ).then(granted => {
                 if (granted === PermissionsAndroid.RESULTS.GRANTED) {
                     resolve(true)
@@ -32,15 +24,7 @@ export const requestWriteToExternalStoragePermission = () => {
     return new Promise((resolve, reject) => {
         try {
             PermissionsAndroid.request(
-                PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
-                {
-                    title: "مجوز نوشتن در حافظه خارجی",
-                    message:
-                        "باسکول نیازمند دسترسی به حافظه خارجی است. اجازه می‌دهید ؟",
-                    buttonNeutral: "بعدا دوباره بپرس",
-                    buttonNegative: "خیر",
-                    buttonPositive: "مجاز است"
-                }
+                PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE
             ).then(granted => {
                 if (granted === PermissionsAndroid.RESULTS.GRANTED) {
                     resolve(true)
@@ -80,15 +64,7 @@ export const requestVoicePermission = () => {
     return new Promise((resolve, reject) => {
         try {
             PermissionsAndroid.request(
-                PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
-                {
-                    title: "مجوز ضبط صدا",
-                    message:
-                        "باسکول نیازمند مجوز صدا است. اجازه می‌دهید ؟",
-                    buttonNeutral: "بعدا دوباره بپرس",
-                    buttonNegative: "خیر",
-                    buttonPositive: "مجاز است"
-                }
+                PermissionsAndroid.PERMISSIONS.RECORD_AUDIO
             ).then(granted => {
                 if (granted === PermissionsAndroid.RESULTS.GRANTED) {
                     resolve(true)
