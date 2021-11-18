@@ -840,6 +840,36 @@ class ProductDetails extends PureComponent {
         })
     };
 
+    handleScrollChange = event => {
+        if (
+            event.nativeEvent.contentOffset.y > 60
+            && !isScrollForButtonsReached
+        )
+
+            this.setState({
+                isScrollForButtonsReached: true,
+            }, _ => {
+                Animated.timing(this.state.animatedValue, {
+                    toValue: responsiveScreenHeight(77.3),
+                    duration: 500,
+                    useNativeDriver: true
+                }).start()
+            });
+        else if (
+            event.nativeEvent.contentOffset.y < 60
+            && isScrollForButtonsReached
+        )
+            this.setState({
+                isScrollForButtonsReached: false
+            }, _ => {
+                Animated.timing(this.state.animatedValue, {
+                    toValue: screenHeight + 140,
+                    duration: 500,
+                    useNativeDriver: true
+                }).start()
+            });
+    };
+
     render() {
         const {
             editProductLoading,
@@ -1927,29 +1957,7 @@ class ProductDetails extends PureComponent {
 
                             }}
                             ref={this.wrapper}
-                            onScroll={event => {
-                                if (event.nativeEvent.contentOffset.y > 60 && !isScrollForButtonsReached)
-                                    this.setState({
-                                        isScrollForButtonsReached: true,
-                                    }, _ => {
-                                        console.log(screenHeight)
-                                        Animated.timing(this.state.animatedValue, {
-                                            toValue: responsiveScreenHeight(77.3),
-                                            duration: 500,
-                                            useNativeDriver: true
-                                        }).start()
-                                    })
-                                else if (event.nativeEvent.contentOffset.y < 60 && isScrollForButtonsReached)
-                                    this.setState({
-                                        isScrollForButtonsReached: false
-                                    }, _ => {
-                                        Animated.timing(this.state.animatedValue, {
-                                            toValue: screenHeight + 140,
-                                            duration: 500,
-                                            useNativeDriver: true
-                                        }).start()
-                                    })
-                            }}
+                            onScroll={this.handleScrollChange}
                             refreshControl={
                                 <RefreshControl
                                     refreshing={!!this.props.productDetailsInfoLoading}
