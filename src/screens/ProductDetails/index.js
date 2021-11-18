@@ -2143,38 +2143,52 @@ class ProductDetails extends PureComponent {
                                     }
                                 </View>
 
-                                <View style={{
-                                    flexDirection: 'row-reverse', alignItems: 'center', borderBottomColor: '#F1F1F1',
-                                    borderBottomWidth: 0.7, paddingVertical: 15,
-                                    marginVertical: 10, width: deviceWidth * 0.9, alignSelf: 'center',
-                                    justifyContent: 'space-between', paddingHorizontal: 10
-                                }}>
-
-                                    <View style={{
-                                        flexDirection: 'row-reverse', alignItems: 'center', borderBottomColor: '#BEBEBE',
+                                <View
+                                    style={{
+                                        flexDirection: 'row-reverse',
+                                        alignItems: 'center',
+                                        paddingVertical: 15,
+                                        width: deviceWidth * 0.9,
+                                        alignSelf: 'center',
                                         justifyContent: 'space-between',
-                                    }}>
+                                        paddingHorizontal: 10
+                                    }}
+                                >
+
+                                    <View
+                                        style={{
+                                            flexDirection: 'row-reverse',
+                                            alignItems: 'center',
+                                            justifyContent: 'space-between',
+                                        }}
+                                    >
                                         <FontAwesome5
                                             name='user-circle'
-                                            color='#777777'
+                                            color='#264653'
                                             solid
-                                            size={20}
-                                            style={{ textAlign: 'center', width: 23 }}
+                                            size={18}
+                                            style={{
+                                                textAlign: 'center',
+                                                width: 23
+                                            }}
                                         />
-                                        <Text style={{
-                                            color: '#777777', fontSize: 18,
-                                            textAlignVertical: 'center',
-                                            marginHorizontal: 7,
-                                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                        }}>
+                                        <Text
+                                            style={{
+                                                color: '#000000',
+                                                fontSize: 16,
+                                                textAlignVertical: 'center',
+                                                marginHorizontal: 7,
+                                                fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                            }}
+                                        >
                                             {locales('labels.seller')}
                                         </Text>
                                     </View>
                                     <Text
                                         style={
                                             {
-                                                fontSize: 16,
-                                                fontFamily: 'IRANSansWeb(FaNum)_Bold'
+                                                fontSize: 18,
+                                                fontFamily: 'IRANSansWeb(FaNum)'
                                             }
                                         }
                                     >
@@ -2182,86 +2196,156 @@ class ProductDetails extends PureComponent {
                                     </Text>
                                 </View>
 
-                                <View style={{
-                                    flexDirection: 'row-reverse', alignItems: 'center', borderBottomColor: '#F1F1F1',
-                                    borderBottomWidth: 0.7, paddingTop: 5, paddingBottom: 20,
-                                    marginVertical: 10, width: deviceWidth * 0.9, alignSelf: 'center',
-                                    justifyContent: 'space-between', paddingHorizontal: 10
-                                }}>
-                                    <View style={{
-                                        flexDirection: 'row-reverse', alignItems: 'center', borderBottomColor: '#BEBEBE',
+                                <View
+                                    style={{
+                                        flexDirection: 'row-reverse',
+                                        alignItems: 'center',
+                                        paddingVertical: 15,
+                                        width: deviceWidth * 0.9,
+                                        alignSelf: 'center',
                                         justifyContent: 'space-between',
-                                    }}>
+                                        paddingHorizontal: 10
+                                    }}
+                                >
+                                    <View
+                                        style={{
+                                            flexDirection: 'row-reverse',
+                                            alignItems: 'center',
+                                            justifyContent: 'space-between',
+                                        }}
+                                    >
                                         <FontAwesome5
                                             name='map-marker-alt'
-                                            color='#777777'
-                                            style={{ textAlign: 'center', width: 23 }}
+                                            color='#264653'
+                                            style={{
+                                                textAlign: 'center',
+                                                width: 23
+                                            }}
                                             solid
-                                            size={20}
+                                            size={18}
                                         />
-                                        <Text style={{
-                                            color: '#777777',
-                                            fontSize: 18,
-                                            marginHorizontal: 7,
-                                            fontFamily: 'IRANSansWeb(FaNum)_Medium'
-                                        }}>
+                                        <Text
+                                            style={{
+                                                color: '#000000',
+                                                fontSize: 16,
+                                                marginHorizontal: 7,
+                                                fontFamily: 'IRANSansWeb(FaNum)_Light'
+                                            }}
+                                        >
                                             {locales('labels.address')}
                                         </Text>
                                     </View>
-                                    <Text style={{ fontSize: 16, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>
+                                    <Text
+                                        style={{
+                                            fontSize: 18,
+                                            fontFamily: 'IRANSansWeb(FaNum)'
+                                        }}
+                                    >
                                         {`${province_name || '---'}-${city_name || '==='}`}
                                     </Text>
                                 </View>
 
-                                <View style={{
-                                    flexDirection: 'row-reverse', alignItems: 'center', borderBottomColor: '#F1F1F1',
-                                    borderBottomWidth: 0.7, paddingTop: 5, paddingBottom: 20,
-                                    marginVertical: 10, width: deviceWidth * 0.9, alignSelf: 'center',
-                                    justifyContent: 'space-between', paddingHorizontal: 10
-                                }}>
-                                    <View style={{
-                                        flexDirection: 'row-reverse', alignItems: 'center', borderBottomColor: '#BEBEBE',
+                                <View
+                                    style={{
+                                        flexDirection: 'row-reverse',
+                                        alignItems: 'center',
+                                        paddingVertical: 15,
+                                        width: deviceWidth * 0.9,
+                                        alignSelf: 'center',
                                         justifyContent: 'space-between',
-                                    }}>
+                                        paddingHorizontal: 10
+                                    }}
+                                >
+                                    <View
+                                        style={{
+                                            flexDirection: 'row-reverse',
+                                            alignItems: 'center',
+                                            borderBottomColor: '#BEBEBE',
+                                            justifyContent: 'space-between',
+                                        }}
+                                    >
                                         <FontAwesome5
                                             name='box-open'
-                                            color='#777777'
+                                            color='#264653'
                                             solid
-                                            style={{ textAlign: 'center', width: 23 }}
+                                            style={{
+                                                textAlign: 'center',
+                                                width: 23
+                                            }}
                                             size={18}
                                         />
-                                        <Text style={{ color: '#777777', fontSize: 18, marginHorizontal: 7, fontFamily: 'IRANSansWeb(FaNum)_Medium' }}>
-                                            {locales('titles.stockQuantity')}
+                                        <Text
+                                            style={{
+                                                color: '#000000',
+                                                fontSize: 16,
+                                                marginHorizontal: 7,
+                                                fontFamily: 'IRANSansWeb(FaNum)_Light'
+                                            }}
+                                        >
+                                            {
+                                                locales('titles.stockQuantity')
+                                            }
                                         </Text>
                                     </View>
-                                    <Text style={{ fontSize: 16, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>{formatter.convertedNumbersToTonUnit(stock)} </Text>
+                                    <Text
+                                        style={{
+                                            fontSize: 18,
+                                            fontFamily: 'IRANSansWeb(FaNum)'
+                                        }}
+                                    >
+                                        {formatter.convertedNumbersToTonUnit(stock)}
+                                    </Text>
                                 </View>
 
-                                <View style={{
-                                    flexDirection: 'row-reverse', alignItems: 'center', borderBottomColor: '#F1F1F1',
-                                    borderBottomWidth: 0.7, paddingTop: 5, paddingBottom: 20,
-                                    marginVertical: 10, width: deviceWidth * 0.9, alignSelf: 'center',
-                                    justifyContent: 'space-between', paddingHorizontal: 10
-                                }}>
-                                    <View style={{
-                                        flexDirection: 'row-reverse', alignItems: 'center', borderBottomColor: '#BEBEBE',
+                                <View
+                                    style={{
+                                        flexDirection: 'row-reverse',
+                                        alignItems: 'center',
+                                        width: deviceWidth * 0.9,
+                                        paddingVertical: 15,
+                                        alignSelf: 'center',
                                         justifyContent: 'space-between',
-                                    }}>
+                                        paddingHorizontal: 10
+                                    }}
+                                >
+                                    <View
+                                        style={{
+                                            flexDirection: 'row-reverse',
+                                            alignItems: 'center',
+                                            borderBottomColor: '#BEBEBE',
+                                            justifyContent: 'space-between',
+                                        }}
+                                    >
                                         <FontAwesome5
                                             name='clipboard-check'
-                                            color='#777777'
+                                            color='#264653'
                                             solid
-                                            style={{ textAlign: 'center', width: 23 }}
-                                            size={20}
+                                            style={{
+                                                textAlign: 'center',
+                                                width: 23
+                                            }}
+                                            size={18}
                                         />
-                                        <Text style={{
-                                            color: '#777777', fontSize: 18, marginHorizontal: 7, fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                        }}>
+                                        <Text
+                                            style={{
+                                                color: '#000000',
+                                                fontSize: 16,
+                                                marginHorizontal: 7,
+                                                fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                            }}
+                                        >
                                             {locales('titles.minOrder')}
                                         </Text>
                                     </View>
-                                    <Text style={{ fontSize: 16, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>
-                                        {formatter.convertedNumbersToTonUnit(min_sale_amount)}
+                                    <Text
+                                        style={{
+                                            fontSize: 18,
+                                            fontFamily: 'IRANSansWeb(FaNum)'
+                                        }}
+                                    >
+                                        {
+                                            formatter.convertedNumbersToTonUnit(min_sale_amount)
+                                        }
                                     </Text>
                                 </View>
 
