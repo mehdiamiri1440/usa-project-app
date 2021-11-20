@@ -6,6 +6,7 @@ import {
 } from 'react-native';
 import RBSheet from "react-native-raw-bottom-sheet";
 import { Dialog, Portal, Paragraph } from 'react-native-paper';
+import { CommonActions } from '@react-navigation/native';
 import { Navigation } from 'react-native-navigation';
 import analytics from '@react-native-firebase/analytics';
 import { connect } from 'react-redux';
@@ -456,8 +457,22 @@ class ProductDetails extends PureComponent {
         analytics().logEvent('register_product_in_price_modal')
         this.setState({ shouldShowPriceSheet: false }, _ => {
             if (loggedInUserId) {
-                if (is_seller)
-                    return this.props.navigation.navigate('RegisterProductStack');
+                if (is_seller) {
+                    return this.props.navigation.dispatch(
+                        CommonActions.reset({
+                            routes: [
+                                {
+                                    name: 'RegisterProductStack',
+                                    state: {
+                                        routes: [
+                                            { name: 'RegisterProduct' }
+                                        ]
+                                    }
+                                }
+                            ]
+                        })
+                    )
+                }
                 return this.props.navigation.navigate('RegisterRequestStack', {
                     screen: 'RegisterRequest'
                 });
