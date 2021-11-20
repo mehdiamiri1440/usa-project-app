@@ -816,49 +816,52 @@ class PromoteRegistration extends React.Component {
 
                     </View>
 
-                    <View
-                        style={{
-                            flexDirection: 'row-reverse',
-                            marginTop: 10,
-                            padding: 10,
-                            borderBottomWidth: 1,
-                            borderColor: 'rgba(0,0,0,0.1)',
-                            justifyContent: 'space-between',
-                            width: '100%'
-                        }}
-                    >
-                        <View
-                            style={{
-                                flexDirection: 'row-reverse'
-                            }}
-                        >
-
-                            <Text
+                    {
+                        activeTab != 0 ?
+                            <View
                                 style={{
-                                    fontSize: 16,
-                                    marginHorizontal: 5,
-                                    textAlign: 'center',
-                                    color: activeTab == 0 ? 'rgba(0, 0, 0, 0.5)' : '#000000',
-                                    fontFamily: 'IRANSansWeb(FaNum)_Light',
-                                    textAlignVertical: 'center',
-                                    paddingBottom: 5
-                                }}>
-                                {locales('labels.5xConnectionWithBuyers')}
-                            </Text>
-                        </View>
-                        <FontAwesome5
-                            name={activeTab == 0 ? 'times' : 'check'}
-                            color={activeTab == 0 ? '#F03738' : '#0AA709'}
-                            style={{
-                                marginHorizontal: 5,
-                                left: -15
-                            }}
-                            solid
-                            size={20}
-                        />
+                                    flexDirection: 'row-reverse',
+                                    marginTop: 10,
+                                    padding: 10,
+                                    borderBottomWidth: 1,
+                                    borderColor: 'rgba(0,0,0,0.1)',
+                                    justifyContent: 'space-between',
+                                    width: '100%'
+                                }}
+                            >
+                                <View
+                                    style={{
+                                        flexDirection: 'row-reverse'
+                                    }}
+                                >
 
-                    </View>
+                                    <Text
+                                        style={{
+                                            fontSize: 16,
+                                            marginHorizontal: 5,
+                                            textAlign: 'center',
+                                            color: activeTab == 0 ? 'rgba(0, 0, 0, 0.5)' : '#000000',
+                                            fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                            textAlignVertical: 'center',
+                                            paddingBottom: 5
+                                        }}>
+                                        {locales('labels.5xConnectionWithBuyers')}
+                                    </Text>
+                                </View>
+                                <FontAwesome5
+                                    name={activeTab == 0 ? 'times' : 'check'}
+                                    color={activeTab == 0 ? '#F03738' : '#0AA709'}
+                                    style={{
+                                        marginHorizontal: 5,
+                                        left: -15
+                                    }}
+                                    solid
+                                    size={20}
+                                />
 
+                            </View>
+                            : null
+                    }
                     <View
                         style={{
                             flexDirection: 'row-reverse',

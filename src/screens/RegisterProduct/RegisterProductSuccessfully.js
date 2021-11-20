@@ -751,9 +751,6 @@ class RegisterProductSuccessfully extends Component {
         return (
 
             <Pressable
-                android_ripple={{
-                    color: '#ededed'
-                }}
                 onPress={() => {
                     this.props.navigation.navigate('RequestsStack', { subCategoryId, subCategoryName })
                 }} style={{

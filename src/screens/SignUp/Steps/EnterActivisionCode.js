@@ -285,7 +285,7 @@ const EnterActivisionCode = (props) => {
                     <Text style={[styles.buttonText,
                     {
                         color: value.length !== 4 ?
-                            'rgba(0, 0, 0, 0.38)' :
+                            '#777' :
                             'white'
                     }]}>
                         {locales('titles.submitCode')}

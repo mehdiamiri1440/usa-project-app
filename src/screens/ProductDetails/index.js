@@ -1057,7 +1057,7 @@ class ProductDetails extends PureComponent {
                             }, _ => this.priceRBSheet?.current?.close()
                         )
                         }
-                        height={300}
+                        height={320}
                         animationType='fade'
                         customStyles={{
                             draggableIcon: {
@@ -1872,12 +1872,11 @@ class ProductDetails extends PureComponent {
                                 <ContentLoader
                                     speed={2}
                                     width={deviceWidth}
-                                    height={400}
-                                    viewBox="0 0 400 400"
+                                    height={deviceHeight * 0.305}
                                     backgroundColor="#f3f3f3"
                                     foregroundColor="#ecebeb"
                                 >
-                                    <Rect x="0" y="0" rx="2" ry="2" width="400" height="400" />
+                                    <Rect x="0" y="0" rx="2" ry="2" width="100%" height='100%' />
                                 </ContentLoader>
                             </View>
 
@@ -1903,8 +1902,7 @@ class ProductDetails extends PureComponent {
                                         foregroundColor="#ecebeb"
                                     >
                                         <Rect x="174" y="1" rx="3" ry="3" width="221" height="30" />
-                                        <Rect x="232" y="56" rx="3" ry="3" width="163" height="47" />
-                                        <Rect x="15" y="55" rx="3" ry="3" width="122" height="47" />
+                                        <Rect x="14" y="1" rx="3" ry="3" width="91" height="30" />
                                     </ContentLoader>
                                 </View>
                                 <View style={{
@@ -1916,6 +1914,7 @@ class ProductDetails extends PureComponent {
                                     <ContentLoader
                                         speed={2}
                                         width={deviceWidth}
+                                        style={{ top: -70 }}
                                         height={350}
                                         viewBox="0 0 410 350"
                                         backgroundColor="#f3f3f3"
