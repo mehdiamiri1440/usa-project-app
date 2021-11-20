@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
     View,
     Text,
@@ -17,7 +17,8 @@ import { deviceHeight } from '../../../utils';
 const AuthenticatedSuccessfully = props => {
 
     const {
-        userProfile = {}
+        userProfile = {},
+        parentRef = null
     } = props;
 
     const {
@@ -34,6 +35,10 @@ const AuthenticatedSuccessfully = props => {
             return props.navigation.navigate('Home', { screen: 'ProductsList' });
         return props.navigation.navigate('RequestsStack');
     };
+
+    useEffect(_ => {
+        parentRef?.current?.scrollTo({ x: 0, y: 0, animated: true })
+    }, []);
 
     return (
         <View

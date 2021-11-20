@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Text, View, ScrollView } from 'react-native';
 
 import { connect } from 'react-redux';
@@ -15,6 +15,8 @@ import Header from '../../../components/header';
 
 
 const Authentication = props => {
+
+    const scrollViewRef = useRef(null);
 
     let stepsArray = [
         {
@@ -111,6 +113,7 @@ const Authentication = props => {
             case 4:
                 return <AuthenticatedSuccessfully
                     changeStep={changeStep}
+                    parentRef={scrollViewRef}
                     {...props}
                 />;
 
@@ -152,7 +155,9 @@ const Authentication = props => {
                     </Text>
                 </View>
                 :
-                <ScrollView>
+                <ScrollView
+                    ref={scrollViewRef}
+                >
                     {stepNumber < 4 ?
                         <View style={{
                             flexDirection: 'row-reverse',
