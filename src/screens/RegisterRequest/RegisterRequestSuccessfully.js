@@ -662,12 +662,11 @@ const RegisterRequestSuccessfully = props => {
                                 style={{
                                     textAlign: 'center',
                                     zIndex: 10005,
-                                    borderRadius: 5,
+                                    borderRadius: 8,
                                     elevation: 0,
-                                    padding: 25,
                                     marginBottom: 10,
                                     backgroundColor: '#00C569',
-                                    width: '80%',
+                                    width: '68%',
                                     color: 'white',
                                     alignItems: 'center',
                                     alignSelf: 'center',
@@ -678,31 +677,39 @@ const RegisterRequestSuccessfully = props => {
                             >
                                 <View
                                     style={{
-                                        flexDirection: 'row', justifyContent: 'center',
-                                        alignItems: 'center', width: '100%'
-                                    }}>
-                                    <ActivityIndicator
-                                        size="small"
-                                        animating={loading && selectedContact.contact_id && selectedContact.contact_id == item.myuser_id}
-                                        color="white"
-                                    />
+                                        flexDirection: 'row',
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        alignSelf: 'center',
+                                        width: '100%'
+                                    }}
+                                >
                                     <Text
                                         onPress={event => navigateToChat(event, item, id)}
                                         style={{
                                             color: 'white',
                                             textAlign: 'center',
-                                            fontSize: 20,
+                                            fontSize: 18,
                                             marginHorizontal: 3,
                                             fontFamily: 'IRANSansWeb(FaNum)_Bold'
                                         }}>
                                         {locales('labels.sendMessageToSeller')}
                                     </Text>
-                                    <MaterialCommunityIcons
-                                        name='message'
-                                        size={22}
-                                        color='#FFFFFF'
-                                        onPress={event => navigateToChat(event, item, id)}
-                                    />
+                                    {
+                                        loading && selectedContact.contact_id && selectedContact.contact_id == item.myuser_id
+                                            ?
+                                            <ActivityIndicator
+                                                size="small"
+                                                color="white"
+                                            />
+                                            :
+                                            <MaterialCommunityIcons
+                                                name='message'
+                                                size={17}
+                                                color='#FFFFFF'
+                                                onPress={event => navigateToChat(event, item, id)}
+                                            />
+                                    }
                                 </View>
                             </Button>
                         }

@@ -433,6 +433,7 @@ const BuyAdList = props => {
                                 : ['#E0E0E0', '#E0E0E0']}
                             style={{
                                 width: '100%',
+                                height: 48,
                                 paddingHorizontal: 10,
                                 flexDirection: 'row-reverse',
                                 alignItems: 'center',
@@ -500,7 +501,7 @@ const BuyAdList = props => {
                                 borderColor: item.has_phone ? '#556080' : (!!item.is_golden ? '#c7a84f' : '#00C569'),
                                 paddingHorizontal: 10,
                                 flexDirection: 'row-reverse',
-                                borderWidth: 1,
+                                borderWidth: item.has_phone ? 1 : 0,
                                 alignItems: 'center',
                                 textAlign: 'center',
                                 justifyContent: 'center',

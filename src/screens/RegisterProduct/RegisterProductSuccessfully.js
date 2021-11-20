@@ -182,7 +182,7 @@ class RegisterProductSuccessfully extends Component {
                     }}>
 
                         <Image
-                            source={require('../../../assets/images/blur-items-2.jpg')}
+                            source={require('../../../assets/images/blur-items-2.png')}
                             style={{
                                 zIndex: 0,
                                 width: '100%',
@@ -223,10 +223,9 @@ class RegisterProductSuccessfully extends Component {
                             style={{
                                 top: -10,
                                 zIndex: 1000,
-                                width: deviceWidth,
                                 alignItems: 'center',
                                 justifyContent: 'center',
-                                left: -12,
+                                left: '1%',
                                 right: 0,
                                 marginVertical: 5,
                             }}
