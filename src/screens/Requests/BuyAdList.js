@@ -102,7 +102,7 @@ const BuyAdList = props => {
 
         <View
             style={{
-                backgroundColor: index % 2 == 0 ? item.is_golden && active_pakage_type == 0 ? '#FFFFFF' : '#FDFDFD' : '#FFFFFF',
+                backgroundColor: 'white',
                 width: '95%',
                 alignSelf: 'center',
                 overflow: 'hidden',

@@ -162,7 +162,7 @@ class RegisterProductSuccessfully extends Component {
 
             <View
                 style={{
-                    backgroundColor: index % 2 == 0 ? item.is_golden && active_pakage_type == 0 ? '#FFFFFF' : '#F7FCFF' : '#FFFFFF',
+                    backgroundColor: 'white',
                     width: '100%',
                     padding: 20,
                     borderColor: !!item.is_golden ? '#c7a84f' : '#BEBEBE',
