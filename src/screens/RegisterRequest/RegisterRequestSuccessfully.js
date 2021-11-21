@@ -887,7 +887,7 @@ const RegisterRequestSuccessfully = props => {
                 ref={scrollViewRef}
                 onScroll={event => setOffset(event.nativeEvent.contentOffset.y)}
             >
-                {products && products.length && showBox == true ?
+                {showBox == true ?
                     <LinearGradient
                         start={{ x: 0, y: 0.51, z: 1 }}
                         end={{ x: 0.8, y: 0.2, z: 1 }}
