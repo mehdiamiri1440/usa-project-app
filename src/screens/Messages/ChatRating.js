@@ -121,7 +121,6 @@ const ChatRating = props => {
                     closeOnPressMask
                     // onClose={_ => closeContactInfoSlider()}
                     height={350}
-                    animationType='slide'
                     customStyles={{
                         draggableIcon: {
                             backgroundColor: "#000"

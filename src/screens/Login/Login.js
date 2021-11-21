@@ -158,7 +158,7 @@ class Login extends React.Component {
                     error && !firstLoad ?
                         <Text
                             style={{
-                                height: 40,
+                                height: 50,
                                 fontFamily: 'IRANSansWeb(FaNum)_Medium',
                                 fontSize: 14,
                                 color: '#F03738',
@@ -197,7 +197,7 @@ class Login extends React.Component {
                         style={{
                             width: '100%',
                             textAlign: 'center',
-                            color: validator.isMobileNumber(mobileNumber) ? 'white' : 'black',
+                            color: validator.isMobileNumber(mobileNumber) ? 'white' : 'rgba(0, 0, 0, 0.38)',
                             fontFamily: 'IRANSansWeb(FaNum)_Medium',
                             fontSize: 16,
                         }}

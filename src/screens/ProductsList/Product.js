@@ -14,6 +14,7 @@ import { Dialog, Portal, Paragraph } from 'react-native-paper';
 import { Input, Label, Item, Toast, Button } from 'native-base';
 import Svg, { Path, G } from "react-native-svg"
 import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
+import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import Entypo from 'react-native-vector-icons/dist/Entypo';
 import { Navigation } from 'react-native-navigation';
 import analytics from '@react-native-firebase/analytics';
@@ -649,7 +650,7 @@ class Product extends PureComponent {
                                         <Item
                                             regular
                                             style={{
-                                                borderColor: amountError ? '#D50000' : amount.length ? '#00C569' : '#a8a8a8',
+                                                borderColor: amountError ? '#D50000' : amount && amount.length ? '#00C569' : '#a8a8a8',
                                                 borderRadius: 5, padding: 3
                                             }}>
                                             <Input
@@ -677,7 +678,7 @@ class Product extends PureComponent {
                                         <Label style={{
                                             height: 20,
                                             fontFamily: 'IRANSansWeb(FaNum)_Light',
-                                            textAlign: !amountError && amount.length ? 'left' : 'right'
+                                            textAlign: !amountError && amount && amount.length ? 'left' : 'right'
                                         }}>
 
                                             {!!amountError && <Text style={{
@@ -701,7 +702,7 @@ class Product extends PureComponent {
                                         <Item
                                             regular
                                             style={{
-                                                borderColor: minimumOrderError ? '#D50000' : minimumOrder.length ? '#00C569' : '#a8a8a8',
+                                                borderColor: minimumOrderError ? '#D50000' : minimumOrder && minimumOrder.length ? '#00C569' : '#a8a8a8',
                                                 borderRadius: 5,
                                                 padding: 3
                                             }}>
@@ -729,7 +730,7 @@ class Product extends PureComponent {
                                         <Label style={{
                                             height: 20,
                                             fontFamily: 'IRANSansWeb(FaNum)_Light',
-                                            textAlign: !minimumOrderError && minimumOrder.length ? 'left' : 'right'
+                                            textAlign: !minimumOrderError && minimumOrder && minimumOrder.length ? 'left' : 'right'
                                         }}>
 
                                             {!!minimumOrderError && <Text style={{
@@ -753,7 +754,7 @@ class Product extends PureComponent {
                                         <Item
                                             regular
                                             style={{
-                                                borderColor: minimumPriceError ? '#D50000' : minimumPrice.length ? '#00C569' : '#a8a8a8',
+                                                borderColor: minimumPriceError ? '#D50000' : minimumPrice && minimumPrice.length ? '#00C569' : '#a8a8a8',
                                                 borderRadius: 5,
                                                 padding: 3
                                             }}>
@@ -800,7 +801,7 @@ class Product extends PureComponent {
                                         <Item
                                             regular
                                             style={{
-                                                borderColor: maximumPriceError ? '#D50000' : maximumPrice.length ? '#00C569' : '#a8a8a8',
+                                                borderColor: maximumPriceError ? '#D50000' : maximumPrice && maximumPrice.length ? '#00C569' : '#a8a8a8',
                                                 borderRadius: 5,
                                                 padding: 3
                                             }}>
@@ -1467,7 +1468,49 @@ class Product extends PureComponent {
                                         {formatter.convertedNumbersToTonUnit(stock)}
                                     </Text> */}
                                     </View>
-
+                                    {!!!loggedInUserId ?
+                                        <Pressable
+                                            onPress={_ => {
+                                                analytics().logEvent('click_on_btn_in_product_list');
+                                                this.props.navigation.push('ProductDetails', { productId });
+                                            }}
+                                            style={{
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                alignSelf: 'center',
+                                                borderRadius: 6,
+                                                borderColor: '#128C7E',
+                                                borderWidth: 1,
+                                                padding: 5,
+                                                width: '100%',
+                                                flexDirection: 'row-reverse',
+                                                marginVertical: 8
+                                            }}
+                                        >
+                                            <Svg
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                width="18"
+                                                height="18"
+                                                viewBox="0 0 20 20"
+                                            >
+                                                <Path
+                                                    fill="#128C7E"
+                                                    d="M19.388.405a.605.605 0 00-1.141.399c.929 2.67-.915 4.664-2.321 5.732l-.568-.814c-.191-.273-.618-.5-.95-.504l-3.188.014a2.162 2.162 0 00-1.097.338L.729 12.157a1.01 1.01 0 00-.247 1.404l4.269 6.108c.32.455.831.4 1.287.082l9.394-6.588c.27-.191.582-.603.692-.918l.998-3.145c.11-.314.043-.793-.148-1.066l-.346-.496c1.888-1.447 3.848-4.004 2.76-7.133zm-4.371 9.358a1.608 1.608 0 01-2.24-.396 1.614 1.614 0 01.395-2.246 1.607 1.607 0 011.868.017c-.272.164-.459.26-.494.275a.606.606 0 00.259 1.153c.086 0 .174-.02.257-.059.194-.092.402-.201.619-.33a1.615 1.615 0 01-.664 1.586z"
+                                                ></Path>
+                                            </Svg>
+                                            <Text
+                                                style={{
+                                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                                    textAlign: 'center',
+                                                    color: '#128C7E',
+                                                    fontSize: 16,
+                                                    marginRight: 3
+                                                }}
+                                            >
+                                                {locales('titles.achiveSaleStatus')}
+                                            </Text>
+                                        </Pressable>
+                                        : null}
                                 </View>
 
                                 {loggedInUserId == myuser_id && shouldShowMyButtons ?
@@ -1494,7 +1537,7 @@ class Product extends PureComponent {
                                                     // maxWidth: 130,
                                                     flex: 1,
                                                     marginRight: 15,
-                                                    backgroundColor: '#E41C38',
+                                                    backgroundColor: '#140092',
                                                     alignItems: 'center',
                                                     justifyContent: 'center',
                                                     height: 40,
@@ -1506,9 +1549,11 @@ class Product extends PureComponent {
                                                 <View
                                                     style={[styles.textCenterView, styles.buttonText]}>
                                                     <Text style={[styles.textWhite, { marginHorizontal: 5 }]}>
-                                                        <FontAwesome5 name='chart-line' size={20} color='white' />
+                                                        <MaterialCommunityIcons name='stairs-up' size={20} color='white' />
                                                     </Text>
-                                                    <Text style={[styles.textWhite, styles.textBold]}>
+                                                    <Text style={[styles.textWhite, {
+                                                        fontFamily: 'IRANSansWeb(FaNum)_Medium'
+                                                    }]}>
                                                         {locales('titles.elevateProduct')}
                                                     </Text>
                                                 </View>
@@ -1521,7 +1566,7 @@ class Product extends PureComponent {
                                                     fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                                     // maxWidth: 130,
                                                     flex: 1,
-                                                    backgroundColor: '#000546',
+                                                    backgroundColor: 'rgba(20, 0, 146, 0.25)',
                                                     height: 40,
                                                     elevation: 0
                                                 }}
@@ -1529,10 +1574,25 @@ class Product extends PureComponent {
                                             >
                                                 <View
                                                     style={[styles.textCenterView, styles.buttonText]}>
-                                                    <Text style={[styles.textWhite, styles.marginTop5]}>
-                                                        <EvilIcons name='pencil' size={30} color='white' />
-                                                    </Text>
-                                                    <Text style={[styles.textWhite, styles.margin5, styles.textBold]}>
+                                                    <MaterialCommunityIcons
+                                                        name='pencil'
+                                                        size={20}
+                                                        style={{
+                                                            top: 7
+                                                        }}
+                                                        color='#140092'
+                                                    />
+                                                    <Text
+                                                        style={[
+                                                            styles.textWhite,
+                                                            styles.margin5,
+                                                            {
+                                                                color: '#140092',
+                                                                fontFamily: 'IRANSansWeb(FaNum)_Medium'
+                                                            }
+                                                        ]
+                                                        }
+                                                    >
                                                         {locales('titles.edit')}
                                                     </Text>
                                                 </View>

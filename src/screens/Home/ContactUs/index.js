@@ -113,13 +113,9 @@ class ContactUs extends React.Component {
 
                         <ShadowView
                             style={{
-                                shadowColor: 'black',
-                                shadowOpacity: 0.1,
-                                shadowRadius: 1,
-                                shadowOffset: { width: 0, height: 4 },
                                 backgroundColor: '#E2F0F5',
                                 width: '95%',
-                                borderRadius: 12,
+                                borderRadius: 25,
                                 alignSelf: 'center',
                                 marginTop: 30
                             }}
@@ -130,9 +126,9 @@ class ContactUs extends React.Component {
                                 }}
                                 style={{
                                     width: '100%',
-                                    borderColor: '#e0e0e0',
+                                    borderColor: 'rgba(39, 182, 238, 0.1)',
                                     padding: 10,
-                                    borderRadius: 12,
+                                    borderRadius: 25,
                                     borderWidth: 1,
                                     alignItems: 'center',
                                     justifyContent: 'space-between',
@@ -144,7 +140,8 @@ class ContactUs extends React.Component {
                                     style={{
                                         flexDirection: 'row-reverse',
                                         justifyContent: 'center',
-                                        alignItems: 'center'
+                                        alignItems: 'center',
+                                        borderRadius: 25
                                     }}
                                 >
                                     <LinearGradient
@@ -185,7 +182,7 @@ class ContactUs extends React.Component {
                                 <FontAwesome5
                                     name='angle-left'
                                     size={20}
-                                    color='#bebebe'
+                                    color='#15313C'
                                 />
                             </Pressable>
                         </ShadowView>
@@ -207,8 +204,9 @@ class ContactUs extends React.Component {
                         >
                             <Image
                                 style={{
-                                    width: 30,
-                                    height: 30
+                                    width: 42,
+                                    height: 42,
+                                    backgroundColor: 'white'
                                 }}
                                 source={require('../../../../assets/icons/instagram.png')}
                             />

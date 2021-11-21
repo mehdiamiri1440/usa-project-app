@@ -1,14 +1,13 @@
 import React, { createRef } from 'react';
 import {
     Text, View, Modal, Pressable, ScrollView,
-    StyleSheet, Linking, RefreshControl,
-    TouchableOpacity,
-    LayoutAnimation, UIManager, Platform,
+    StyleSheet, Linking, Image,
+    UIManager, Platform,
 } from 'react-native';
 import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
 import { connect } from 'react-redux';
 import LinearGradient from 'react-native-linear-gradient';
-import Svg, { Circle, Path, G } from "react-native-svg";
+import Svg, { Circle, Path, G, Stop, Defs } from "react-native-svg";
 import { Card, Button } from 'native-base';
 import ShadowView from '@vikasrg/react-native-simple-shadow-view';
 
@@ -43,6 +42,7 @@ class PromoteRegistration extends React.Component {
 
     wrapperRef = createRef();
     refRBSheet = createRef();
+    scrollViewRef = createRef();
 
     componentDidMount() {
         analytics().logEvent('package_payment');
@@ -59,15 +59,23 @@ class PromoteRegistration extends React.Component {
         } = userProfile;
 
         const {
-            id
+            id,
+            wallet_balance = 0
         } = user_info;
 
-        if (!!userProfile && !!user_info && !!id)
-            return Linking.canOpenURL(`${REACT_APP_API_ENDPOINT_RELEASE}/app-payment/payment/${id}/${type}`).then(supported => {
-                if (supported) {
-                    Linking.openURL(`${REACT_APP_API_ENDPOINT_RELEASE}/app-payment/payment/${id}/${type}`).then(_ => global.isAppStateChangedCauseOfPayment = true);
-                }
-            })
+        const buyingPrice = this.choosePrice() / 10;
+        ;
+        if (wallet_balance >= buyingPrice) {
+            return this.navigateToPaymentType();
+        }
+        else {
+            if (!!userProfile && !!user_info && !!id)
+                return Linking.canOpenURL(`${REACT_APP_API_ENDPOINT_RELEASE}/app-payment/payment/${id}/${type}`).then(supported => {
+                    if (supported) {
+                        return Linking.openURL(`${REACT_APP_API_ENDPOINT_RELEASE}/app-payment/payment/${id}/${type}`).then(_ => global.isAppStateChangedCauseOfPayment = true);
+                    }
+                });
+        }
     };
 
     handleScrollToTopButtonClick = () => {
@@ -213,7 +221,9 @@ class PromoteRegistration extends React.Component {
                             alignItems: 'center',
                             justifyContent: 'center',
                             backgroundColor: '#140092',
-                            width: '80%',
+                            width: '100%',
+                            borderBottomLeftRadius: 30,
+                            borderBottomRightRadius: 30,
                             padding: 5,
                             marginBottom: 5
                         }}
@@ -221,8 +231,8 @@ class PromoteRegistration extends React.Component {
                         <Text
                             style={{
                                 color: 'white',
-                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                fontSize: 22,
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                fontSize: 20,
                                 textAlign: 'center',
                                 textAlignVertical: 'center',
                             }}
@@ -296,12 +306,12 @@ class PromoteRegistration extends React.Component {
                         color: 'rgba(0, 0, 0, 0.8)',
                         fontFamily: 'IRANSansWeb(FaNum)_Medium',
                         fontSize: 14,
-                        marginTop: 5
+                        marginVertical: 5
                     }}
                 >
                     {activeTab == 0 ?
-                        locales('labels.threeMonthPackageDescription') :
-                        locales('labels.annualPackageDescription')
+                        locales('labels.monthlyPackageDescription') :
+                        locales('titles.specialPackageDescription')
                     }
                 </Text>
                 {hasDiscount ?
@@ -425,12 +435,12 @@ class PromoteRegistration extends React.Component {
                     </>
                     : null
                 }
-                <Button
+                <Pressable
                     style={
                         {
-                            width: '70%',
+                            width: '75%',
                             borderRadius: 6,
-                            height: 50,
+                            height: 55,
                             marginTop: 10,
                             backgroundColor: '#FF6600',
                             alignSelf: 'center',
@@ -451,8 +461,8 @@ class PromoteRegistration extends React.Component {
                                 textAlign: 'center',
                                 alignSelf: 'center',
                                 color: 'white',
-                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                fontSize: 16,
+                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                fontSize: 20,
                             }
                         }
                         >
@@ -468,7 +478,7 @@ class PromoteRegistration extends React.Component {
                             }}
                         />
                     </View>
-                </Button>
+                </Pressable>
                 {/* end of three month package price */}
                 <ShadowView
                     style={{
@@ -506,7 +516,7 @@ class PromoteRegistration extends React.Component {
                             height: '100%',
                             backgroundColor: 'rgba(0,0,0,0.1)',
                             position: 'absolute',
-                            left: '20%'
+                            left: '25%'
                         }}
                     ></View>
                     <View
@@ -586,13 +596,14 @@ class PromoteRegistration extends React.Component {
                             style={{
                                 color: '#000000',
                                 fontSize: 20,
-                                left: -20,
                                 textAlign: 'center',
+                                top: activeTab == 0 ? -3 : 0,
                                 fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                textAlignVertical: 'center'
+                                textAlignVertical: 'center',
+                                left: activeTab == 0 ? -20 : 0,
                             }}
                         >
-                            {activeTab == 0 ? 10 : 30}
+                            {activeTab == 0 ? 10 : locales('titles.unlimited')}
                         </Text>
                     </View>
 
@@ -805,49 +816,52 @@ class PromoteRegistration extends React.Component {
 
                     </View>
 
-                    <View
-                        style={{
-                            flexDirection: 'row-reverse',
-                            marginTop: 10,
-                            padding: 10,
-                            borderBottomWidth: 1,
-                            borderColor: 'rgba(0,0,0,0.1)',
-                            justifyContent: 'space-between',
-                            width: '100%'
-                        }}
-                    >
-                        <View
-                            style={{
-                                flexDirection: 'row-reverse'
-                            }}
-                        >
-
-                            <Text
+                    {
+                        activeTab != 0 ?
+                            <View
                                 style={{
-                                    fontSize: 16,
-                                    marginHorizontal: 5,
-                                    textAlign: 'center',
-                                    color: activeTab == 0 ? 'rgba(0, 0, 0, 0.5)' : '#000000',
-                                    fontFamily: 'IRANSansWeb(FaNum)_Light',
-                                    textAlignVertical: 'center',
-                                    paddingBottom: 5
-                                }}>
-                                {locales('labels.5xConnectionWithBuyers')}
-                            </Text>
-                        </View>
-                        <FontAwesome5
-                            name={activeTab == 0 ? 'times' : 'check'}
-                            color={activeTab == 0 ? '#F03738' : '#0AA709'}
-                            style={{
-                                marginHorizontal: 5,
-                                left: -15
-                            }}
-                            solid
-                            size={20}
-                        />
+                                    flexDirection: 'row-reverse',
+                                    marginTop: 10,
+                                    padding: 10,
+                                    borderBottomWidth: 1,
+                                    borderColor: 'rgba(0,0,0,0.1)',
+                                    justifyContent: 'space-between',
+                                    width: '100%'
+                                }}
+                            >
+                                <View
+                                    style={{
+                                        flexDirection: 'row-reverse'
+                                    }}
+                                >
 
-                    </View>
+                                    <Text
+                                        style={{
+                                            fontSize: 16,
+                                            marginHorizontal: 5,
+                                            textAlign: 'center',
+                                            color: activeTab == 0 ? 'rgba(0, 0, 0, 0.5)' : '#000000',
+                                            fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                            textAlignVertical: 'center',
+                                            paddingBottom: 5
+                                        }}>
+                                        {locales('labels.5xConnectionWithBuyers')}
+                                    </Text>
+                                </View>
+                                <FontAwesome5
+                                    name={activeTab == 0 ? 'times' : 'check'}
+                                    color={activeTab == 0 ? '#F03738' : '#0AA709'}
+                                    style={{
+                                        marginHorizontal: 5,
+                                        left: -15
+                                    }}
+                                    solid
+                                    size={20}
+                                />
 
+                            </View>
+                            : null
+                    }
                     <View
                         style={{
                             flexDirection: 'row-reverse',
@@ -893,7 +907,7 @@ class PromoteRegistration extends React.Component {
                         <Text style={{
                             color: '#140092',
                             fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                            fontSize: 22,
+                            fontSize: 18,
                             textAlign: 'center',
                             textAlignVertical: 'center',
                             textDecorationLine: 'line-through'
@@ -1011,12 +1025,12 @@ class PromoteRegistration extends React.Component {
                     </>
                     : null
                 }
-                <Button
+                <Pressable
                     style={
                         {
-                            width: '70%',
+                            width: '60%',
                             borderRadius: 6,
-                            height: 50,
+                            height: 45,
                             marginTop: 30,
                             backgroundColor: '#FF6600',
                             alignSelf: 'center',
@@ -1037,8 +1051,8 @@ class PromoteRegistration extends React.Component {
                                 textAlign: 'center',
                                 alignSelf: 'center',
                                 color: 'white',
-                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                fontSize: 16,
+                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                fontSize: 18,
                             }
                         }
                         >
@@ -1054,7 +1068,7 @@ class PromoteRegistration extends React.Component {
                             }}
                         />
                     </View>
-                </Button>
+                </Pressable>
             </>
         );
         return;
@@ -1375,6 +1389,8 @@ class PromoteRegistration extends React.Component {
                     null}
 
                 <ScrollView
+                    stickyHeaderIndices={[1]}
+                    ref={this.scrollViewRef}
                     contentContainerStyle={{
                         paddingBottom: 20
                     }}
@@ -1424,39 +1440,36 @@ class PromoteRegistration extends React.Component {
                         {/* title text */}
                         <Text
                             style={{
-                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                fontFamily: 'IRANSansWeb(FaNum)_Light',
                                 fontSize: 16,
                                 textAlign: 'center',
                                 marginVertical: 15,
                                 paddingRight: 4
                             }}
                         >
-                            {locales('titles.specialSellersTo')} <Text
-                                style={{
-                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                    fontSize: 16,
-                                    color: '#078D06'
-                                }}
-                            >
-                                {locales('titles.moreRealBuyers')}
-                            </Text> <Text
-                                style={{
-                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                    fontSize: 16
-                                }}
-                            >
-                                {locales('titles.haveAccessTo')}.
-                            </Text>
+                            {locales('titles.buyersAndSellersAccess')}
                         </Text>
                         {/* end of title text */}
 
                         {/* header buttons */}
+
+                        {/* end of header buttons */}
+
+                        {/* three month package price */}
+                    </View>
+                    <View
+                        style={{
+                            flexDirection: 'row-reverse'
+                        }}
+                    >
                         <View
                             style={{
                                 flexDirection: 'row-reverse',
                                 alignItems: 'center',
                                 justifyContent: 'center',
-                                marginVertical: 10
+                                marginBottom: 30,
+                                width: '95%',
+                                alignSelf: 'center'
                             }}
                         >
                             <ShadowView
@@ -1466,12 +1479,22 @@ class PromoteRegistration extends React.Component {
                                     shadowRadius: activeTab == 0 ? 2 : 0,
                                     shadowOffset: { width: 0, height: 0 },
                                     backgroundColor: 'white',
-                                    width: '50%'
+                                    width: '50%',
+                                    zIndex: activeTab == 0 ? 1 : 0
 
                                 }}
                             >
                                 <Pressable
-                                    onPress={_ => this.setState({ activeTab: 0, paymentType: 1 })}
+                                    onPress={_ => {
+                                        analytics().logEvent('switch_to_package_type_one_in_top')
+                                        this.setState(
+                                            {
+                                                activeTab: 0,
+                                                paymentType: 1
+                                            }
+                                        )
+                                    }
+                                    }
                                     style={{
                                         borderBottomWidth: 2,
                                         borderBottomColor: activeTab == 0 ?
@@ -1485,7 +1508,7 @@ class PromoteRegistration extends React.Component {
                                             fontFamily: 'IRANSansWeb(FaNum)_Medium',
                                             fontSize: 16,
                                             textAlign: 'center',
-                                            color: `rgba(0,0,0,${activeTab == 0 ? '1' : '0.5'})`
+                                            color: activeTab == 0 ? '#000000' : '#808080'
                                         }}
                                     >
                                         {locales('titles.threeMonthBasicPackage')}
@@ -1499,11 +1522,16 @@ class PromoteRegistration extends React.Component {
                                     shadowRadius: activeTab == 1 ? 2 : 0,
                                     shadowOffset: { width: 0, height: 0 },
                                     backgroundColor: 'white',
-                                    width: '50%'
+                                    width: '50%',
+                                    zIndex: activeTab == 1 ? 1 : 0
                                 }}
                             >
                                 <Pressable
-                                    onPress={_ => this.setState({ activeTab: 1, paymentType: 3 })}
+                                    onPress={_ => {
+                                        analytics().logEvent('switch_to_package_type_three_in_top')
+                                        this.setState({ activeTab: 1, paymentType: 3 });
+                                    }
+                                    }
                                     style={{
                                         borderBottomWidth: 2,
                                         borderBottomColor: activeTab == 1 ?
@@ -1517,7 +1545,7 @@ class PromoteRegistration extends React.Component {
                                             fontFamily: 'IRANSansWeb(FaNum)_Medium',
                                             fontSize: 16,
                                             textAlign: 'center',
-                                            color: `rgba(0,0,0,${activeTab == 1 ? '1' : '0.5'})`
+                                            color: activeTab == 1 ? '#000000' : '#808080'
                                         }}
                                     >
                                         {locales('titles.annualSpecialPackage')}
@@ -1525,17 +1553,10 @@ class PromoteRegistration extends React.Component {
                                 </Pressable>
                             </ShadowView>
                         </View>
-                        {/* end of header buttons */}
-
-                        {/* three month package price */}
                     </View>
                     {this.renderPackagesDetails()}
                     <ShadowView
                         style={{
-                            shadowColor: 'black',
-                            shadowOpacity: 0.1,
-                            shadowRadius: 1,
-                            shadowOffset: { width: 0, height: 4 },
                             backgroundColor: '#E2F0F5',
                             width: '95%',
                             borderRadius: 12,
@@ -1548,7 +1569,7 @@ class PromoteRegistration extends React.Component {
                                 borderRadius: 12,
                                 borderWidth: 1,
                                 width: '100%',
-                                borderColor: '#e0e0e0',
+                                borderColor: 'rgba(39, 182, 238, 0.1)',
                                 padding: 10,
                             }}
                         >
@@ -1575,7 +1596,7 @@ class PromoteRegistration extends React.Component {
                                 <FontAwesome5
                                     name={`angle-${packageVisibility ? 'up' : 'down'}`}
                                     size={20}
-                                    color='#bebebe'
+                                    color='#15313C'
                                 />
                             </Pressable>
                             {packageVisibility ?
@@ -1596,10 +1617,6 @@ class PromoteRegistration extends React.Component {
 
                     <ShadowView
                         style={{
-                            shadowColor: 'black',
-                            shadowOpacity: 0.1,
-                            shadowRadius: 1,
-                            shadowOffset: { width: 0, height: 4 },
                             backgroundColor: '#E2F0F5',
                             width: '95%',
                             borderRadius: 12,
@@ -1612,7 +1629,7 @@ class PromoteRegistration extends React.Component {
                                 borderRadius: 12,
                                 borderWidth: 1,
                                 width: '100%',
-                                borderColor: '#e0e0e0',
+                                borderColor: 'rgba(39, 182, 238, 0.1)',
                                 padding: 10,
                             }}
                         >
@@ -1638,7 +1655,7 @@ class PromoteRegistration extends React.Component {
                                 <FontAwesome5
                                     name={`angle-${elevatorVisibility ? 'up' : 'down'}`}
                                     size={20}
-                                    color='#bebebe'
+                                    color='#15313C'
                                 />
                             </Pressable>
                             {elevatorVisibility ?
@@ -1659,10 +1676,6 @@ class PromoteRegistration extends React.Component {
 
                     <ShadowView
                         style={{
-                            shadowColor: 'black',
-                            shadowOpacity: 0.1,
-                            shadowRadius: 1,
-                            shadowOffset: { width: 0, height: 4 },
                             backgroundColor: '#E2F0F5',
                             width: '95%',
                             borderRadius: 12,
@@ -1675,7 +1688,7 @@ class PromoteRegistration extends React.Component {
                                 borderRadius: 12,
                                 borderWidth: 1,
                                 width: '100%',
-                                borderColor: '#e0e0e0',
+                                borderColor: 'rgba(39, 182, 238, 0.1)',
                                 padding: 10,
                             }}
                         >
@@ -1701,7 +1714,7 @@ class PromoteRegistration extends React.Component {
                                 <FontAwesome5
                                     name={`angle-${passwordVisibility ? 'up' : 'down'}`}
                                     size={20}
-                                    color='#bebebe'
+                                    color='#15313C'
                                 />
                             </Pressable>
                             {passwordVisibility ?
@@ -1779,7 +1792,87 @@ class PromoteRegistration extends React.Component {
                                 : null}
                         </View>
                     </ShadowView>
+                    <LinearGradient
+                        start={{ x: 0, y: 1 }}
+                        end={{ x: 0.8, y: 0.2 }}
+                        colors={['rgba(38, 70, 83, 0.19)', 'rgba(255, 255, 255, 0)']}
+                        style={
+                            {
+                                width: '70%',
+                                borderRadius: 50,
+                                height: 55,
+                                padding: 0.2,
+                                marginTop: 30,
+                                flexDirection: 'row-reverse',
+                                alignSelf: 'center',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                            }}
+                    >
+                        <Button
+                            style={
+                                {
+                                    width: '100%',
+                                    borderRadius: 50,
+                                    height: '98%',
+                                    backgroundColor: 'rgba(196, 196, 196, 0.4)',
+                                    flexDirection: 'row-reverse',
+                                    elevation: 0,
+                                    alignSelf: 'center',
+                                    justifyContent: 'space-around',
+                                    paddingLeft: 30,
+                                    paddingRight: 10,
+                                    alignItems: 'center',
+                                }}
+                            onPress={_ => {
+                                if (this.state.activeTab == 0)
+                                    analytics().logEvent('switch_to_package_type_three_in_down')
+                                else
+                                    analytics().logEvent('switch_to_package_type_one_in_down')
 
+                                this.setState(
+                                    {
+                                        activeTab: this.state.activeTab == 0 ? 1 : 0,
+                                        paymentType: this.state.activeTab == 0 ? 3 : 1
+                                    }, _ => setTimeout(() => this.scrollViewRef.current?.scrollTo({
+                                        animated: true,
+                                        y: 0
+                                    }), 100)
+                                )
+                            }
+                            }
+                        >
+                            <View
+                                style={{
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    flexDirection: 'row-reverse'
+                                }}
+                            >
+                                <Text style={
+                                    {
+                                        textAlign: 'center',
+                                        alignSelf: 'center',
+                                        color: '#264653',
+                                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                        fontSize: 16,
+                                    }
+                                }
+                                >
+                                    {activeTab == 1 ?
+                                        locales('titles.threeMonthBasicPackage')
+                                        : locales('titles.annualSpecialPackage')
+                                    }
+                                </Text>
+                            </View>
+                            <Image
+                                style={{
+                                    marginHorizontal: 10
+                                }}
+                                source={require('../../../../assets/icons/arrows.png')}
+                            />
+                        </Button>
+                    </LinearGradient>
                 </ScrollView>
 
 

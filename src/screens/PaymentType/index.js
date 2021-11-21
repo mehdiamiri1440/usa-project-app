@@ -133,6 +133,18 @@ const PaymentType = props => {
                         setShowSuccessModal(false);
                         props.navigation.goBack();
                     }, 2000);
+                }).catch(({ response = {} }) => {
+
+                    const {
+                        data = {}
+                    } = response;
+
+                    const {
+                        msg = ''
+                    } = data;
+
+                    if (msg && msg.length)
+                        return setShowIncreaseInventoryModal(true);
                 })
         };
     };

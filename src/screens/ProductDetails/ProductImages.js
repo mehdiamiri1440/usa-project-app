@@ -1,21 +1,34 @@
 
 
-import React, { memo } from 'react';
+import React, { memo, useState } from 'react';
+import { View } from 'react-native';
 import FastImage from 'react-native-fast-image'
 import { SliderBox } from "react-native-image-slider-box";
-import ImageZoom from 'react-native-image-pan-zoom';
 import { deviceWidth, deviceHeight } from '../../utils';
 
 const ProductImages = props => {
     const { photosWithCompletePath } = props
+    const [width, setWidth] = useState(deviceWidth * 0.98);
+
+    const onLayout = e => {
+        setWidth(e.nativeEvent.layout.width);
+    };
+
     return (
 
         (photosWithCompletePath && photosWithCompletePath.length) ?
-            <ImageZoom
-                cropWidth={deviceWidth}
-                cropHeight={400}
-                imageWidth={deviceWidth}
-                imageHeight={400}
+            <View
+                style={{
+                    width,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    alignSelf: 'center',
+                    height: deviceHeight * 0.29,
+                    borderWidth: 2,
+                    borderColor: 'rgba(0, 0, 0, 0.05)',
+                    marginTop: 10
+                }}
+                onLayout={onLayout}
             >
                 <SliderBox
                     dotColor='#00C569'
@@ -30,7 +43,7 @@ const ProductImages = props => {
                     resizeMethod='resize'
                     onCurrentImagePressed={index => props.showFullSizeImage(index)}
                 />
-            </ImageZoom>
+            </View>
             : null
 
     )

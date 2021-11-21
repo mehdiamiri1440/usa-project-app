@@ -159,6 +159,7 @@ class SignUp extends React.Component {
             contact,
             profile_photo,
             isFromRequests,
+            isFromAchivePrice,
             parentRoute
         } = params;
 
@@ -243,16 +244,23 @@ class SignUp extends React.Component {
                             global.meInfo.loggedInUserId = id;
 
                             const popAction = StackActions.pop(1);
+
                             if (contact && Object.keys(contact).length) {
                                 this.props.navigation.dispatch(popAction);
                                 this.props.navigation.navigate('Home', { screen: 'Chat', params: { profile_photo, contact } })
                             }
+
                             if (isFromRequests == true) {
                                 AsyncStorage.setItem('@isBuyAdRequestsFocuesd', JSON.stringify(true));
                                 this.props.navigation.dispatch(popAction);
                                 if (is_seller)
                                     return this.props.navigation.navigate('RegisterProductStack', { screen: 'RegisterProduct' });
                                 return this.props.navigation.navigate('Home', { screen: 'ProductsList' });
+                            }
+
+                            if (isFromAchivePrice == true) {
+                                this.props.navigation.dispatch(popAction);
+                                return props.navigation.navigate('Home', { screen: 'ProductsList' });
                             }
                         })
                         this.setState({ signUpError: '' })
@@ -298,7 +306,8 @@ class SignUp extends React.Component {
         const {
             contact,
             profile_photo,
-            isFromRequests
+            isFromRequests,
+            isFromAchivePrice,
         } = params;
         switch (stepNumber) {
 
@@ -310,6 +319,7 @@ class SignUp extends React.Component {
                     profile_photo={profile_photo}
                     contact={contact}
                     isFromRequests={isFromRequests}
+                    isFromAchivePrice={isFromAchivePrice}
                     setVerificationCode={this.setVerificationCode}
                     verificationCode={verificationCode}
                     changeStep={this.changeStep}

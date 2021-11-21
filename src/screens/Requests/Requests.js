@@ -58,6 +58,7 @@ class Requests extends PureComponent {
             searchText: null,
             sortModalFlag: false,
             sort_by: ENUMS.SORT_LIST.values.BM,
+            scrollOffset: 0
         }
     }
 
@@ -171,9 +172,15 @@ class Requests extends PureComponent {
     hideDialog = () => this.setState({ showDialog: false });
 
     setSelectedButton = id => {
-        const foundIndex = this.state.buyAdRequestsList.findIndex(item => item.id == id);
-        this.props.requestsRef?.current?.scrollToIndex({ index: foundIndex, animated: true });
+        const {
+            scrollOffset
+        } = this.state;
+
         this.setState({ selectedButton: id });
+        this.props.requestsRef?.current?.scrollToOffset({
+            offset: scrollOffset + 100,
+            animated: true
+        });
     };
 
     setPromotionModalVisiblity = shouldShow => this.setState({ showGoldenModal: shouldShow });
@@ -822,7 +829,7 @@ class Requests extends PureComponent {
                                 <FontAwesome5 name="times" color="#777" solid size={18} />
                             </Button>
                             <Paragraph style={styles.headerTextDialogModal}>
-                                {locales('labels.contactInfo')}
+                                {locales('labels.callWithBuyer')}
                             </Paragraph>
                         </Dialog.Actions>
 
@@ -1056,6 +1063,7 @@ class Requests extends PureComponent {
 
                 <Header
                     title={locales('labels.buyRequests')}
+                    shouldShowBackButton={false}
                     onBackButtonPressed={() => {
                         this.updateFlag.current.close();
                         this.props.navigation.goBack()
@@ -1150,9 +1158,12 @@ class Requests extends PureComponent {
                     refreshing={false}
                     onRefresh={this.onRefresh}
                     keyboardDismissMode='on-drag'
+                    onScroll={event => this.setState({ scrollOffset: event.nativeEvent.contentOffset.y })}
                     keyboardShouldPersistTaps='handled'
                     ListEmptyComponent={this.renderListEmptyComponent}
-                    data={buyAdRequestsList}
+                    data={!this.props.loggedInUserId ?
+                        buyAdRequestsList
+                        : buyAdRequestsList.filter(item => item.has_msg || item.has_phone)}
                     extraData={this.state}
                     onScrollToIndexFailed={this.onScrollToIndexFailed}
                     keyExtractor={(item) => item.id.toString()}

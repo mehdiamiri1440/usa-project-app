@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
     View,
     Text,
@@ -6,6 +6,7 @@ import {
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { connect } from 'react-redux';
+import analytics from '@react-native-firebase/analytics';
 import ShadowView from '@vikasrg/react-native-simple-shadow-view';
 import Svg, { Path, G, Circle } from "react-native-svg";
 
@@ -16,7 +17,8 @@ import { deviceHeight } from '../../../utils';
 const AuthenticatedSuccessfully = props => {
 
     const {
-        userProfile = {}
+        userProfile = {},
+        parentRef = null
     } = props;
 
     const {
@@ -33,6 +35,10 @@ const AuthenticatedSuccessfully = props => {
             return props.navigation.navigate('Home', { screen: 'ProductsList' });
         return props.navigation.navigate('RequestsStack');
     };
+
+    useEffect(_ => {
+        parentRef?.current?.scrollTo({ x: 0, y: 0, animated: true })
+    }, []);
 
     return (
         <View
@@ -90,7 +96,8 @@ const AuthenticatedSuccessfully = props => {
                     <Svg
                         xmlns="http://www.w3.org/2000/svg"
                         style={{
-                            left: 20
+                            left: 20,
+                            top: -10
                         }}
                         width="46"
                         height="42"
@@ -120,9 +127,9 @@ const AuthenticatedSuccessfully = props => {
                 <Text
                     style={{
                         textAlign: 'center',
-                        color: 'rgba(38,70,83,80)',
-                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                        fontSize: 16
+                        color: 'rgba(38,70,83,0.8)',
+                        fontFamily: 'IRANSansWeb(FaNum)',
+                        fontSize: 15
                     }}
                 >
                     {locales('labels.willBeAuthenticatedAfterApprovment')}
@@ -185,10 +192,6 @@ const AuthenticatedSuccessfully = props => {
                 {!!!is_seller ?
                     <ShadowView
                         style={{
-                            shadowColor: 'black',
-                            shadowOpacity: 0.1,
-                            shadowRadius: 1,
-                            shadowOffset: { width: 0, height: 4 },
                             backgroundColor: '#E2F0F5',
                             width: '95%',
                             borderRadius: 12,
@@ -201,7 +204,7 @@ const AuthenticatedSuccessfully = props => {
                             }}
                             style={{
                                 width: '100%',
-                                borderColor: '#e0e0e0',
+                                borderColor: 'rgba(39, 182, 238, 0.1)',
                                 padding: 10,
                                 borderRadius: 12,
                                 borderWidth: 1,
@@ -209,7 +212,11 @@ const AuthenticatedSuccessfully = props => {
                                 justifyContent: 'space-between',
                                 flexDirection: 'row-reverse'
                             }}
-                            onPress={_ => props.navigation.navigate('SpecialProducts')}
+                            onPress={_ => {
+                                analytics().logEvent('suggested_products_in_verification');
+                                props.navigation.navigate('SpecialProducts');
+                            }
+                            }
                         >
                             <LinearGradient
                                 start={{ x: 0, y: 0, }}
@@ -246,23 +253,19 @@ const AuthenticatedSuccessfully = props => {
                                     </G>
                                 </Svg>
                             </LinearGradient>
-                            <View
-                                style={{
-                                    right: 15
-                                }}
-                            >
+                            <View>
                                 <Text
                                     style={{
-                                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                        fontSize: 16
+                                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                        fontSize: 17
                                     }}
                                 >
                                     {locales('labels.suggestedProducts')}
                                 </Text>
                                 <Text
                                     style={{
-                                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                        fontSize: 16
+                                        fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                        fontSize: 15
                                     }}
                                 >
                                     {locales('labels.seeSellersProductsList')}
@@ -271,7 +274,7 @@ const AuthenticatedSuccessfully = props => {
                             <FontAwesome5
                                 name='angle-left'
                                 size={20}
-                                color='#bebebe'
+                                color='#15313C'
                             />
                         </Pressable>
                     </ShadowView>
@@ -279,10 +282,6 @@ const AuthenticatedSuccessfully = props => {
                         {active_pakage_type == 0 ?
                             <ShadowView
                                 style={{
-                                    shadowColor: 'black',
-                                    shadowOpacity: 0.1,
-                                    shadowRadius: 1,
-                                    shadowOffset: { width: 0, height: 4 },
                                     backgroundColor: '#E2F0F5',
                                     width: '95%',
                                     borderRadius: 12,
@@ -295,7 +294,7 @@ const AuthenticatedSuccessfully = props => {
                                     }}
                                     style={{
                                         width: '100%',
-                                        borderColor: '#e0e0e0',
+                                        borderColor: 'rgba(39, 182, 238, 0.1)',
                                         padding: 10,
                                         borderRadius: 12,
                                         borderWidth: 1,
@@ -303,7 +302,10 @@ const AuthenticatedSuccessfully = props => {
                                         justifyContent: 'space-between',
                                         flexDirection: 'row-reverse'
                                     }}
-                                    onPress={_ => props.navigation.navigate('PromoteRegistration')}
+                                    onPress={_ => {
+                                        analytics().logEvent('package_promotion_in_verification');
+                                        props.navigation.navigate('PromoteRegistration');
+                                    }}
                                 >
                                     <LinearGradient
                                         start={{ x: 0, y: 0, }}
@@ -342,23 +344,19 @@ const AuthenticatedSuccessfully = props => {
                                             </G>
                                         </Svg>
                                     </LinearGradient>
-                                    <View
-                                        style={{
-                                            right: 15
-                                        }}
-                                    >
+                                    <View>
                                         <Text
                                             style={{
-                                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                                fontSize: 16
+                                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                                fontSize: 17
                                             }}
                                         >
                                             {locales('titles.promoteRegistration')}
                                         </Text>
                                         <Text
                                             style={{
-                                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                                fontSize: 16
+                                                fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                                fontSize: 15
                                             }}
                                         >
                                             {locales('labels.accessToMoreFeaturesOfBuskool')}
@@ -367,7 +365,7 @@ const AuthenticatedSuccessfully = props => {
                                     <FontAwesome5
                                         name='angle-left'
                                         size={20}
-                                        color='#bebebe'
+                                        color='#15313C'
                                     />
                                 </Pressable>
                             </ShadowView>
@@ -375,10 +373,6 @@ const AuthenticatedSuccessfully = props => {
                         }
                         <ShadowView
                             style={{
-                                shadowColor: 'black',
-                                shadowOpacity: 0.1,
-                                shadowRadius: 1,
-                                shadowOffset: { width: 0, height: 4 },
                                 backgroundColor: '#E2F0F5',
                                 width: '95%',
                                 borderRadius: 12,
@@ -392,7 +386,7 @@ const AuthenticatedSuccessfully = props => {
                                 }}
                                 style={{
                                     width: '100%',
-                                    borderColor: '#e0e0e0',
+                                    borderColor: 'rgba(39, 182, 238, 0.1)',
                                     padding: 10,
                                     borderRadius: 12,
                                     borderWidth: 1,
@@ -400,7 +394,11 @@ const AuthenticatedSuccessfully = props => {
                                     justifyContent: 'space-between',
                                     flexDirection: 'row-reverse'
                                 }}
-                                onPress={_ => props.navigation.navigate('RequestsStack')}
+                                onPress={_ => {
+                                    analytics().logEvent('click_buyads_in_verification');
+                                    props.navigation.navigate('RequestsStack');
+                                }
+                                }
                             >
                                 <LinearGradient
                                     start={{ x: 0, y: 0, }}
@@ -437,21 +435,21 @@ const AuthenticatedSuccessfully = props => {
                                 </LinearGradient>
                                 <View
                                     style={{
-                                        right: 45
+                                        right: 25
                                     }}
                                 >
                                     <Text
                                         style={{
-                                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                            fontSize: 16
+                                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                            fontSize: 17
                                         }}
                                     >
                                         {locales('titles.buyAdRequests')}
                                     </Text>
                                     <Text
                                         style={{
-                                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                            fontSize: 16
+                                            fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                            fontSize: 15
                                         }}
                                     >
                                         {locales('titles.seeBuyAdsRequests')}
@@ -460,7 +458,7 @@ const AuthenticatedSuccessfully = props => {
                                 <FontAwesome5
                                     name='angle-left'
                                     size={20}
-                                    color='#bebebe'
+                                    color='#15313C'
                                 />
                             </Pressable>
                         </ShadowView>

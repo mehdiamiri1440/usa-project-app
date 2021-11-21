@@ -3,7 +3,7 @@ import {
     Text, View, Pressable, FlatList, StyleSheet,
     Image, ActivityIndicator, Linking,
     LayoutAnimation, UIManager, Platform,
-    TouchableOpacity
+    TouchableOpacity, ScrollView
 } from 'react-native'
 import { connect } from 'react-redux';
 import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
@@ -16,8 +16,10 @@ import LinearGradient from 'react-native-linear-gradient';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
+import { StackActions } from '@react-navigation/native';
 
 import * as productListActions from '../../redux/productsList/actions';
+import * as productActions from '../../redux/registerProduct/actions';
 import { dataGenerator, formatter, deviceWidth, validator, deviceHeight } from '../../utils';
 import ValidatedUserIcon from '../../components/validatedUserIcon';
 import Header from '../../components/header';
@@ -32,6 +34,8 @@ if (
 const RegisterRequestSuccessfully = props => {
 
     const flatListRef = useRef(null);
+
+    const scrollViewRef = useRef(null);
 
     const viewRef = useRef(null);
 
@@ -52,10 +56,8 @@ const RegisterRequestSuccessfully = props => {
     const [scrollOffset, setOffset] = useState(0);
 
     const handleBack = () => {
-        if (props.route && props.route.params) {
-            props.navigation.goBack();
-        }
-
+        props.resetRegisterRequest(true)
+        return props.navigation.dispatch(StackActions.popToTop());
     }
 
     const keyExtractor = item => `${dataGenerator.generateKey('request_')}${item?.id.toString()}`;
@@ -175,19 +177,6 @@ const RegisterRequestSuccessfully = props => {
         )
     };
 
-    const renderItemSeparatorComponent = _ => {
-        return (
-            <View
-                style={{
-                    marginVertical: 15
-                }}
-            >
-
-            </View>
-        )
-    }
-
-
 
     const openCallPad = phoneNumber => {
 
@@ -227,8 +216,9 @@ const RegisterRequestSuccessfully = props => {
                 item.mobileNumber = phone;
                 setMobileNumber(phone);
                 setIsContactInfoShown(true);
-                return flatListRef?.current?.scrollToOffset({
-                    offset: scrollOffset + 100,
+                return scrollViewRef?.current?.scrollTo({
+                    y: scrollOffset + 100,
+                    x: 0,
                     animated: true
                 });
             }
@@ -289,12 +279,12 @@ const RegisterRequestSuccessfully = props => {
                 <Card
                     style={{
                         paddingVertical: 5,
-                        borderColor: active_pakage_type == 3 ? '#00C569' : '#CCC',
-                        borderTopWidth: 2,
-                        borderBottomWidth: 2,
+                        borderColor: active_pakage_type == 3 ? '#00C569' : 'rgba(0,0,0,0.15)',
+                        borderTopWidth: 1,
+                        borderBottomWidth: 1,
                         elevation: 0,
-                        borderRightWidth: 2,
-                        borderLeftWidth: 2,
+                        borderRightWidth: 1,
+                        borderLeftWidth: 1,
                         borderRadius: 8,
                         width: deviceWidth * 0.96,
                         alignSelf: 'center'
@@ -307,7 +297,7 @@ const RegisterRequestSuccessfully = props => {
                         activeOpacity={1}
                         onPress={() => props.navigation.navigate('ProductDetails', { productId: id })}
                     >
-                        <View
+                        {/* <View
                             style={{
                                 flexDirection: 'row-reverse',
                                 alignItems: 'flex-start',
@@ -341,7 +331,7 @@ const RegisterRequestSuccessfully = props => {
                                 </Text>
                                 {is_verified ? <ValidatedUserIcon {...props} /> : null}
                             </View>
-                        </View>
+                        </View> */}
 
                         {active_pakage_type == 3 && <Svg
                             style={{ position: 'absolute', left: 5, top: 37, zIndex: 1 }}
@@ -386,15 +376,20 @@ const RegisterRequestSuccessfully = props => {
                         </Svg>}
                         <View
                             style={{
-                                flexDirection: 'row-reverse', justifyContent: 'flex-start',
-                                alignItems: 'flex-start', paddingHorizontal: 10, paddingVertical: 20
+                                flexDirection: 'row-reverse',
+                                justifyContent: 'flex-start',
+                                alignItems: 'flex-start',
+                                paddingHorizontal: 10,
+                                paddingVertical: 5
                             }}>
                             <FastImage
                                 resizeMethod='resize'
                                 style={{
                                     backgroundColor: "#f0f3f6",
-                                    width: deviceWidth * 0.25,
-                                    borderColor: '#BEBEBE', height: deviceWidth * 0.25, borderRadius: 4
+                                    width: deviceWidth * 0.26,
+                                    borderColor: '#BEBEBE',
+                                    height: deviceWidth * 0.21,
+                                    borderRadius: 4
                                 }}
                                 source={{
                                     uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${photo}`,
@@ -405,8 +400,8 @@ const RegisterRequestSuccessfully = props => {
                             />
                             <View
                                 style={{
-                                    marginTop: 5,
-                                    marginHorizontal: 10
+                                    marginHorizontal: 10,
+                                    top: -3,
                                 }}
                             >
                                 <View
@@ -431,10 +426,11 @@ const RegisterRequestSuccessfully = props => {
                                     <Text
                                         numberOfLines={1}
                                         style={{
-                                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
                                             fontSize: 18,
                                             fontWeight: '200',
-                                            color: '#474747',
+                                            width: '85%',
+                                            color: 'black',
                                         }}
                                     >
                                         {` ${product_name}`}
@@ -455,21 +451,19 @@ const RegisterRequestSuccessfully = props => {
                                             width: '100%'
                                         }}
                                     >
-                                        <Image
-                                            style={{
-                                                borderRadius: 100,
-                                                width: deviceWidth * 0.05,
-                                                height: deviceWidth * 0.05
-                                            }}
-                                            source={require('../../../assets/icons/user.png')}
+                                        <FontAwesome5
+                                            name='user-circle'
+                                            color='black'
+                                            size={19}
+                                            solid
                                         />
                                         <Text
                                             numberOfLines={1}
                                             style={{
-                                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                                fontSize: 16,
+                                                fontFamily: 'IRANSansWeb(FaNum)',
+                                                fontSize: 15,
                                                 marginHorizontal: 5,
-                                                color: '#474747',
+                                                color: 'black',
                                                 width: '75%'
                                             }}
                                         >
@@ -496,15 +490,15 @@ const RegisterRequestSuccessfully = props => {
                                         <FontAwesome5
                                             name='box-open'
                                             size={15}
-                                            color='#777'
+                                            color='black'
                                         />
                                         <Text
                                             numberOfLines={1}
                                             style={{
-                                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                                fontSize: 16,
+                                                fontFamily: 'IRANSansWeb(FaNum)',
+                                                fontSize: 15,
                                                 marginHorizontal: 5,
-                                                color: '#474747',
+                                                color: 'black',
                                                 width: '65%'
                                             }}
                                         >
@@ -528,7 +522,7 @@ const RegisterRequestSuccessfully = props => {
                                 marginVertical: 15,
                                 flexDirection: 'row-reverse',
                                 alignItems: 'center',
-                                width: deviceWidth * 0.89,
+                                width: '97%',
                                 paddingHorizontal: 5,
                                 alignSelf: 'center',
                                 justifyContent: 'space-between'
@@ -539,7 +533,7 @@ const RegisterRequestSuccessfully = props => {
                                     onPress={() => fetchContactInfo(item, index)}
                                     style={{
                                         borderColor: item.isContactInfoShown ? '#c7a84f' : '#00C569',
-                                        width: '47%',
+                                        width: '49%',
                                         zIndex: 1000,
                                         position: 'relative',
                                         alignSelf: 'center',
@@ -558,6 +552,7 @@ const RegisterRequestSuccessfully = props => {
                                             textAlign: 'center',
                                             justifyContent: 'center',
                                             borderRadius: 8,
+                                            height: 45.7,
                                             paddingLeft: 20,
                                             padding: 8,
                                             elevation: 0
@@ -565,7 +560,7 @@ const RegisterRequestSuccessfully = props => {
                                     >
                                         {!!sellerMobileNumberLoading && selectedButton == item.id ?
                                             <ActivityIndicator
-                                                size={20}
+                                                size={17}
                                                 color='white'
                                                 animating
                                                 style={{
@@ -579,32 +574,32 @@ const RegisterRequestSuccessfully = props => {
                                                 solid
                                                 name='phone-alt'
                                                 color='white'
-                                                size={20} />
+                                                size={14}
+                                                style={{
+                                                }}
+                                            />
                                         }
                                         <Text
                                             style={{
                                                 fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                                 marginHorizontal: 3,
-                                                fontSize: 18,
+                                                fontSize: 16,
                                                 color: 'white',
                                                 paddingHorizontal: 3
                                             }}
                                         >
-                                            {locales('labels.contactInfo')}
+                                            {locales('labels.callWithSeller')}
                                         </Text>
 
                                     </LinearGradient>
 
                                 </Button>
 
-
-
-
                                 <Button
                                     small
                                     onPress={event => navigateToChat(event, item, id)}
                                     style={{
-                                        width: has_phone ? '47%' : '70%',
+                                        width: '49%',
                                         zIndex: 1000,
                                         elevation: 0,
                                         position: 'relative',
@@ -614,10 +609,10 @@ const RegisterRequestSuccessfully = props => {
                                     <LinearGradient
                                         start={{ x: 0, y: 0.51, z: 1 }}
                                         end={{ x: 0.8, y: 0.2, z: 1 }}
-                                        colors={has_phone ? ['#fff', '#fff'] : ['#c7a84f', '#f9f29f', '#c7a84f']}
+                                        colors={['#fff', '#fff']}
                                         style={{
                                             width: '100%',
-                                            borderColor: has_phone ? '#556080' : '#00C569',
+                                            borderColor: '#556080',
                                             paddingHorizontal: 10,
                                             flexDirection: 'row-reverse',
                                             borderWidth: 1,
@@ -632,15 +627,15 @@ const RegisterRequestSuccessfully = props => {
 
                                         <MaterialCommunityIcons
                                             name='message'
-                                            color={has_phone ? '#556080' : 'white'}
-                                            size={20}
+                                            color='#556080'
+                                            size={15}
                                         />
                                         <Text
                                             onPress={event => navigateToChat(event, item, id)}
                                             style={{
                                                 fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                                fontSize: 18,
-                                                color: has_phone ? '#556080' : 'white',
+                                                fontSize: 16,
+                                                color: '#556080',
                                                 paddingHorizontal: 3
                                             }}
                                         >
@@ -649,10 +644,12 @@ const RegisterRequestSuccessfully = props => {
                                         <ActivityIndicator
                                             size="small"
                                             animating={loading && selectedContact.contact_id && selectedContact.contact_id == item.myuser_id}
-                                            color={has_phone ? '#556080' : 'white'}
+                                            color='#556080'
                                             style={{
                                                 position: 'relative',
-                                                width: 10, height: 10, borderRadius: 5,
+                                                width: 10,
+                                                height: 10,
+                                                borderRadius: 5,
                                                 marginLeft: -10,
                                                 marginRight: 5
                                             }}
@@ -666,12 +663,11 @@ const RegisterRequestSuccessfully = props => {
                                 style={{
                                     textAlign: 'center',
                                     zIndex: 10005,
-                                    borderRadius: 5,
+                                    borderRadius: 8,
                                     elevation: 0,
-                                    padding: 25,
                                     marginBottom: 10,
                                     backgroundColor: '#00C569',
-                                    width: '80%',
+                                    width: '68%',
                                     color: 'white',
                                     alignItems: 'center',
                                     alignSelf: 'center',
@@ -682,26 +678,39 @@ const RegisterRequestSuccessfully = props => {
                             >
                                 <View
                                     style={{
-                                        flexDirection: 'row', justifyContent: 'center',
-                                        alignItems: 'center', width: '100%'
-                                    }}>
-                                    <ActivityIndicator
-                                        size="small"
-                                        animating={loading && selectedContact.contact_id && selectedContact.contact_id == item.myuser_id}
-                                        color="white"
-                                    />
+                                        flexDirection: 'row',
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        alignSelf: 'center',
+                                        width: '100%'
+                                    }}
+                                >
                                     <Text
                                         onPress={event => navigateToChat(event, item, id)}
                                         style={{
                                             color: 'white',
                                             textAlign: 'center',
-                                            fontSize: 20,
+                                            fontSize: 18,
                                             marginHorizontal: 3,
                                             fontFamily: 'IRANSansWeb(FaNum)_Bold'
-                                        }}>{locales('labels.sendMessageToSeller')}</Text>
-                                    <MaterialCommunityIcons name='message' size={22} color='#FFFFFF'
-                                        onPress={event => navigateToChat(event, item, id)}
-                                    />
+                                        }}>
+                                        {locales('labels.sendMessageToSeller')}
+                                    </Text>
+                                    {
+                                        loading && selectedContact.contact_id && selectedContact.contact_id == item.myuser_id
+                                            ?
+                                            <ActivityIndicator
+                                                size="small"
+                                                color="white"
+                                            />
+                                            :
+                                            <MaterialCommunityIcons
+                                                name='message'
+                                                size={17}
+                                                color='#FFFFFF'
+                                                onPress={event => navigateToChat(event, item, id)}
+                                            />
+                                    }
                                 </View>
                             </Button>
                         }
@@ -834,7 +843,7 @@ const RegisterRequestSuccessfully = props => {
                             <FontAwesome5 name="times" color="#777" solid size={18} />
                         </Button>
                         <Paragraph style={styles.headerTextDialogModal}>
-                            {locales('labels.contactInfo')}
+                            {locales('labels.callWithSeller')}
                         </Paragraph>
                     </Dialog.Actions>
                     <View
@@ -874,94 +883,98 @@ const RegisterRequestSuccessfully = props => {
                 onBackButtonPressed={_ => handleBack()}
                 {...props}
             />
-            {products && products.length && showBox == true ?
-                <LinearGradient
-                    start={{ x: 0, y: 0.51, z: 1 }}
-                    end={{ x: 0.8, y: 0.2, z: 1 }}
-                    colors={['#aef8d6', '#67ce9e']}
-                    style={{
-                        borderRadius: 8,
-                        padding: 20,
-                        width: '95%',
-                        alignSelf: 'center',
-                        marginVertical: 15,
-                        marginHorizontal: 25,
-                    }}
-                >
-                    <View
+            <ScrollView
+                ref={scrollViewRef}
+                onScroll={event => setOffset(event.nativeEvent.contentOffset.y)}
+            >
+                {showBox == true ?
+                    <LinearGradient
+                        start={{ x: 0, y: 0.51, z: 1 }}
+                        end={{ x: 0.8, y: 0.2, z: 1 }}
+                        colors={['#aef8d6', '#67ce9e']}
                         style={{
-                            backgroundColor: 'white',
-                            opacity: 0.3,
-                            width: 100,
-                            height: 100,
-                            borderRadius: 100,
-                            top: '-35%',
-                            overflow: 'hidden',
-                            position: 'absolute',
+                            borderRadius: 8,
+                            padding: 20,
+                            width: '95%',
+                            alignSelf: 'center',
+                            marginVertical: 15,
+                            marginHorizontal: 25,
                         }}
                     >
-                    </View>
-                    <View
-                        style={{
-                            backgroundColor: 'white',
-                            opacity: 0.3,
-                            width: 100,
-                            height: 100,
-                            borderRadius: 100,
-                            left: '-15%',
-                            overflow: 'hidden',
-                            position: 'absolute',
-                        }}
-                    >
-                    </View>
-                    <View
-                        style={{
-                            flexDirection: 'row-reverse',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                        }}
-                    >
-                        <Svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="36"
-                            height="32"
-                            fill="none"
-                            viewBox="0 0 36 32"
-                        >
-                            <Circle cx="20" cy="16" r="16" fill="#fff"></Circle>
-                            <Circle cx="20" cy="16" r="16" fill="#fff"></Circle>
-                            <Circle cx="20" cy="16" r="16" fill="#fff"></Circle>
-                            <Circle cx="20" cy="16" r="16" fill="#fff"></Circle>
-                            <Circle cx="16" cy="16" r="15.5" stroke="#000"></Circle>
-                            <Path stroke="#000" d="M9.778 16l5.333 4.445 7.111-8.89"></Path>
-                        </Svg>
-                        <Text
+                        <View
                             style={{
-                                marginVertical: 10,
-                                textAlign: 'center',
-                                color: '#264653',
-                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                fontSize: 18,
-                                marginHorizontal: 10
+                                backgroundColor: 'white',
+                                opacity: 0.3,
+                                width: 100,
+                                height: 100,
+                                borderRadius: 100,
+                                top: '-35%',
+                                overflow: 'hidden',
+                                position: 'absolute',
                             }}
                         >
-                            {locales('titles.requestSubmittedSuccessfully')}
+                        </View>
+                        <View
+                            style={{
+                                backgroundColor: 'white',
+                                opacity: 0.3,
+                                width: 100,
+                                height: 100,
+                                borderRadius: 100,
+                                left: '-15%',
+                                overflow: 'hidden',
+                                position: 'absolute',
+                            }}
+                        >
+                        </View>
+                        <View
+                            style={{
+                                flexDirection: 'row-reverse',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                            }}
+                        >
+                            <Svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="36"
+                                height="32"
+                                fill="none"
+                                viewBox="0 0 36 32"
+                            >
+                                <Circle cx="20" cy="16" r="16" fill="#fff"></Circle>
+                                <Circle cx="20" cy="16" r="16" fill="#fff"></Circle>
+                                <Circle cx="20" cy="16" r="16" fill="#fff"></Circle>
+                                <Circle cx="20" cy="16" r="16" fill="#fff"></Circle>
+                                <Circle cx="16" cy="16" r="15.5" stroke="#000"></Circle>
+                                <Path stroke="#000" d="M9.778 16l5.333 4.445 7.111-8.89"></Path>
+                            </Svg>
+                            <Text
+                                style={{
+                                    marginVertical: 10,
+                                    textAlign: 'center',
+                                    color: '#264653',
+                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                    fontSize: 18,
+                                    marginHorizontal: 10
+                                }}
+                            >
+                                {locales('titles.requestSubmittedSuccessfully')}
+                            </Text>
+                        </View>
+                        <Text
+                            style={{
+                                textAlign: 'center',
+                                color: 'rgba(38,70,83,0.8)',
+                                fontFamily: 'IRANSansWeb(FaNum)',
+                                fontSize: 15
+                            }}
+                        >
+                            {locales('titles.registerRequestFullDescription')}
                         </Text>
-                    </View>
-                    <Text
-                        style={{
-                            textAlign: 'center',
-                            color: 'rgba(38,70,83,80)',
-                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                            fontSize: 16
-                        }}
-                    >
-                        {locales('titles.registerRequestFullDescription')}
-                    </Text>
-                </LinearGradient>
-                : null}
+                    </LinearGradient>
+                    : null}
 
-            {/* 
+                {/* 
             <View
                 style={{
                     backgroundColor: '#edf8e6',
@@ -1017,95 +1030,94 @@ const RegisterRequestSuccessfully = props => {
             </View> */}
 
 
-            {!products || !products.length ? <Text
-                style={{
-                    paddingHorizontal: 10,
-                    textAlign: 'center',
-                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                    fontSize: 15,
-                    color: '#777777',
-                    marginTop: 40
-                }}>
-                {locales('titles.registerRequestDescription')}
-                <Text
-                    style={{
-                        paddingHorizontal: 10,
-                        textAlign: 'center',
-                        fontWeight: '200',
-                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                        fontSize: 15,
-                        color: '#21ad93'
-                    }}>
-                    {` ${locales('titles.buskool')}`}،
-                </Text>
-                <Text
+                {!products || !products.length ? <Text
                     style={{
                         paddingHorizontal: 10,
                         textAlign: 'center',
                         fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                        fontWeight: '200',
                         fontSize: 15,
-                        color: '#777777'
+                        color: '#777777',
+                        marginTop: 40
                     }}>
-                    {` ${locales('titles.willBeSentToBuyers')}`}
-                </Text>
-            </Text> : null}
+                    {locales('titles.registerRequestDescription')}
+                    <Text
+                        style={{
+                            paddingHorizontal: 10,
+                            textAlign: 'center',
+                            fontWeight: '200',
+                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                            fontSize: 15,
+                            color: '#21ad93'
+                        }}>
+                        {` ${locales('titles.buskool')}`}،
+                    </Text>
+                    <Text
+                        style={{
+                            paddingHorizontal: 10,
+                            textAlign: 'center',
+                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                            fontWeight: '200',
+                            fontSize: 15,
+                            color: '#777777'
+                        }}>
+                        {` ${locales('titles.willBeSentToBuyers')}`}
+                    </Text>
+                </Text> : null}
 
-            {!products || !products.length ? <Button
-                onPress={() => props.navigation.navigate('Home', { screen: 'ProductsList', params: { productsListRefreshKey: dataGenerator.generateKey('productList_') } })}
-                style={{
-                    textAlign: 'center',
-                    borderRadius: 5,
-                    marginVertical: 40,
-                    backgroundColor: '#00C569',
-                    width: '70%',
-                    color: 'white',
-                    alignItems: 'center',
-                    alignSelf: 'center',
-                    justifyContent: 'center',
-                    elevation: 0,
-                    fontFamily: 'IRANSansWeb(FaNum)_Bold'
-                }}
-                rounded
-            >
-                <Text style={{
-                    color: 'white',
-                    width: '100%',
-                    textAlign: 'center',
-                    fontSize: 16,
-                    fontFamily: 'IRANSansWeb(FaNum)_Bold'
-                }}>{locales('labels.productsList')}</Text>
-            </Button> : null}
-
-
-            {products && products.length ?
-                <LinearGradient
-                    start={{ x: 0, y: 0.51, z: 1 }}
-                    end={{ x: 0.8, y: 0.2, z: 1 }}
-                    colors={showBox ? ['#79a6b8', '#79a6b8'] : ['white', 'white']}
+                {!products || !products.length ? <Button
+                    onPress={() => props.navigation.navigate('Home', { screen: 'ProductsList', params: { productsListRefreshKey: dataGenerator.generateKey('productList_') } })}
                     style={{
-                        borderRadius: 8,
+                        textAlign: 'center',
+                        borderRadius: 5,
+                        marginVertical: 40,
+                        backgroundColor: '#00C569',
+                        width: '70%',
+                        color: 'white',
+                        alignItems: 'center',
                         alignSelf: 'center',
-                        flex: 1
+                        justifyContent: 'center',
+                        elevation: 0,
+                        fontFamily: 'IRANSansWeb(FaNum)_Bold'
                     }}
+                    rounded
                 >
+                    <Text style={{
+                        color: 'white',
+                        width: '100%',
+                        textAlign: 'center',
+                        fontSize: 16,
+                        fontFamily: 'IRANSansWeb(FaNum)_Bold'
+                    }}>{locales('labels.productsList')}</Text>
+                </Button> : null}
 
-                    <FlatList
-                        ListHeaderComponent={renderListHeaderComponent}
-                        ListFooterComponent={renderListFooterComponent}
-                        maxToRenderPerBatch={3}
-                        getItemLayout={getItemLayout}
-                        windowSize={10}
-                        onScroll={event => setOffset(event.nativeEvent.contentOffset.y)}
-                        initialNumToRender={2}
-                        keyExtractor={keyExtractor}
-                        data={products}
-                        ref={flatListRef}
-                        renderItem={renderItem}
-                        ItemSeparatorComponent={renderItemSeparatorComponent}
-                    />
-                </LinearGradient>
-                : null}
+
+                {products && products.length ?
+                    <LinearGradient
+                        start={{ x: 0, y: 0 }}
+                        end={{ x: 1, y: 1 }}
+                        colors={showBox ? ['#9FBDCA', '#548DA5'] : ['white', 'white']}
+                        style={{
+                            borderRadius: 8,
+                            alignSelf: 'center',
+                            flex: 1
+                        }}
+                    >
+
+                        <FlatList
+                            ListHeaderComponent={renderListHeaderComponent}
+                            ListFooterComponent={renderListFooterComponent}
+                            maxToRenderPerBatch={3}
+                            getItemLayout={getItemLayout}
+                            windowSize={10}
+                            initialNumToRender={2}
+                            keyExtractor={keyExtractor}
+                            data={products}
+                            ref={flatListRef}
+                            renderItem={renderItem}
+                        />
+                    </LinearGradient>
+                    : null}
+            </ScrollView>
         </View>
     )
 }
@@ -1319,6 +1331,7 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = dispatch => {
     return {
+        resetRegisterRequest: resetTab => dispatch(productActions.resetRegisterRequest(resetTab)),
         fetchSellerMobileNumber: contactInfoObject => dispatch(productListActions.fetchSellerMobileNumber(contactInfoObject)),
     }
 }

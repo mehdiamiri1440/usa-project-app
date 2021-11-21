@@ -2,25 +2,31 @@ import React, { PureComponent } from 'react';
 import {
     Text, Image, View, StyleSheet, Modal, ScrollView,
     Pressable, Linking, Share, RefreshControl,
-    ActivityIndicator
+    ActivityIndicator, Animated
 } from 'react-native';
 import RBSheet from "react-native-raw-bottom-sheet";
 import { Dialog, Portal, Paragraph } from 'react-native-paper';
+import { CommonActions } from '@react-navigation/native';
 import { Navigation } from 'react-native-navigation';
 import analytics from '@react-native-firebase/analytics';
 import { connect } from 'react-redux';
+import {
+    responsiveHeight,
+    responsiveScreenHeight
+} from "react-native-responsive-dimensions";
 import { Input, Label, Item, Button, Toast } from 'native-base';
 import { REACT_APP_API_ENDPOINT_RELEASE, REACT_APP_API_ENDPOINT_BLOG_RELEASE } from '@env';
 import * as productListActions from '../../redux/productsList/actions';
 import ShadowView from '@vikasrg/react-native-simple-shadow-view'
 import * as profileActions from '../../redux/profile/actions';
-import { deviceWidth, deviceHeight } from '../../utils/deviceDimenssions';
+import { deviceWidth, deviceHeight, screenHeight } from '../../utils/deviceDimenssions';
 import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
 import EvilIcons from 'react-native-vector-icons/dist/EvilIcons';
 import ContentLoader, { Rect, Circle } from "react-content-loader/native"
 import Svg, { Path as SvgPath, G, Defs, Pattern, Image as SvgImage, Circle as SvgCircle } from "react-native-svg"
 import ImageZoom from 'react-native-image-pan-zoom';
 
+import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import Feather from 'react-native-vector-icons/dist/Feather';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
@@ -33,6 +39,7 @@ import Header from '../../components/header';
 import RegisterationModal from '../../components/RegisterationModal';
 import ContactsListModal from '../../components/contactsListModal';
 import { shareToSocial } from '../../components/shareToSocial';
+import { numberWithCommas } from '../../utils/formatter';
 
 class ProductDetails extends PureComponent {
     constructor(props) {
@@ -105,6 +112,12 @@ class ProductDetails extends PureComponent {
             RegisterationModalReturnType: null,
 
             showContactListModal: false,
+
+            shouldShowPriceSheet: false,
+
+            isScrollForButtonsReached: false,
+
+            animatedValue: new Animated.Value(screenHeight + 140)
         }
     }
 
@@ -114,6 +127,7 @@ class ProductDetails extends PureComponent {
     maximumPriceRef = React.createRef();
     minimumPriceRef = React.createRef();
     refRBSheet = React.createRef();
+    priceRBSheet = React.createRef();
 
 
     wrapper = React.createRef();
@@ -150,7 +164,22 @@ class ProductDetails extends PureComponent {
         } = params;
 
         if (productId) {
-            this.props.fetchAllProductInfo(productId);
+            return this.props.fetchAllProductInfo(productId)
+                .catch(({ response = {} }) => {
+
+                    const {
+                        data = {}
+                    } = response;
+
+                    const {
+                        status
+                    } = data;
+                    if (!status)
+                        return this.props.navigation.navigate('Home',
+                            {
+                                screen: 'ProductsList'
+                            });
+                });
         }
     };
 
@@ -210,14 +239,14 @@ class ProductDetails extends PureComponent {
                 confirmed,
                 description,
                 is_elevated,
-                max_sale_price,
-                min_sale_amount,
-                min_sale_price,
+                max_sale_price = 0,
+                min_sale_amount = 0,
+                min_sale_price = 0,
                 myuser_id,
                 product_name,
                 province_id,
                 province_name,
-                stock,
+                stock = 0,
                 sub_category_id,
                 sub_category_name,
                 updated_at,
@@ -247,10 +276,10 @@ class ProductDetails extends PureComponent {
             } = productDetailsInfo[1];
 
             this.setState({
-                minimumOrder: min_sale_amount.toString(),
-                maximumPrice: max_sale_price.toString(),
-                minimumPrice: min_sale_price.toString(),
-                amount: stock.toString(),
+                minimumOrder: min_sale_amount?.toString(),
+                maximumPrice: max_sale_price?.toString(),
+                minimumPrice: min_sale_price?.toString(),
+                amount: stock?.toString(),
                 loaded: true,
 
                 related_products,
@@ -411,6 +440,51 @@ class ProductDetails extends PureComponent {
 
     };
 
+    redirectToScreensViaAchivePrice = _ => {
+
+        const {
+            loggedInUserId,
+            userProfile = {}
+        } = this.props;
+
+        const {
+            user_info = {}
+        } = userProfile;
+
+        const {
+            is_seller
+        } = user_info;
+        analytics().logEvent('register_product_in_price_modal')
+        this.setState({ shouldShowPriceSheet: false }, _ => {
+            if (loggedInUserId) {
+                if (is_seller) {
+                    return this.props.navigation.dispatch(
+                        CommonActions.reset({
+                            routes: [
+                                {
+                                    name: 'RegisterProductStack',
+                                    state: {
+                                        routes: [
+                                            { name: 'RegisterProduct' }
+                                        ]
+                                    }
+                                }
+                            ]
+                        })
+                    )
+                }
+                return this.props.navigation.navigate('RegisterRequestStack', {
+                    screen: 'RegisterRequest'
+                });
+            }
+            return this.props.navigation.navigate('StartUp', {
+                screen: 'SignUp',
+                params: {
+                    isFromAchivePrice: true
+                }
+            });
+        });
+    };
 
     onSubmit = () => {
 
@@ -508,7 +582,7 @@ class ProductDetails extends PureComponent {
     };
 
     getProductUrl = _ => {
-        if (this.props.productDetailsInfo.length)
+        if (this.props.productDetailsInfo && this.props.productDetailsInfo.length)
             return (
                 "/product-view/خرید-عمده-" +
                 this.props.productDetailsInfo[0].product.main.sub_category_name.replace(" ", "-") +
@@ -715,16 +789,20 @@ class ProductDetails extends PureComponent {
                 user_name,
                 is_verified
             }
+            switch (RegisterationModalReturnType) {
+                case 1:
+                    return this.fetchContactInfo(productIdFromProductDetails, userId, true);
+                case 0:
+                    if (shouldOpenChat == true)
+                        return this.props.navigation.navigate('Chat', {
+                            contact: selectedContact,
+                            profile_photo,
+                            productId: productIdFromProductDetails
+                        });
+                    break;
+                default:
+                    break;
 
-            if (RegisterationModalReturnType == 1)
-                this.fetchContactInfo(productIdFromProductDetails, userId, true);
-            else {
-                if (shouldOpenChat == true)
-                    this.props.navigation.navigate('Chat', {
-                        contact: selectedContact,
-                        profile_photo,
-                        productId: productIdFromProductDetails
-                    });
             }
         });
     };
@@ -745,6 +823,76 @@ class ProductDetails extends PureComponent {
             productId: productIdFromProductDetails,
             bankUrl: `${REACT_APP_API_ENDPOINT_RELEASE}/app-payment/elevator/${productIdFromProductDetails}`
         });
+    };
+
+    openCallPadFromAchivePrice = _ => {
+
+        const {
+            userProfile = {}
+        } = this.props;
+
+        const {
+            user_info = {}
+        } = userProfile;
+
+        const {
+            is_seller
+        } = user_info;
+
+        const {
+            productIdFromProductDetails,
+            userId,
+            has_phone
+        } = this.state;
+
+        this.setState({ shouldShowPriceSheet: false }, _ => {
+            this.priceRBSheet?.current?.close();
+            if (has_phone && !is_seller) {
+                analytics().logEvent('phone_btn_in_price_modal');
+                return this.fetchContactInfo(productIdFromProductDetails, userId);
+            }
+            analytics().logEvent('chat_btn_in_price_modal');
+            return this.openChat();
+        })
+    };
+
+    handleScrollChange = event => {
+
+        const {
+            isScrollForButtonsReached
+        } = this.state;
+
+        if (
+            event.nativeEvent.contentOffset.y > 60
+            && !isScrollForButtonsReached
+        )
+
+            this.setState({
+                isScrollForButtonsReached: true,
+            }, _ => {
+                Animated.timing(this.state.animatedValue, {
+                    toValue: responsiveScreenHeight(
+                        deviceHeight < 650 || deviceHeight > 780
+                            ? 77.6
+                            : deviceHeight < 736 ? 75 : 77
+                    ),
+                    duration: 500,
+                    useNativeDriver: true
+                }).start()
+            });
+        else if (
+            event.nativeEvent.contentOffset.y < 60
+            && isScrollForButtonsReached
+        )
+            this.setState({
+                isScrollForButtonsReached: false
+            }, _ => {
+                Animated.timing(this.state.animatedValue, {
+                    toValue: screenHeight + 140,
+                    duration: 500,
+                    useNativeDriver: true
+                }).start()
+            });
     };
 
     render() {
@@ -828,7 +976,13 @@ class ProductDetails extends PureComponent {
             category_id,
             sub_category_id,
 
-            showContactListModal
+            showContactListModal,
+
+            shouldShowPriceSheet,
+
+            isScrollForButtonsReached,
+
+            animatedValue
         } = this.state;
 
 
@@ -889,6 +1043,206 @@ class ProductDetails extends PureComponent {
                         productName={product_name}
                         {...this.props}
                     />
+                    : null
+                }
+
+                {shouldShowPriceSheet ?
+                    <RBSheet
+                        ref={this.priceRBSheet}
+                        closeOnDragDown
+                        closeOnPressMask
+                        onClose={_ => this.setState(
+                            {
+                                shouldShowPriceSheet: false
+                            }, _ => this.priceRBSheet?.current?.close()
+                        )
+                        }
+                        height={320}
+                        animationType='fade'
+                        customStyles={{
+                            draggableIcon: {
+                                backgroundColor: "#000"
+                            },
+                            container: {
+                                borderTopLeftRadius: 12,
+                                borderTopRightRadius: 12,
+                                backgroundColor: '#FAFAFA'
+                            }
+                        }}
+                    >
+                        <FontAwesome5
+                            onPress={_ => this.setState({
+                                shouldShowPriceSheet: false
+                            }, _ => this.priceRBSheet?.current?.close())}
+                            name='times'
+                            color='#777'
+                            size={20}
+                            style={{
+                                position: 'absolute',
+                                right: 15,
+                                top: 10,
+                            }}
+                        />
+                        <ScrollView
+                            style={{
+                                marginTop: 10
+                            }}
+                            contentContainerStyle={{
+                                alignItems: 'center',
+                                justifyContent: 'space-between',
+                            }}
+                        >
+                            <View
+
+                                style={{
+                                    top: 20
+                                }}
+                            >
+                                <Text
+                                    style={{
+                                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                        fontSize: 20,
+                                        color: 'black',
+                                        textAlign: 'center',
+                                        paddingHorizontal: 5
+                                    }}
+                                >
+                                    {locales('titles.minOfThePrice')} <Text
+                                        style={{
+                                            fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                            fontSize: 20,
+                                            fontWeight: '200',
+                                            color: 'black'
+                                        }}
+                                    >
+                                        {locales('titles.forEachKilo')}
+                                    </Text>
+                                    <Text
+                                        style={{
+                                            fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                            fontWeight: '200',
+                                            fontSize: 20,
+                                            color: 'black',
+                                        }}
+                                    >
+                                        {` ${product_name}`}
+                                    </Text>
+                                </Text>
+                                <Text
+                                    style={{
+                                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                        fontSize: 22,
+                                        color: '#140092',
+                                        marginTop: 20,
+                                        textAlign: 'center',
+                                        bottom: 20
+                                    }}
+                                >
+                                    {numberWithCommas(min_sale_price)} <Text
+                                        style={{
+                                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                            fontWeight: '200',
+                                            fontSize: 22,
+                                            color: '#140092'
+                                        }}
+                                    >
+                                        {locales('titles.toman')}
+                                    </Text>
+                                </Text>
+                            </View>
+                            <View
+                                style={{
+                                    marginTop: 30,
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                }}
+                            >
+                                <Button
+                                    onPress={this.openCallPadFromAchivePrice}
+                                    style={{
+                                        backgroundColor: '#FF6600',
+                                        borderRadius: 8,
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        alignSelf: 'center',
+                                        marginTop: 10,
+                                        width: '80%',
+                                        paddingVertical: 10,
+                                        flexDirection: 'row-reverse'
+                                    }}
+                                >
+                                    <View
+                                        style={{
+                                            width: '100%',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            alignSelf: 'center',
+                                            flexDirection: 'row-reverse'
+                                        }}
+                                    >
+                                        {has_phone && !is_seller ?
+                                            <FontAwesome5
+                                                name='phone-alt'
+                                                color='white'
+                                                solid
+                                                size={16}
+                                            />
+                                            : <Svg
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                width="24"
+                                                height="24"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                            >
+                                                <SvgPath
+                                                    fill="white"
+                                                    d="M4 18h2v4.081L11.101 18H16c1.103 0 2-.897 2-2V8c0-1.103-.897-2-2-2H4c-1.103 0-2 .897-2 2v8c0 1.103.897 2 2 2z"
+                                                ></SvgPath>
+                                                <SvgPath
+                                                    fill="white"
+                                                    d="M20 2H8c-1.103 0-2 .897-2 2h12c1.103 0 2 .897 2 2v8c1.103 0 2-.897 2-2V4c0-1.103-.897-2-2-2z"
+                                                ></SvgPath>
+                                            </Svg>
+                                        }
+                                        <Text
+                                            style={{
+                                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                                fontSize: 20,
+                                                color: 'white',
+                                                alignSelf: 'center',
+                                                textAlign: 'center',
+                                                textAlignVertical: 'center',
+                                                marginRight: 8
+                                            }}
+                                        >
+                                            {locales(`labels.${has_phone && !is_seller ?
+                                                'callWithSeller'
+                                                : 'chatWithSeller'}`)}
+                                        </Text>
+                                    </View>
+                                </Button>
+                                <Text
+                                    onPress={this.redirectToScreensViaAchivePrice}
+                                    style={{
+                                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                        fontSize: 18,
+                                        color: '#FF6600',
+                                        textAlign: 'center',
+                                        textAlignVertical: 'center',
+                                        marginTop: 40,
+                                        bottom: 10
+                                    }}
+                                >
+                                    {is_seller || !loggedInUserId ?
+                                        locales('labels.haveProductToSell')
+                                        :
+                                        null
+                                    }
+                                </Text>
+                            </View>
+                        </ScrollView>
+
+                    </RBSheet>
                     : null
                 }
 
@@ -1028,7 +1382,7 @@ class ProductDetails extends PureComponent {
                                 <FontAwesome5 name="times" color="#777" solid size={18} />
                             </Button>
                             <Paragraph style={styles.headerTextDialogModal}>
-                                {locales('labels.contactInfo')}
+                                {locales('labels.callWithSeller')}
                             </Paragraph>
                         </Dialog.Actions>
 
@@ -1160,7 +1514,7 @@ class ProductDetails extends PureComponent {
                                         <Item
                                             regular
                                             style={{
-                                                borderColor: amountError ? '#D50000' : amount.length ? '#00C569' : '#a8a8a8',
+                                                borderColor: amountError ? '#D50000' : amount && amount.length ? '#00C569' : '#a8a8a8',
                                                 borderRadius: 5, padding: 3
                                             }}>
                                             <Input
@@ -1188,7 +1542,7 @@ class ProductDetails extends PureComponent {
                                         <Label style={{
                                             height: 20,
                                             fontFamily: 'IRANSansWeb(FaNum)_Light',
-                                            textAlign: !amountError && amount.length ? 'left' : 'right'
+                                            textAlign: !amountError && amount && amount.length ? 'left' : 'right'
                                         }}>
 
                                             {!!amountError && <Text style={{
@@ -1212,7 +1566,7 @@ class ProductDetails extends PureComponent {
                                         <Item
                                             regular
                                             style={{
-                                                borderColor: minimumOrderError ? '#D50000' : minimumOrder.length ? '#00C569' : '#a8a8a8',
+                                                borderColor: minimumOrderError ? '#D50000' : minimumOrder && minimumOrder.length ? '#00C569' : '#a8a8a8',
                                                 borderRadius: 5,
                                                 padding: 3
                                             }}>
@@ -1240,7 +1594,7 @@ class ProductDetails extends PureComponent {
                                         <Label style={{
                                             height: 20,
                                             fontFamily: 'IRANSansWeb(FaNum)_Light',
-                                            textAlign: !minimumOrderError && minimumOrder.length ? 'left' : 'right'
+                                            textAlign: !minimumOrderError && minimumOrder && minimumOrder.length ? 'left' : 'right'
                                         }}>
 
                                             {!!minimumOrderError && <Text style={{
@@ -1264,7 +1618,7 @@ class ProductDetails extends PureComponent {
                                         <Item
                                             regular
                                             style={{
-                                                borderColor: minimumPriceError ? '#D50000' : minimumPrice.length ? '#00C569' : '#a8a8a8',
+                                                borderColor: minimumPriceError ? '#D50000' : minimumPrice && minimumPrice.length ? '#00C569' : '#a8a8a8',
                                                 borderRadius: 5,
                                                 padding: 3
                                             }}>
@@ -1311,7 +1665,7 @@ class ProductDetails extends PureComponent {
                                         <Item
                                             regular
                                             style={{
-                                                borderColor: maximumPriceError ? '#D50000' : maximumPrice.length ? '#00C569' : '#a8a8a8',
+                                                borderColor: maximumPriceError ? '#D50000' : maximumPrice && maximumPrice.length ? '#00C569' : '#a8a8a8',
                                                 borderRadius: 5,
                                                 padding: 3
                                             }}>
@@ -1518,12 +1872,11 @@ class ProductDetails extends PureComponent {
                                 <ContentLoader
                                     speed={2}
                                     width={deviceWidth}
-                                    height={400}
-                                    viewBox="0 0 400 400"
+                                    height={deviceHeight * 0.305}
                                     backgroundColor="#f3f3f3"
                                     foregroundColor="#ecebeb"
                                 >
-                                    <Rect x="0" y="0" rx="2" ry="2" width="400" height="400" />
+                                    <Rect x="0" y="0" rx="2" ry="2" width="100%" height='100%' />
                                 </ContentLoader>
                             </View>
 
@@ -1549,8 +1902,7 @@ class ProductDetails extends PureComponent {
                                         foregroundColor="#ecebeb"
                                     >
                                         <Rect x="174" y="1" rx="3" ry="3" width="221" height="30" />
-                                        <Rect x="232" y="56" rx="3" ry="3" width="163" height="47" />
-                                        <Rect x="15" y="55" rx="3" ry="3" width="122" height="47" />
+                                        <Rect x="14" y="1" rx="3" ry="3" width="91" height="30" />
                                     </ContentLoader>
                                 </View>
                                 <View style={{
@@ -1562,6 +1914,7 @@ class ProductDetails extends PureComponent {
                                     <ContentLoader
                                         speed={2}
                                         width={deviceWidth}
+                                        style={{ top: -70 }}
                                         height={350}
                                         viewBox="0 0 410 350"
                                         backgroundColor="#f3f3f3"
@@ -1620,20 +1973,28 @@ class ProductDetails extends PureComponent {
                         </ScrollView>
                         :
                         <ScrollView
-                            style={{ backgroundColor: 'white' }}
+                            style={{
+                                backgroundColor: 'white',
+                            }}
+                            contentContainerStyle={{
+                                paddingBottom: 55
+
+                            }}
                             ref={this.wrapper}
+                            onScroll={this.handleScrollChange}
                             refreshControl={
                                 <RefreshControl
                                     refreshing={!!this.props.productDetailsInfoLoading}
                                     onRefresh={() => this.componentDidMount()}
                                 />
                             }>
-                            <ShadowView style={{
-                                shadowColor: 'black',
-                                shadowOpacity: 0.13,
-                                shadowRadius: 1,
-                                shadowOffset: { width: 0, height: 2 },
-                            }}>
+                            <ShadowView
+                                style={{
+                                    shadowColor: 'black',
+                                    shadowOpacity: 0.13,
+                                    shadowRadius: 1,
+                                    shadowOffset: { width: 0, height: 2 },
+                                }}>
                                 <ProductImages
                                     showFullSizeImage={this.showFullSizeImage}
                                     photosWithCompletePath={photosWithCompletePath}
@@ -1659,31 +2020,52 @@ class ProductDetails extends PureComponent {
                                                 this.setState({ showContactListModal: true });
                                             }}
                                             style={{
-                                                borderWidth: 0.8, borderColor: '#777777', borderRadius: 6, padding: 5,
-                                                flexDirection: 'row-reverse', justifyContent: 'center', alignItems: 'center'
+                                                borderWidth: 0.8,
+                                                borderColor: '#777777',
+                                                borderRadius: 6,
+                                                padding: 5,
+                                                flexDirection: 'row-reverse',
+                                                justifyContent: 'center',
+                                                alignItems: 'center'
                                             }}>
-                                            <FontAwesome name='share-alt' size={14} color='#777777' style={{ marginHorizontal: 5 }} />
-                                            <Text style={{
-                                                color: '#777777', fontSize: 14, marginLeft: 5,
-                                                fontFamily: 'IRANSansWeb(FaNum)_Light'
-                                            }}>
+                                            <FontAwesome
+                                                name='share-alt'
+                                                size={14}
+                                                color='rgba(46, 58, 89, 0.8)'
+                                                style={{ marginHorizontal: 5 }}
+                                            />
+                                            <Text
+                                                style={{
+                                                    color: '#264653',
+                                                    fontSize: 14,
+                                                    marginLeft: 5,
+                                                    fontFamily: 'IRANSansWeb(FaNum)_Light'
+                                                }}
+                                            >
                                                 {locales('labels.share')}
                                             </Text>
-
                                         </Pressable>
                                     </View>
                                 </View>
 
-                                <View style={{
-                                    flexDirection: 'row-reverse', alignItems: 'center',
-                                    width: deviceWidth, justifyContent: 'space-between', paddingHorizontal: 15,
+                                <View
+                                    style={{
+                                        flexDirection: 'row-reverse',
+                                        alignItems: 'center',
+                                        width: deviceWidth,
+                                        justifyContent: 'space-between',
+                                        paddingHorizontal: 15,
 
-                                }}>
-                                    {userId == loggedInUserId ? <View style={{
-                                        flexDirection: 'row', justifyContent: 'space-around',
-                                        flex: 1
-                                        // width: !!is_elevated ? deviceWidth * 0.88 : deviceWidth * 0.99
-                                    }}>
+                                    }}
+                                >
+                                    {userId == loggedInUserId ? <View
+                                        style={{
+                                            flexDirection: 'row',
+                                            justifyContent: 'space-around',
+                                            flex: 1
+                                            // width: !!is_elevated ? deviceWidth * 0.88 : deviceWidth * 0.99
+                                        }}
+                                    >
                                         <Button
                                             style={{
                                                 color: 'white',
@@ -1691,18 +2073,34 @@ class ProductDetails extends PureComponent {
                                                 borderRadius: 5,
                                                 marginLeft: !is_elevated ? 5 : 0,
                                                 fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                                width: !!is_elevated ? '45%' : '55%',
+                                                backgroundColor: '#140092',
+                                                width: !!is_elevated ? '48%' : '46%',
                                                 paddingRight: 40,
-                                                backgroundColor: '#E41C38'
                                             }}
                                         >
                                             <Text
                                                 onPress={this.navigateToPaymentType}
 
-                                                style={[styles.buttonText, { fontFamily: 'IRANSansWeb(FaNum)_Bold' }]}>
-                                                {locales('titles.elevateProduct')}</Text>
-                                            <FontAwesome5
-                                                name='chart-line' size={25} color='white' style={{ position: 'absolute', right: 15 }} />
+                                                style={
+                                                    [styles.buttonText,
+                                                    {
+                                                        fontFamily: 'IRANSansWeb(FaNum)_Medium'
+                                                    }
+                                                    ]
+                                                }
+                                            >
+                                                {locales('titles.elevateProduct')}
+                                            </Text>
+                                            <MaterialCommunityIcons
+                                                name='stairs-up'
+                                                size={25}
+                                                color='white'
+                                                style={
+                                                    {
+                                                        position: 'absolute',
+                                                        right: is_elevated ? '18%' : '25%',
+                                                    }}
+                                            />
                                         </Button>
                                         <Button
                                             style={{
@@ -1710,13 +2108,36 @@ class ProductDetails extends PureComponent {
                                                 fontSize: 18,
                                                 borderRadius: 5,
                                                 fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                                width: '40%',
+                                                width: !is_elevated ? '46%' : '40%',
                                                 paddingRight: 15,
-                                                backgroundColor: '#000546'
+                                                backgroundColor: 'rgba(20, 0, 146, 0.25)',
+                                                elevation: 0
                                             }}
                                         >
-                                            <Text onPress={() => this.setState({ editionFlag: true })} style={[styles.buttonText, { fontFamily: 'IRANSansWeb(FaNum)_Bold' }]}>{locales('titles.edit')}</Text>
-                                            <FontAwesome name='pencil' size={23} color='white' style={{ position: 'absolute', right: 15 }} />
+                                            <Text
+                                                onPress={() => this.setState({
+                                                    editionFlag:
+                                                        true
+                                                })}
+                                                style={
+                                                    [styles.buttonText,
+                                                    {
+                                                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                                        color: '#140092'
+                                                    }
+                                                    ]}
+                                            >
+                                                {locales('titles.edit')}
+                                            </Text>
+                                            <MaterialCommunityIcons
+                                                name='pencil'
+                                                size={20}
+                                                style={{
+                                                    right: is_elevated ? '18%' : '25%',
+                                                    position: 'absolute'
+                                                }}
+                                                color='#140092'
+                                            />
                                         </Button>
                                     </View> :
                                         null
@@ -1736,115 +2157,213 @@ class ProductDetails extends PureComponent {
                                     }
                                 </View>
 
-                                <View style={{
-                                    flexDirection: 'row-reverse', alignItems: 'center', borderBottomColor: '#F1F1F1',
-                                    borderBottomWidth: 0.7, paddingVertical: 15,
-                                    marginVertical: 10, width: deviceWidth * 0.9, alignSelf: 'center',
-                                    justifyContent: 'space-between', paddingHorizontal: 10
-                                }}>
-
-                                    <View style={{
-                                        flexDirection: 'row-reverse', alignItems: 'center', borderBottomColor: '#BEBEBE',
+                                <View
+                                    style={{
+                                        flexDirection: 'row-reverse',
+                                        alignItems: 'center',
+                                        paddingVertical: 15,
+                                        width: deviceWidth * 0.9,
+                                        alignSelf: 'center',
                                         justifyContent: 'space-between',
-                                    }}>
+                                        paddingHorizontal: 10
+                                    }}
+                                >
+
+                                    <View
+                                        style={{
+                                            flexDirection: 'row-reverse',
+                                            alignItems: 'center',
+                                            justifyContent: 'space-between',
+                                        }}
+                                    >
                                         <FontAwesome5
-                                            name='folder'
-                                            color='#777777'
+                                            name='user-circle'
+                                            color='#264653'
                                             solid
-                                            size={20}
-                                            style={{ textAlign: 'center', width: 23 }}
+                                            size={18}
+                                            style={{
+                                                textAlign: 'center',
+                                                width: 23
+                                            }}
                                         />
-                                        <Text style={{
-                                            color: '#777777', fontSize: 18,
-                                            textAlignVertical: 'center',
-                                            marginHorizontal: 7,
-                                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                        }}>
-                                            {locales('titles.category')}
+                                        <Text
+                                            style={{
+                                                color: '#000000',
+                                                fontSize: 16,
+                                                textAlignVertical: 'center',
+                                                marginHorizontal: 7,
+                                                fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                            }}
+                                        >
+                                            {locales('labels.seller')}
                                         </Text>
                                     </View>
-                                    <Text style={{ fontSize: 16, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>{sub_category_name}</Text>
+                                    <Text
+                                        style={
+                                            {
+                                                fontSize: 18,
+                                                fontFamily: 'IRANSansWeb(FaNum)'
+                                            }
+                                        }
+                                    >
+                                        {`${first_name} ${last_name}`}
+                                    </Text>
                                 </View>
 
-                                <View style={{
-                                    flexDirection: 'row-reverse', alignItems: 'center', borderBottomColor: '#F1F1F1',
-                                    borderBottomWidth: 0.7, paddingTop: 5, paddingBottom: 20,
-                                    marginVertical: 10, width: deviceWidth * 0.9, alignSelf: 'center',
-                                    justifyContent: 'space-between', paddingHorizontal: 10
-                                }}>
-                                    <View style={{
-                                        flexDirection: 'row-reverse', alignItems: 'center', borderBottomColor: '#BEBEBE',
+                                <View
+                                    style={{
+                                        flexDirection: 'row-reverse',
+                                        alignItems: 'center',
+                                        paddingVertical: 15,
+                                        width: deviceWidth * 0.9,
+                                        alignSelf: 'center',
                                         justifyContent: 'space-between',
-                                    }}>
+                                        paddingHorizontal: 10
+                                    }}
+                                >
+                                    <View
+                                        style={{
+                                            flexDirection: 'row-reverse',
+                                            alignItems: 'center',
+                                            justifyContent: 'space-between',
+                                        }}
+                                    >
                                         <FontAwesome5
                                             name='map-marker-alt'
-                                            color='#777777'
-                                            style={{ textAlign: 'center', width: 23 }}
+                                            color='#264653'
+                                            style={{
+                                                textAlign: 'center',
+                                                width: 23
+                                            }}
                                             solid
-                                            size={20}
+                                            size={18}
                                         />
-                                        <Text style={{ color: '#777777', fontSize: 16, marginHorizontal: 7, fontFamily: 'IRANSansWeb(FaNum)_Medium' }}>
-                                            {locales('titles.province/city')}
+                                        <Text
+                                            style={{
+                                                color: '#000000',
+                                                fontSize: 16,
+                                                marginHorizontal: 7,
+                                                fontFamily: 'IRANSansWeb(FaNum)_Light'
+                                            }}
+                                        >
+                                            {locales('labels.address')}
                                         </Text>
                                     </View>
-                                    <Text style={{ fontSize: 16, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>
+                                    <Text
+                                        style={{
+                                            fontSize: 18,
+                                            fontFamily: 'IRANSansWeb(FaNum)'
+                                        }}
+                                    >
                                         {`${province_name || '---'}-${city_name || '==='}`}
                                     </Text>
                                 </View>
 
-                                <View style={{
-                                    flexDirection: 'row-reverse', alignItems: 'center', borderBottomColor: '#F1F1F1',
-                                    borderBottomWidth: 0.7, paddingTop: 5, paddingBottom: 20,
-                                    marginVertical: 10, width: deviceWidth * 0.9, alignSelf: 'center',
-                                    justifyContent: 'space-between', paddingHorizontal: 10
-                                }}>
-                                    <View style={{
-                                        flexDirection: 'row-reverse', alignItems: 'center', borderBottomColor: '#BEBEBE',
+                                <View
+                                    style={{
+                                        flexDirection: 'row-reverse',
+                                        alignItems: 'center',
+                                        paddingVertical: 15,
+                                        width: deviceWidth * 0.9,
+                                        alignSelf: 'center',
                                         justifyContent: 'space-between',
-                                    }}>
+                                        paddingHorizontal: 10
+                                    }}
+                                >
+                                    <View
+                                        style={{
+                                            flexDirection: 'row-reverse',
+                                            alignItems: 'center',
+                                            borderBottomColor: '#BEBEBE',
+                                            justifyContent: 'space-between',
+                                        }}
+                                    >
                                         <FontAwesome5
                                             name='box-open'
-                                            color='#777777'
+                                            color='#264653'
                                             solid
-                                            style={{ textAlign: 'center', width: 23 }}
+                                            style={{
+                                                textAlign: 'center',
+                                                width: 23
+                                            }}
                                             size={18}
                                         />
-                                        <Text style={{ color: '#777777', fontSize: 18, marginHorizontal: 7, fontFamily: 'IRANSansWeb(FaNum)_Medium' }}>
-                                            {locales('titles.stockQuantity')}
+                                        <Text
+                                            style={{
+                                                color: '#000000',
+                                                fontSize: 16,
+                                                marginHorizontal: 7,
+                                                fontFamily: 'IRANSansWeb(FaNum)_Light'
+                                            }}
+                                        >
+                                            {
+                                                locales('titles.stockQuantity')
+                                            }
                                         </Text>
                                     </View>
-                                    <Text style={{ fontSize: 16, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>{formatter.convertedNumbersToTonUnit(stock)} </Text>
-                                </View>
-
-                                <View style={{
-                                    flexDirection: 'row-reverse', alignItems: 'center', borderBottomColor: '#F1F1F1',
-                                    borderBottomWidth: 0.7, paddingTop: 5, paddingBottom: 20,
-                                    marginVertical: 10, width: deviceWidth * 0.9, alignSelf: 'center',
-                                    justifyContent: 'space-between', paddingHorizontal: 10
-                                }}>
-                                    <View style={{
-                                        flexDirection: 'row-reverse', alignItems: 'center', borderBottomColor: '#BEBEBE',
-                                        justifyContent: 'space-between',
-                                    }}>
-                                        <FontAwesome5
-                                            name='clipboard-check'
-                                            color='#777777'
-                                            solid
-                                            style={{ textAlign: 'center', width: 23 }}
-                                            size={20}
-                                        />
-                                        <Text style={{
-                                            color: '#777777', fontSize: 18, marginHorizontal: 7, fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                        }}>
-                                            {locales('titles.minOrder')}
-                                        </Text>
-                                    </View>
-                                    <Text style={{ fontSize: 16, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>
-                                        {formatter.convertedNumbersToTonUnit(min_sale_amount)}
+                                    <Text
+                                        style={{
+                                            fontSize: 18,
+                                            fontFamily: 'IRANSansWeb(FaNum)'
+                                        }}
+                                    >
+                                        {formatter.convertedNumbersToTonUnit(stock)}
                                     </Text>
                                 </View>
 
-                                <View style={{
+                                <View
+                                    style={{
+                                        flexDirection: 'row-reverse',
+                                        alignItems: 'center',
+                                        width: deviceWidth * 0.9,
+                                        paddingVertical: 15,
+                                        alignSelf: 'center',
+                                        justifyContent: 'space-between',
+                                        paddingHorizontal: 10
+                                    }}
+                                >
+                                    <View
+                                        style={{
+                                            flexDirection: 'row-reverse',
+                                            alignItems: 'center',
+                                            borderBottomColor: '#BEBEBE',
+                                            justifyContent: 'space-between',
+                                        }}
+                                    >
+                                        <FontAwesome5
+                                            name='clipboard-check'
+                                            color='#264653'
+                                            solid
+                                            style={{
+                                                textAlign: 'center',
+                                                width: 23
+                                            }}
+                                            size={18}
+                                        />
+                                        <Text
+                                            style={{
+                                                color: '#000000',
+                                                fontSize: 16,
+                                                marginHorizontal: 7,
+                                                fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                            }}
+                                        >
+                                            {locales('titles.minOrder')}
+                                        </Text>
+                                    </View>
+                                    <Text
+                                        style={{
+                                            fontSize: 18,
+                                            fontFamily: 'IRANSansWeb(FaNum)'
+                                        }}
+                                    >
+                                        {
+                                            formatter.convertedNumbersToTonUnit(min_sale_amount)
+                                        }
+                                    </Text>
+                                </View>
+
+                                {/* <View style={{
                                     flexDirection: 'row-reverse', alignItems: 'center', borderBottomColor: '#F1F1F1',
                                     borderBottomWidth: 0.7, paddingTop: 5, paddingBottom: 20,
                                     marginVertical: 10, width: deviceWidth * 0.9, alignSelf: 'center',
@@ -1866,7 +2385,61 @@ class ProductDetails extends PureComponent {
                                         </Text>
                                     </View>
                                     <Text style={{ fontSize: 16, fontFamily: 'IRANSansWeb(FaNum)_Bold' }}>{locales('titles.achiveThePrice')}</Text>
-                                </View>
+                                </View> */}
+
+                                {loggedInUserId != userId ?
+                                    <Button
+                                        onPress={_ => {
+                                            analytics().logEvent('show_price_btn_in_product_view')
+                                            this.setState(
+                                                {
+                                                    shouldShowPriceSheet: true
+                                                }, _ => this.priceRBSheet?.current?.open()
+                                            )
+                                        }
+                                        }
+                                        style={{
+                                            marginTop: 40,
+                                            marginBottom: 25,
+                                            alignSelf: 'center',
+                                            width: '70%',
+                                            elevation: 0,
+                                            borderRadius: 6,
+                                            borderWidth: 1,
+                                            borderColor: '#FF6600',
+                                            backgroundColor: 'white',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            flexDirection: 'row-reverse'
+                                        }}
+                                    >
+                                        <Svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            width="20"
+                                            height="20"
+                                            style={{
+                                                marginHorizontal: 5
+                                            }}
+                                            viewBox="0 0 20 20"
+                                        >
+                                            <SvgPath
+                                                fill="#FF6600"
+                                                d="M19.388.405a.605.605 0 00-1.141.399c.929 2.67-.915 4.664-2.321 5.732l-.568-.814c-.191-.273-.618-.5-.95-.504l-3.188.014a2.162 2.162 0 00-1.097.338L.729 12.157a1.01 1.01 0 00-.247 1.404l4.269 6.108c.32.455.831.4 1.287.082l9.394-6.588c.27-.191.582-.603.692-.918l.998-3.145c.11-.314.043-.793-.148-1.066l-.346-.496c1.888-1.447 3.848-4.004 2.76-7.133zm-4.371 9.358a1.608 1.608 0 01-2.24-.396 1.614 1.614 0 01.395-2.246 1.607 1.607 0 011.868.017c-.272.164-.459.26-.494.275a.606.606 0 00.259 1.153c.086 0 .174-.02.257-.059.194-.092.402-.201.619-.33a1.615 1.615 0 01-.664 1.586z"
+                                            ></SvgPath>
+                                        </Svg>
+                                        <Text
+                                            style={{
+                                                textAlign: 'center',
+                                                textAlignVertical: 'center',
+                                                color: '#FF6600',
+                                                fontSize: 16,
+                                                fontFamily: 'IRANSansWeb(FaNum)_Medium'
+                                            }}
+                                        >
+                                            {locales('titles.achiveSaleStatus')}
+                                        </Text>
+                                    </Button>
+                                    : null}
 
                                 <View
 
@@ -2363,78 +2936,126 @@ class ProductDetails extends PureComponent {
                 }
                 {
                     productDetailsInfoFailed || productDetailsInfoError ? null :
-                        !this.props.productDetailsInfoLoading && userId != loggedInUserId ?
-                            <ShadowView style={{
-                                width: '100%',
-                                height: 65,
-                                shadowColor: 'black',
-                                shadowOpacity: 0.13,
-                                backgroundColor: 'white',
-                                shadowRadius: 1,
-                                shadowOffset: { width: 0, height: 2 },
-                                flexDirection: 'row-reverse',
-                                justifyContent: 'space-between',
-                                alignItems: 'center',
-                            }} >
-                                {(has_phone && !is_seller) ?
+                        !this.props.productDetailsInfoLoading
+                            && userId != loggedInUserId ?
+                            <Animated.View
+                                style={{
+                                    transform: [{
+                                        translateY: animatedValue
+                                    }],
+                                    backgroundColor: 'white',
+                                    width: '100%',
+                                    position: 'absolute',
+                                }}
+                            >
+                                <ShadowView
+                                    style={{
+                                        shadowColor: 'black',
+                                        backgroundColor: 'white',
+                                        shadowRadius: 1,
+                                        shadowOffset: { width: 0, height: 2 },
+                                        flexDirection: 'row-reverse',
+                                        justifyContent: 'space-between',
+                                        alignItems: 'center',
+                                        shadowOpacity: 0.13,
+                                    }}
+                                >
+                                    {(has_phone && !is_seller) ?
+                                        <Button
+                                            onPress={() => {
+                                                analytics().logEvent('click_on_call_info_button_product');
+                                                this.fetchContactInfo(productIdFromProductDetails, userId);
+                                            }}
+                                            style={[styles.loginButton, {
+                                                alignItems: 'center',
+                                                width: '45%',
+                                                justifyContent: 'center',
+                                                backgroundColor: isContactInfoShown ? '#E0E0E0' : '#FF6600'
+                                                // width: !!is_elevated ? '50%' : '46%'
+                                            }]}
+                                        >
+                                            <View style={[styles.textCenterView, styles.buttonText]}>
+                                                {!sellerMobileNumberLoading ? <Text
+                                                    style={[
+                                                        styles.textWhite,
+                                                        {
+                                                            top: 10
+                                                        }
+                                                    ]}
+                                                >
+                                                    <FontAwesome5
+                                                        solid
+                                                        name='phone-alt'
+                                                        size={18}
+                                                    />
+                                                </Text> :
+                                                    <ActivityIndicator
+                                                        animating={true}
+                                                        size={20}
+                                                        color='white'
+                                                    />
+                                                }
+                                                <Text style={
+                                                    [
+                                                        styles.textWhite,
+                                                        styles.margin5,
+                                                        styles.textBold,
+                                                        styles.textSize18
+                                                    ]}
+                                                >
+                                                    {locales('labels.callWithSeller')}
+                                                </Text>
+                                            </View>
+                                        </Button>
+                                        : null}
                                     <Button
-                                        onPress={() => {
-                                            analytics().logEvent('click_on_call_info_button_product');
-                                            this.fetchContactInfo(productIdFromProductDetails, userId);
-                                        }}
+                                        onPress={this.openChat}
                                         style={[styles.loginButton, {
-                                            alignItems: 'center',
-                                            width: '45%',
-                                            justifyContent: 'center',
-                                            backgroundColor: isContactInfoShown ? '#E0E0E0' : '#00C569'
-                                            // width: !!is_elevated ? '50%' : '46%'
+                                            zIndex: 1,
+                                            width: (!is_seller && has_phone) ? '45%' : '95%',
+                                            backgroundColor:
+                                                (!is_seller && has_phone) ? '#FFD5A8' : '#FF6600',
                                         }]}
                                     >
                                         <View style={[styles.textCenterView, styles.buttonText]}>
-                                            {!sellerMobileNumberLoading ? <Text style={[styles.textWhite, styles.margin5, { marginTop: 7 }]}>
-                                                <FontAwesome5 solid name='phone-square-alt'
-                                                    size={20} />
-                                            </Text> :
-                                                <ActivityIndicator
-                                                    animating={true}
-                                                    size={20}
-                                                    color='white'
-                                                />
+                                            <Text style={[styles.textWhite, styles.margin5, {
+                                                marginTop: 7,
+                                                color: (!is_seller && has_phone) ? '#556080' : 'white',
+                                            }]}>
+                                                <Svg
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    width="24"
+                                                    height="24"
+                                                    fill="none"
+                                                    viewBox="0 0 24 24"
+                                                >
+                                                    <SvgPath
+                                                        fill={
+                                                            (!is_seller && has_phone) ?
+                                                                "#F60" : "white"}
+                                                        d="M4 18h2v4.081L11.101 18H16c1.103 0 2-.897 2-2V8c0-1.103-.897-2-2-2H4c-1.103 0-2 .897-2 2v8c0 1.103.897 2 2 2z"
+                                                    ></SvgPath>
+                                                    <SvgPath
+                                                        fill={
+                                                            (!is_seller && has_phone) ?
+                                                                "#F60" : "white"}
+                                                        d="M20 2H8c-1.103 0-2 .897-2 2h12c1.103 0 2 .897 2 2v8c1.103 0 2-.897 2-2V4c0-1.103-.897-2-2-2z"
+                                                    ></SvgPath>
+                                                </Svg>
+                                            </Text>
+                                            <Text style={[styles.textWhite, styles.margin5, styles.textBold, styles.textSize18,
+                                            {
+                                                color: (!is_seller && has_phone) ?
+                                                    '#FF6600' : "white"
                                             }
-                                            <Text style={[styles.textWhite, styles.margin5, styles.textBold, styles.textSize18]}>
-                                                {locales('labels.contactInfo')}
+                                            ]}>
+                                                {locales('labels.chatWithSeller')}
                                             </Text>
                                         </View>
-                                    </Button>
-                                    : null}
-                                <Button
-                                    onPress={this.openChat}
-                                    style={[styles.loginButton, {
-                                        zIndex: 1,
-                                        width: (!is_seller && has_phone) ? '45%' : '95%',
-                                        backgroundColor: (!is_seller && has_phone) ? 'white' : '#FF5722',
-                                        borderColor: (!is_seller && has_phone) ? '#556080' : '#FF5722',
-                                        borderWidth: (!is_seller && has_phone) ? 1 : 0,
-                                    }]}
-                                >
-                                    <View style={[styles.textCenterView, styles.buttonText]}>
-                                        <Text style={[styles.textWhite, styles.margin5, {
-                                            marginTop: 7,
-                                            color: (!is_seller && has_phone) ? '#556080' : 'white',
-                                        }]}>
-                                            <FontAwesome5 solid name='comment-alt' size={20} />
-                                        </Text>
-                                        <Text style={[styles.textWhite, styles.margin5, styles.textBold, styles.textSize18,
-                                        {
-                                            color: (!is_seller && has_phone) ? '#556080' : 'white',
-                                        }
-                                        ]}>
-                                            {(!is_seller && has_phone) ? locales('labels.chat') : locales('labels.chatWithSeller')}
-                                        </Text>
-                                    </View>
 
-                                </Button>
-                            </ShadowView>
+                                    </Button>
+                                </ShadowView>
+                            </Animated.View>
                             : null
                 }
             </>

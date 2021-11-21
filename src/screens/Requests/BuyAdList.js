@@ -95,11 +95,14 @@ const BuyAdList = props => {
             .catch(_ => { })
     };
 
+    if (!!loggedInUserId && !item.has_msg && !item.has_phone)
+        return null;
+
     return (
 
         <View
             style={{
-                backgroundColor: index % 2 == 0 ? item.is_golden && active_pakage_type == 0 ? '#FFFFFF' : '#FDFDFD' : '#FFFFFF',
+                backgroundColor: 'white',
                 width: '95%',
                 alignSelf: 'center',
                 overflow: 'hidden',
@@ -128,7 +131,8 @@ const BuyAdList = props => {
                     <Image source={require('../../../assets/images/blur-items.jpg')}
                         style={{
                             width: deviceWidth * 0.915,
-                            height: '80%'
+                            height: '80%',
+                            top: '5%'
                         }}
                     />
 
@@ -400,7 +404,7 @@ const BuyAdList = props => {
                 marginVertical: 15,
                 flexDirection: 'row-reverse',
                 alignItems: 'center',
-                width: deviceWidth * 0.89,
+                width: deviceWidth * 0.87,
                 paddingHorizontal: 5,
                 alignSelf: 'center',
                 justifyContent: 'center'
@@ -412,7 +416,7 @@ const BuyAdList = props => {
                         onPress={() => fetchContactInfo(item)}
                         style={{
                             borderColor: !!item.is_golden ? '#c7a84f' : '#00C569',
-                            width: item.has_msg ? '47%' : '70%',
+                            width: item.has_msg ? '49%' : '70%',
                             zIndex: 1000,
                             position: 'relative',
                             alignSelf: 'center',
@@ -429,6 +433,7 @@ const BuyAdList = props => {
                                 : ['#E0E0E0', '#E0E0E0']}
                             style={{
                                 width: '100%',
+                                height: 48,
                                 paddingHorizontal: 10,
                                 flexDirection: 'row-reverse',
                                 alignItems: 'center',
@@ -442,7 +447,7 @@ const BuyAdList = props => {
                         >
                             {buyerMobileNumberLoading && selectedButton == item.id ?
                                 <ActivityIndicator
-                                    size={20}
+                                    size={19}
                                     color={(!item.is_golden ? 'white' : '#333')}
                                     animating={selectedButton == item.id && !!buyerMobileNumberLoading}
                                 />
@@ -451,18 +456,18 @@ const BuyAdList = props => {
                                     solid
                                     name='phone-square-alt'
                                     color={!item.isContactInfoShown ? (!item.is_golden ? 'white' : '#333') : 'white'}
-                                    size={20} />
+                                    size={19} />
                             }
                             <Text
                                 style={{
                                     fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                     marginHorizontal: 3,
-                                    fontSize: 18,
+                                    fontSize: 17,
                                     color: !item.isContactInfoShown ? (!item.is_golden ? 'white' : '#333') : 'white',
                                     paddingHorizontal: 3
                                 }}
                             >
-                                {locales('labels.contactInfo')}
+                                {locales('labels.callWithBuyer')}
                             </Text>
 
                         </LinearGradient>
@@ -496,7 +501,7 @@ const BuyAdList = props => {
                                 borderColor: item.has_phone ? '#556080' : (!!item.is_golden ? '#c7a84f' : '#00C569'),
                                 paddingHorizontal: 10,
                                 flexDirection: 'row-reverse',
-                                borderWidth: 1,
+                                borderWidth: item.has_phone ? 1 : 0,
                                 alignItems: 'center',
                                 textAlign: 'center',
                                 justifyContent: 'center',

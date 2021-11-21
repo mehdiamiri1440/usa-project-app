@@ -1744,6 +1744,7 @@ class SpecialProducts extends PureComponent {
 
                 <Header
                     {...this.props}
+                    shouldShowBackButton={false}
                     title={locales('labels.suggestedProducts')}
                 />
 

@@ -7,6 +7,7 @@ import {
     View,
     FlatList,
     ActivityIndicator,
+    ScrollView,
     Pressable,
     Linking, BackHandler,
     LayoutAnimation, UIManager, Platform
@@ -40,6 +41,7 @@ class RegisterProductSuccessfully extends Component {
             subCategoryId: null,
             selectedBuyAdId: -1,
             showGoldenModal: false,
+            scrollToOffset: 0,
             selectedContact: {},
             subCategoryName: '',
             loaded: false,
@@ -50,6 +52,7 @@ class RegisterProductSuccessfully extends Component {
     }
 
     flatListRef = React.createRef();
+    scrollViewRef = React.createRef();
     isComponentMounted = false;
 
     componentDidMount() {
@@ -119,7 +122,11 @@ class RegisterProductSuccessfully extends Component {
                     item.isContactInfoShown = true;
                     item.mobileNumber = phone;
                     this.setState({});
-                    return this.flatListRef?.current?.scrollToIndex({ index, animated: true })
+                    return this.scrollViewRef?.current?.scrollTo({
+                        x: 0,
+                        y: this.state.scrollToOffset + 105,
+                        animated: true
+                    })
                 }
             })
                 .catch(err => {
@@ -155,12 +162,12 @@ class RegisterProductSuccessfully extends Component {
 
             <View
                 style={{
-                    backgroundColor: index % 2 == 0 ? item.is_golden && active_pakage_type == 0 ? '#FFFFFF' : '#F7FCFF' : '#FFFFFF',
+                    backgroundColor: 'white',
                     width: '100%',
                     padding: 20,
                     borderColor: !!item.is_golden ? '#c7a84f' : '#BEBEBE',
                     borderWidth: !!item.is_golden ? 2 : 0.5,
-                    marginVertical: 20,
+                    marginVertical: 5,
                     borderRadius: 8
                 }}
                 key={item.id}
@@ -174,22 +181,23 @@ class RegisterProductSuccessfully extends Component {
                         marginLeft: -20
                     }}>
 
-                        <Image source={require('../../../assets/images/blur-items-2.jpg')}
+                        <Image
+                            source={require('../../../assets/images/blur-items-2.png')}
                             style={{
                                 zIndex: 0,
-                                width: deviceWidth,
+                                width: '100%',
                                 height: '100%',
                                 position: 'absolute',
-                                left: 0,
-                                top: '35%'
+                                borderWidth: 0,
+                                top: '55%'
                             }}
+                            resizeMode='cover'
                         />
                         <View
                             style={{
                                 alignItems: 'center',
                                 marginVertical: 10,
                                 right: 0,
-
                                 flexDirection: 'row-reverse'
                             }}
                         >
@@ -213,12 +221,11 @@ class RegisterProductSuccessfully extends Component {
                         </View>
                         <View
                             style={{
-                                top: 0,
+                                top: -10,
                                 zIndex: 1000,
-                                width: deviceWidth,
                                 alignItems: 'center',
                                 justifyContent: 'center',
-                                left: 0,
+                                left: '1%',
                                 right: 0,
                                 marginVertical: 5,
                             }}
@@ -323,6 +330,7 @@ class RegisterProductSuccessfully extends Component {
                         style={{
                             justifyContent: 'center',
                             alignItems: 'center',
+                            paddingHorizontal: 5,
                             flexDirection: 'row-reverse',
                             marginVertical: 10,
                         }}
@@ -445,12 +453,13 @@ class RegisterProductSuccessfully extends Component {
                                     borderRadius: 8,
                                     paddingLeft: 20,
                                     padding: 8,
+                                    height: 47,
                                     elevation: 0
                                 }}
                             >
                                 {buyerMobileNumberLoading && selectedButton == item.id ?
                                     <ActivityIndicator
-                                        size={20}
+                                        size={16}
                                         color={(!item.is_golden ? 'white' : '#333')}
                                         animating={selectedButton == item.id && !!buyerMobileNumberLoading}
                                     />
@@ -459,18 +468,18 @@ class RegisterProductSuccessfully extends Component {
                                         solid
                                         name='phone-alt'
                                         color={!item.isContactInfoShown ? (!item.is_golden ? 'white' : '#333') : 'white'}
-                                        size={20} />
+                                        size={14} />
                                 }
                                 <Text
                                     style={{
                                         fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                         marginHorizontal: 3,
-                                        fontSize: 18,
+                                        fontSize: 16,
                                         color: !item.isContactInfoShown ? (!item.is_golden ? 'white' : '#333') : 'white',
                                         paddingHorizontal: 3
                                     }}
                                 >
-                                    {locales('labels.contactInfo')}
+                                    {locales('labels.callWithBuyer')}
                                 </Text>
 
                             </LinearGradient>
@@ -515,19 +524,22 @@ class RegisterProductSuccessfully extends Component {
                             <MaterialCommunityIcons
                                 name='message'
                                 color={item.has_phone ? '#556080' : (!item.is_golden ? 'white' : '#333')}
-                                size={20}
+                                size={16}
+                                style={{
+                                    marginLeft: 3
+                                }}
                             />
                             <Text style={{
                                 fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                fontSize: 18,
+                                fontSize: 16,
                                 color: item.has_phone ? '#556080' : (!item.is_golden ? 'white' : '#333'),
-                                paddingHorizontal: 3
                             }}>
                                 {locales('labels.messageToBuyer')}
 
 
                             </Text>
-                            <ActivityIndicator size={20}
+                            <ActivityIndicator
+                                size={16}
                                 color={item.has_phone ? '#556080' : (!item.is_golden ? 'white' : '#333')}
                                 animating={selectedButton == item.id &&
                                     !!isUserAllowedToSendMessageLoading}
@@ -739,9 +751,6 @@ class RegisterProductSuccessfully extends Component {
         return (
 
             <Pressable
-                android_ripple={{
-                    color: '#ededed'
-                }}
                 onPress={() => {
                     this.props.navigation.navigate('RequestsStack', { subCategoryId, subCategoryName })
                 }} style={{
@@ -979,7 +988,7 @@ class RegisterProductSuccessfully extends Component {
                                     <FontAwesome5 name="times" color="#777" solid size={18} />
                                 </Button>
                                 <Paragraph style={styles.headerTextDialogModal}>
-                                    {locales('labels.contactInfo')}
+                                    {locales('labels.callWithBuyer')}
                                 </Paragraph>
                             </Dialog.Actions>
 
@@ -1131,7 +1140,11 @@ class RegisterProductSuccessfully extends Component {
                     </Portal >
                     : null
                 }
-                <View
+                <ScrollView
+                    onScroll={event => {
+                        this.setState({ scrollToOffset: event.nativeEvent.contentOffset.y })
+                    }}
+                    ref={this.scrollViewRef}
                     style={{
                         flex: 1,
                         backgroundColor: 'white'
@@ -1214,10 +1227,10 @@ class RegisterProductSuccessfully extends Component {
                             <Text
                                 style={{
                                     textAlign: 'center',
-                                    color: 'rgba(38,70,83,80)',
+                                    color: 'rgba(38,70,83,0.8)',
                                     paddingHorizontal: 10,
-                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                    fontSize: 16
+                                    fontFamily: 'IRANSansWeb(FaNum)',
+                                    fontSize: 15
                                 }}
                             >
                                 {locales('titles.productdAccepted')}
@@ -1229,9 +1242,9 @@ class RegisterProductSuccessfully extends Component {
 
                     {this.chooseBuyadsList(buyAds, buyAdsFromParams, buyAdsAfterPaymentList).length ?
                         <LinearGradient
-                            start={{ x: 0, y: 0.51, z: 1 }}
-                            end={{ x: 0.8, y: 0.2, z: 1 }}
-                            colors={showBox ? ['#79a6b8', '#79a6b8'] : ['white', 'white']}
+                            start={{ x: 0, y: 0 }}
+                            end={{ x: 1, y: 1 }}
+                            colors={showBox ? ['#9FBDCA', '#548DA5'] : ['white', 'white']}
                             style={{
                                 borderRadius: 8,
                                 alignSelf: 'center',
@@ -1276,7 +1289,7 @@ class RegisterProductSuccessfully extends Component {
                             </Button>
                         </View>
                     }
-                </View>
+                </ScrollView>
             </>
         )
     }

@@ -1059,7 +1059,8 @@ const ProfileAccomplishes = props => {
                         textAlign: 'center',
                         textAlignVertical: 'center',
                         width: deviceWidth * 0.6,
-                        marginVertical: 10
+                        marginVertical: 10,
+                        height: 65
                     }}
                 >
                     {locales(item.text)}

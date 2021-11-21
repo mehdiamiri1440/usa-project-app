@@ -76,7 +76,6 @@ class RequestsTab extends Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        console.log('in  requests updated')
         if (prevState.fromMyBuskool == false && this.props.route && prevProps.route &&
             this.props.route.params && prevProps.route.params &&
             (this.props.route.params.fromMyNuskool != prevProps.route.params.fromMyNuskool ||
@@ -133,7 +132,6 @@ class RequestsTab extends Component {
         if (
             this.state.appState.match(/inactive|background/) && nextAppState === 'active' && this.props.isFocused
         ) {
-            console.log('app is in forground from requests')
             this.props.fetchRelatedRequests().then(result => {
                 this.setState({ relatedBuyAdRequestsList: result.payload.buyAds, goldenBuyAdsList: result.payload.golden_buyAds })
             });
@@ -510,7 +508,7 @@ class RequestsTab extends Component {
                                                 paddingHorizontal: 3
                                             }}
                                         >
-                                            {locales('labels.contactInfo')}
+                                            {locales('labels.callWithBuyer')}
                                         </Text>
                                     </LinearGradient>
 
@@ -684,11 +682,11 @@ class RequestsTab extends Component {
                         }}
                     >
 
-                        <Image source={require('../../../assets/images/blur-items.jpg')}
+                        <Image
+                            source={require('../../../assets/images/blur-items.jpg')}
                             style={{
                                 height: '100%',
                                 position: 'absolute',
-                                top: -45,
                                 right: 10,
                                 width: '100%',
                                 zIndex: -1
@@ -809,7 +807,7 @@ class RequestsTab extends Component {
                                                 paddingHorizontal: 3
                                             }}
                                         >
-                                            {locales('labels.contactInfo')}
+                                            {locales('labels.callWithBuyer')}
                                         </Text>
 
                                     </LinearGradient>
@@ -1134,7 +1132,7 @@ class RequestsTab extends Component {
                                             paddingHorizontal: 3
                                         }}
                                     >
-                                        {locales('labels.contactInfo')}
+                                        {locales('labels.callWithBuyer')}
                                     </Text>
 
                                 </LinearGradient>
@@ -1444,7 +1442,7 @@ class RequestsTab extends Component {
                                     <FontAwesome5 name="times" color="#777" solid size={18} />
                                 </Button>
                                 <Paragraph style={styles.headerTextDialogModal}>
-                                    {locales('labels.contactInfo')}
+                                    {locales('labels.callWithBuyer')}
                                 </Paragraph>
                             </Dialog.Actions>
 

@@ -698,7 +698,7 @@ const routes = props => {
                                     }}
                                     onPress={() => {
                                         closePromotionModal();
-                                        navigationRef?.current?.navigate('MyBuskool', { screen: 'PromoteRegistration' })
+                                        navigationRef?.current?.navigate('PromoteRegistration')
                                     }}
                                 >
                                     <Text style={[styles.buttonText, {
@@ -968,7 +968,7 @@ const routes = props => {
                                                     paddingHorizontal: 3
                                                 }}
                                             >
-                                                {locales('labels.contactInfo')}
+                                                {locales('labels.callWithBuyer')}
                                             </Text>
                                         </LinearGradient>
 
@@ -1132,7 +1132,7 @@ const routes = props => {
                                         onPress={() => {
                                             closePromoteRegistrationModal();
                                             closeSuggestedBuyerModal();
-                                            navigationRef?.current?.navigate('MyBuskool', { screen: 'PromoteRegistration' })
+                                            navigationRef?.current?.navigate('PromoteRegistration');
                                         }}
                                     >
 
@@ -1378,7 +1378,10 @@ const routes = props => {
                             shifting={false}
                             activeColor="#00C569"
                             inactiveColor="#FFFFFF"
-                            barStyle={{ backgroundColor: '#313A43', display: shouldShowBottomMenu ? 'flex' : 'none' }}
+                            barStyle={{
+                                backgroundColor: '#313A43',
+                                display: shouldShowBottomMenu ? 'flex' : 'none'
+                            }}
                         >
                             {unSignedInRoutes.map((item) => (
                                 <Tab.Screen

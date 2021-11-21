@@ -68,7 +68,8 @@ const EnterActivisionCode = (props) => {
                             sort_by: ENUMS.SORT_LIST.values.BM,
                             to_record_number: 16,
                         };
-                        props.fetchAllProductsList(item, true).then(_ => props.updateProductsList(true));
+                        props.fetchAllProductsList(item, true)
+                            .then(_ => props.updateProductsList(true));
                         analytics().setUserId(result.payload.id.toString());
                         props.fetchUserProfile().then((userProfileResult = {}) => {
                             const {
@@ -88,6 +89,7 @@ const EnterActivisionCode = (props) => {
                                 contact,
                                 profile_photo,
                                 isFromRequests,
+                                isFromAchivePrice,
                                 route = {},
                             } = props;
 
@@ -136,6 +138,7 @@ const EnterActivisionCode = (props) => {
                             global.meInfo.loggedInUserId = id;
 
                             const popAction = StackActions.pop(1);
+
                             if (contact && Object.keys(contact).length) {
                                 props.navigation.dispatch(popAction);
                                 props.navigation.navigate('Home', { screen: 'Chat', params: { profile_photo, contact } })
@@ -147,6 +150,11 @@ const EnterActivisionCode = (props) => {
                                     return props.navigation.navigate('RegisterProductStack', { screen: 'RegisterProduct' });
                                 return props.navigation.navigate('Home', { screen: 'ProductsList' });
                             }
+
+                            if (isFromAchivePrice == true) {
+                                return props.navigation.navigate('Home', { screen: 'ProductsList' });
+                            }
+
                         })
                     })
                 }
@@ -174,7 +182,7 @@ const EnterActivisionCode = (props) => {
         <>
 
             <Text style={[styles.userText, { marginTop: 12 }]}>
-                {locales('messages.enterCode', { fieldName: mobileNumber })}
+                {locales('messages.enterSentCode', { fieldName: mobileNumber })}
             </Text>
             {/* {!error && value.length === 4 && flag && message && message.length &&
                 <View style={styles.loginFailedContainer}>
@@ -188,10 +196,12 @@ const EnterActivisionCode = (props) => {
                     ref={ref}
                     {...codeProps}
                     value={value}
-                    onChangeText={value => {
+                    onChangeText={val => {
                         setValueError('');
-                        setValue(value);
+                        setValue(val);
                         setFlag(false)
+                        if (val && val.length == 4)
+                            onSubmit(val);
                     }}
                     cellCount={CELL_COUNT}
                     rootStyle={styles.codeFiledRoot}
@@ -263,10 +273,21 @@ const EnterActivisionCode = (props) => {
                         setFlag(true);
                         onSubmit(value)
                     }}
-                    style={[value.length !== 4 ? styles.disableLoginButton : styles.loginButton]}
+                    style={[
+                        value.length !== 4
+                            ? styles.disableLoginButton
+                            : styles.loginButton,
+                        {
+                            borderRadius: 8
+                        }]}
                     rounded
                 >
-                    <Text style={styles.buttonText}>
+                    <Text style={[styles.buttonText,
+                    {
+                        color: value.length !== 4 ?
+                            '#777' :
+                            'white'
+                    }]}>
                         {locales('titles.submitCode')}
                     </Text>
                     <ActivityIndicator
@@ -285,17 +306,22 @@ const EnterActivisionCode = (props) => {
                 </Button>
                 <Button
                     onPress={() => props.changeStep(1)}
-                    style={styles.backButtonContainer}
+                    style={[styles.backButtonContainer, {
+                        backgroundColor: 'white',
+                        borderColor: '#747474'
+                    }]}
                     rounded
                 >
                     <Text
-                        style={styles.backButtonText}>
+                        style={[styles.backButtonText, {
+                            color: '#747474'
+                        }]}>
                         {locales('titles.previousStep')}
                     </Text>
                     <AntDesign
                         name='arrowright'
                         size={25}
-                        color='#00C569'
+                        color='#747474'
                     />
                 </Button>
             </View>
