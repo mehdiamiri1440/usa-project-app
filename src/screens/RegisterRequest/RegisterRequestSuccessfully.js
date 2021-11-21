@@ -429,6 +429,7 @@ const RegisterRequestSuccessfully = props => {
                                             fontFamily: 'IRANSansWeb(FaNum)_Medium',
                                             fontSize: 18,
                                             fontWeight: '200',
+                                            width: '85%',
                                             color: 'black',
                                         }}
                                     >
