@@ -552,7 +552,7 @@ const RegisterRequestSuccessfully = props => {
                                             textAlign: 'center',
                                             justifyContent: 'center',
                                             borderRadius: 8,
-                                            height: 45.9,
+                                            height: 45.7,
                                             paddingLeft: 20,
                                             padding: 8,
                                             elevation: 0
