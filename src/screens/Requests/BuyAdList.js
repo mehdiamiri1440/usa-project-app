@@ -404,7 +404,7 @@ const BuyAdList = props => {
                 marginVertical: 15,
                 flexDirection: 'row-reverse',
                 alignItems: 'center',
-                width: deviceWidth * 0.89,
+                width: deviceWidth * 0.87,
                 paddingHorizontal: 5,
                 alignSelf: 'center',
                 justifyContent: 'center'
