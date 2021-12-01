@@ -254,7 +254,7 @@ class SignUp extends React.Component {
                                 AsyncStorage.setItem('@isBuyAdRequestsFocuesd', JSON.stringify(true));
                                 this.props.navigation.dispatch(popAction);
                                 if (is_seller)
-                                    return this.props.navigation.navigate('RegisterProductStack', { screen: 'RegisterProduct' });
+                                    return this.props.navigation.navigate('RequestsStack', { screen: 'Requests' });
                                 return this.props.navigation.navigate('Home', { screen: 'ProductsList' });
                             }
 
