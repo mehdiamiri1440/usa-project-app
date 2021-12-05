@@ -204,7 +204,7 @@ class ChatScreen extends Component {
         } = this.state;
 
         if (userChatHistory && userChatHistory.length &&
-            userChatHistory.filter(item => item.sender_id != this.props.loggedInUserId).some(item => !item.text.includes(':wlt=') && !item.text.includes(':p='))
+            userChatHistory.filter(item => item.sender_id != this.props.loggedInUserId).some(item => !item.p_id && !item.phone_locked)
         )
             return true;
         return false;

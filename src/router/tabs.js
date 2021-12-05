@@ -1059,7 +1059,7 @@ export const unSignedInRoutes = [
         key: 'Home'
     },
     {
-        label: 'labels.requests',
+        label: 'labels.buyers',
         name: 'RequestsStack',
         icon: 'list-ul',
         key: 'RequestsStack'

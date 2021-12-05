@@ -1436,7 +1436,7 @@ const routes = props => {
                                 key={'RequestsStack'}
                                 options={{
                                     tabBarBadge: false,
-                                    tabBarLabel: <Text style={{ fontFamily: "IRANSansWeb(FaNum)_Medium" }}>{locales('labels.requests')}</Text>,
+                                    tabBarLabel: <Text style={{ fontFamily: "IRANSansWeb(FaNum)_Medium" }}>{locales('labels.buyers')}</Text>,
                                     tabBarIcon: ({ focused, color }) => <FontAwesome5 size={20} name='list-ul' solid color={color} />,
                                 }}
                                 name={'RequestsStack'}

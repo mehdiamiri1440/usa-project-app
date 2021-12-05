@@ -147,7 +147,7 @@ const EnterActivisionCode = (props) => {
                                 AsyncStorage.setItem('@isBuyAdRequestsFocuesd', JSON.stringify(true));
                                 props.navigation.dispatch(popAction);
                                 if (is_seller)
-                                    return props.navigation.navigate('RegisterProductStack', { screen: 'RegisterProduct' });
+                                    return props.navigation.navigate('RequestsStack', { screen: 'Requests' });
                                 return props.navigation.navigate('Home', { screen: 'ProductsList' });
                             }
 
