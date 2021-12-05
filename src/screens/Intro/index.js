@@ -563,7 +563,8 @@ const StepThree = _ => {
             <Image
                 style={{
                     width: '100%',
-                    height: '55%'
+                    height: '65%',
+                    resizeMode: 'contain'
                 }}
                 source={require('../../../assets/images/investment.png')}
             />
