@@ -187,7 +187,7 @@ class Intro extends Component {
                             style={{
                                 flexDirection: 'row-reverse',
                                 alignItems: 'center',
-                                width: '25%',
+                                width: '28%',
                                 borderTopLeftRadius: 20,
                                 borderBottomLeftRadius: 20,
                                 padding: 7,
@@ -197,7 +197,7 @@ class Intro extends Component {
                         >
                             <Text
                                 style={{
-                                    color: '#FF9828',
+                                    color: '#FF6600',
                                     fontFamily: 'IRANSansWeb(FaNum)_Medium',
                                     fontSize: 18
                                 }}
@@ -210,11 +210,11 @@ class Intro extends Component {
                             style={{
                                 flexDirection: 'row-reverse',
                                 alignItems: 'center',
-                                width: '25%',
+                                width: '28%',
                                 borderBottomRightRadius: 20,
                                 borderTopRightRadius: 20,
                                 padding: 7,
-                                justifyContent: 'space-around',
+                                justifyContent: 'center',
                                 backgroundColor: '#FF9828'
                             }}
                         >
@@ -222,7 +222,8 @@ class Intro extends Component {
                                 style={{
                                     color: 'white',
                                     fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                    fontSize: 18
+                                    fontSize: 18,
+                                    marginHorizontal: 10
                                 }}
                             >
                                 {locales('titles.next')}
@@ -230,7 +231,7 @@ class Intro extends Component {
                             <FontAwesome5
                                 name='arrow-left'
                                 color='white'
-                                size={20}
+                                size={16}
                             />
                         </Pressable>
                     </View>
@@ -254,7 +255,6 @@ const StepOne = _ => {
                     justifyContent: 'center',
                     alignItems: 'center',
                     width: deviceWidth,
-                    top: -20,
                     height: deviceWidth,
                     borderWidth: 2,
                     borderColor: 'rgba(240, 243, 245, 0.1)',
@@ -266,8 +266,8 @@ const StepOne = _ => {
                         alignSelf: 'center',
                         justifyContent: 'center',
                         alignItems: 'center',
-                        width: 320,
-                        height: 320,
+                        width: deviceWidth * 0.78,
+                        height: deviceWidth * 0.78,
                         borderWidth: 2,
                         borderColor: 'rgba(240, 243, 245, 0.3)',
                         borderRadius: 1000
@@ -278,8 +278,8 @@ const StepOne = _ => {
                             alignSelf: 'center',
                             justifyContent: 'center',
                             alignItems: 'center',
-                            width: 200,
-                            height: 200,
+                            width: deviceWidth * 0.45,
+                            height: deviceWidth * 0.45,
                             borderWidth: 2,
                             borderColor: 'rgba(240, 243, 245, 0.6)',
                             borderRadius: 1000
@@ -290,8 +290,8 @@ const StepOne = _ => {
                                 alignSelf: 'center',
                                 justifyContent: 'center',
                                 alignItems: 'center',
-                                width: 120,
-                                height: 120,
+                                width: deviceWidth * 0.25,
+                                height: deviceWidth * 0.25,
                                 borderWidth: 2,
                                 borderColor: 'rgba(240, 243, 245, 0.9)',
                                 borderRadius: 1000
@@ -299,8 +299,8 @@ const StepOne = _ => {
                         >
                             <Image
                                 style={{
-                                    width: 70,
-                                    height: 70,
+                                    width: deviceWidth * 0.15,
+                                    height: deviceWidth * 0.15,
                                     borderRadius: 300
                                 }}
                                 source={require('../../../assets/images/7.jpg')}
