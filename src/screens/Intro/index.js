@@ -530,7 +530,8 @@ const StepTwo = _ => {
             <Image
                 style={{
                     width: '100%',
-                    height: '55%'
+                    height: '65%',
+                    resizeMode: 'contain',
                 }}
                 source={require('../../../assets/images/hands.png')}
             />
