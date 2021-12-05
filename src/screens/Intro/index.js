@@ -340,10 +340,10 @@ const StepOne = _ => {
                             </Path>
                             <Image
                                 style={{
-                                    width: 24,
-                                    height: 24,
-                                    top: 10,
-                                    left: 6,
+                                    width: 20,
+                                    height: 20,
+                                    top: 12,
+                                    left: 8,
                                     borderRadius: 200
                                 }}
                                 source={require('../../../assets/images/womane.jpg')}
@@ -415,11 +415,11 @@ const StepOne = _ => {
                         </Path>
                         <Image
                             style={{
-                                width: 20,
-                                height: 20,
-                                top: 9,
+                                width: 16,
+                                height: 16,
+                                top: 11,
+                                left: 5,
                                 borderRadius: 300,
-                                left: 3
                             }}
                             source={require('../../../assets/images/WsA2B92zf0e8yijcmRiKDQ-001.jpg')}
                         />
@@ -459,10 +459,10 @@ const StepOne = _ => {
                     </Path>
                     <Image
                         style={{
-                            width: 20,
-                            height: 20,
-                            top: 9,
-                            left: 3
+                            width: 16,
+                            height: 16,
+                            top: 11,
+                            left: 5
                         }}
                         source={require('../../../assets/icons/young-man-1.png')}
                     />
