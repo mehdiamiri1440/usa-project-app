@@ -14,7 +14,7 @@ import {
     UIManager,
     Platform
 } from 'react-native';
-import { deviceWidth } from '../../utils/deviceDimenssions';
+import { deviceHeight, deviceWidth } from '../../utils/deviceDimenssions';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import LinearGradient from 'react-native-linear-gradient';
 import Svg, { Path } from "react-native-svg";
@@ -254,8 +254,9 @@ const StepOne = _ => {
                     alignSelf: 'center',
                     justifyContent: 'center',
                     alignItems: 'center',
-                    width: deviceWidth,
-                    height: deviceWidth,
+                    top: -20,
+                    width: deviceWidth * 1.06,
+                    height: deviceWidth * 1.06,
                     borderWidth: 2,
                     borderColor: 'rgba(240, 243, 245, 0.1)',
                     borderRadius: 1000
@@ -319,16 +320,16 @@ const StepOne = _ => {
                         </View>
                         <Svg
                             xmlns="http://www.w3.org/2000/svg"
-                            width="36"
-                            height="57"
+                            width="56"
+                            height="77"
                             fill="none"
                             style={
                                 {
                                     alignItems: 'center',
                                     justifyContent: 'center',
                                     position: 'absolute',
-                                    right: '-9%',
-                                    top: '34%'
+                                    left: deviceWidth * 0.365,
+                                    top: deviceWidth * 0.08
                                 }
                             }
                             viewBox="0 0 36 47"
@@ -340,13 +341,13 @@ const StepOne = _ => {
                             </Path>
                             <Image
                                 style={{
-                                    width: 20,
-                                    height: 20,
+                                    width: 34,
+                                    height: 34,
                                     top: 12,
-                                    left: 8,
-                                    borderRadius: 200
+                                    borderRadius: 300,
+                                    left: 11
                                 }}
-                                source={require('../../../assets/images/womane.jpg')}
+                                source={require('../../../assets/images/5.jpg')}
                             />
                         </Svg>
                         <View
@@ -362,16 +363,16 @@ const StepOne = _ => {
                     </View>
                     <Svg
                         xmlns="http://www.w3.org/2000/svg"
-                        width="56"
-                        height="77"
+                        width="43"
+                        height="64"
                         fill="none"
                         style={
                             {
                                 alignItems: 'center',
                                 justifyContent: 'center',
                                 position: 'absolute',
-                                left: '5%',
-                                top: '62%'
+                                left: deviceWidth * 0.05,
+                                top: deviceWidth * 0.5
                             }
                         }
                         viewBox="0 0 36 47"
@@ -383,13 +384,13 @@ const StepOne = _ => {
                         </Path>
                         <Image
                             style={{
-                                width: 34,
-                                height: 34,
+                                width: 25,
+                                height: 25,
                                 top: 12,
-                                borderRadius: 300,
-                                left: 11
+                                left: 9,
+                                borderRadius: 200
                             }}
-                            source={require('../../../assets/images/5.jpg')}
+                            source={require('../../../assets/images/womane.jpg')}
                         />
                     </Svg>
                     <Svg
@@ -402,8 +403,8 @@ const StepOne = _ => {
                                 alignItems: 'center',
                                 justifyContent: 'center',
                                 position: 'absolute',
-                                left: '35%',
-                                top: '-11%'
+                                left: deviceWidth * 0.3,
+                                top: -deviceWidth * 0.1
                             }
                         }
                         viewBox="0 0 36 47"
@@ -446,8 +447,8 @@ const StepOne = _ => {
                             alignItems: 'center',
                             justifyContent: 'center',
                             position: 'absolute',
-                            right: '25%',
-                            top: '86%'
+                            right: deviceWidth * 0.25,
+                            top: deviceWidth * 0.88
                         }
                     }
                     viewBox="0 0 36 47"
@@ -529,9 +530,8 @@ const StepTwo = _ => {
         >
             <Image
                 style={{
-                    width: '100%',
-                    height: '65%',
-                    resizeMode: 'contain',
+                    width: deviceWidth,
+                    height: deviceHeight * 0.35,
                 }}
                 source={require('../../../assets/images/hands.png')}
             />
@@ -540,7 +540,8 @@ const StepTwo = _ => {
                     textAlign: 'center',
                     color: 'white',
                     fontSize: 16,
-                    fontFamily: 'IRANSansWeb(FaNum)_Medium'
+                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                    top: deviceWidth * 0.047
                 }}
             >
                 {locales('labels.findBestSellersAndBuyers')}
@@ -573,7 +574,8 @@ const StepThree = _ => {
                     textAlign: 'center',
                     color: 'white',
                     fontSize: 16,
-                    fontFamily: 'IRANSansWeb(FaNum)_Medium'
+                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                    top: -(deviceWidth * 0.033)
                 }}
             >
                 {locales('labels.findBestPricesAllAroundTheCountry')}
