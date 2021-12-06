@@ -568,19 +568,32 @@ class Requests extends PureComponent {
             );
 
         return (
-            <View style={{
-                alignSelf: 'center', justifyContent: 'center',
-                alignContent: 'center', alignItems: 'center',
-                width: deviceWidth * 0.9, height: deviceHeight * 0.7
-            }}>
-                <Entypo name='list' size={80} color='#BEBEBE' />
-                <Text style={{
-                    textAlign: 'center', color: '#7E7E7E',
-                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                    fontSize: 17, padding: 15, textAlign: 'center'
-                }}
+            <View
+                style={{
+                    alignSelf: 'center',
+                    justifyContent: 'center',
+                    alignContent: 'center',
+                    alignItems: 'center',
+                    flex: 1,
+                    marginTop: 80
+                }}>
+                <Image
+                    style={{
+                        width: deviceWidth * 0.4,
+                        height: deviceWidth * 0.4
+                    }}
+                    source={require('../../../assets/images/magnifire-empty.png')}
+                />
+                <Text
+                    style={{
+                        color: 'black',
+                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                        fontSize: 16,
+                        textAlign: 'center',
+                        marginTop: 10
+                    }}
                 >
-                    {locales('titles.noBuyAdFound')}
+                    {locales('labels.noBuyerFound')}
                 </Text>
             </View>
         )
