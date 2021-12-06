@@ -756,7 +756,9 @@ class SpecialProducts extends PureComponent {
 
         const {
             loaded,
-            preFetchLoading
+            preFetchLoading,
+            searchText,
+            isFilterApplied
         } = this.state;
 
         if (!specialProductsListLoading && !preFetchLoading)
@@ -767,39 +769,63 @@ class SpecialProducts extends PureComponent {
                         justifyContent: 'center',
                         alignContent: 'center',
                         alignItems: 'center',
-                        width: deviceWidth,
-                        height: deviceHeight * 0.7
-                    }}
-                >
-                    <FontAwesome5 name='list-alt' size={80} color='#BEBEBE' solid />
+                        flex: 1,
+                        marginTop: 80
+                    }}>
+                    <Image
+                        style={{
+                            width: deviceWidth * 0.4,
+                            height: deviceWidth * 0.4
+                        }}
+                        source={require('../../../assets/images/magnifire-empty.png')}
+                    />
                     <Text
                         style={{
-                            color: '#7E7E7E',
-                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                            fontSize: 17,
-                            padding: 15,
-                            textAlign: 'center'
+                            color: 'black',
+                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                            fontSize: 16,
+                            textAlign: 'center',
+                            marginTop: 10
                         }}
                     >
-                        {locales('titles.noProductFound')}
+                        {
+                            isFilterApplied ?
+                                locales('labels.noSellerFound')
+                                : searchText && searchText.length
+                                    ? <Text
+                                        style={{
+                                            color: 'black',
+                                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                            fontSize: 16,
+                                            textAlign: 'center',
+                                            marginTop: 10
+                                        }}
+                                    >
+                                        {locales('labels.noCaseFor')}<Text
+                                            style={{
+                                                color: '#0097C1',
+                                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                                fontSize: 16,
+                                                textAlign: 'center',
+                                                marginTop: 10
+                                            }}
+                                        >
+                                            {` ${searchText} `}
+                                        </Text><Text
+                                            style={{
+                                                color: 'black',
+                                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                                fontSize: 16,
+                                                textAlign: 'center',
+                                                marginTop: 10
+                                            }}
+                                        >
+                                            {locales('labels.nothingFoundFor')}
+                                        </Text>
+                                    </Text>
+                                    : locales('labels.noSellerFound')
+                        }
                     </Text>
-                    <View >
-                        <Button
-                            onPress={() => this.props.navigation.navigate('RegisterRequestStack', { screen: 'RegisterRequest' })}
-                            style={styles.loginButton}
-                        >
-                            <Text
-                                style={[
-                                    styles.buttonText,
-                                    {
-                                        width: deviceWidth * 0.9,
-                                        fontFamily: 'IRANSansWeb(FaNum)_Bold'
-                                    }]}
-                            >
-                                {locales('titles.registerBuyAdRequest')}
-                            </Text>
-                        </Button>
-                    </View>
                 </View>
             )
         if (!loaded || specialProductsListLoading || preFetchLoading) {
