@@ -191,12 +191,34 @@ class ContactsList extends Component {
 
 
             : searchText ?
-                <View style={{ marginTop: 30, flex: 1, alignSelf: 'center', justifyContent: 'center', alignItems: 'center' }}>
-                    <AntDesign size={135} name='contacts' color='#BEBEBE' />
-                    <Text style={{ fontSize: 20, fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#7E7E7E' }}>
-                        {locales('labels.noContactFound')}
+                <View
+                    style={{
+                        alignSelf: 'center',
+                        justifyContent: 'center',
+                        alignContent: 'center',
+                        alignItems: 'center',
+                        width: deviceWidth,
+                        marginTop: 30
+                    }}>
+                    <Image
+                        style={{
+                            width: deviceWidth * 0.4,
+                            height: deviceWidth * 0.4,
+                        }}
+                        source={require('../../../assets/images/magnifire-empty.png')}
+                    />
+                    <Text
+                        style={{
+                            color: 'black',
+                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                            fontSize: 16,
+                            textAlign: 'center',
+                        }}
+                    >
+                        {locales('labels.noContactFound')}!
                     </Text>
-                </View> :
+                </View>
+                :
                 <View
                     style={{
                         alignSelf: 'center',

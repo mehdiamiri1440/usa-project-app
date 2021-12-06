@@ -769,7 +769,7 @@ class SpecialProducts extends PureComponent {
                         justifyContent: 'center',
                         alignContent: 'center',
                         alignItems: 'center',
-                        flex: 1,
+                        width: deviceWidth,
                         marginTop: 80
                     }}>
                     <Image
@@ -826,6 +826,43 @@ class SpecialProducts extends PureComponent {
                                     : locales('labels.noSellerFound')
                         }
                     </Text>
+                    <Button
+                        onPress={_ => this.props.navigation.navigate('RegisterRequestStack', { screen: 'RegisterRequest' })}
+                        style={{
+                            alignSelf: "center",
+                            width: '50%',
+                            borderRadius: 10,
+                            backgroundColor: "#FF9828",
+                            elevation: 0,
+                            marginTop: 20
+                        }}
+                    >
+                        <View
+                            style={{
+                                flexDirection: 'row-reverse',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                width: '100%'
+                            }}
+                        >
+                            <FontAwesome5
+                                name='plus'
+                                size={14}
+                                color='white'
+                            />
+                            <Text
+                                style={{
+                                    color: 'white',
+                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                    fontSize: 16,
+                                    textAlign: 'center',
+                                    marginRight: 5
+                                }}
+                            >
+                                {locales('labels.registerRequest')}
+                            </Text>
+                        </View>
+                    </Button>
                 </View>
             )
         if (!loaded || specialProductsListLoading || preFetchLoading) {
