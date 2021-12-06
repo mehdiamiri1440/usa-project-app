@@ -328,7 +328,7 @@ const StepOne = _ => {
                                     alignItems: 'center',
                                     justifyContent: 'center',
                                     position: 'absolute',
-                                    left: deviceWidth * 0.365,
+                                    left: deviceWidth * 0.356,
                                     top: deviceWidth * 0.08
                                 }
                             }
@@ -372,7 +372,7 @@ const StepOne = _ => {
                                 justifyContent: 'center',
                                 position: 'absolute',
                                 left: deviceWidth * 0.05,
-                                top: deviceWidth * 0.5
+                                top: deviceWidth * 0.49
                             }
                         }
                         viewBox="0 0 36 47"
@@ -404,7 +404,7 @@ const StepOne = _ => {
                                 justifyContent: 'center',
                                 position: 'absolute',
                                 left: deviceWidth * 0.3,
-                                top: -deviceWidth * 0.1
+                                top: -deviceWidth * 0.11
                             }
                         }
                         viewBox="0 0 36 47"
@@ -541,7 +541,7 @@ const StepTwo = _ => {
                     color: 'white',
                     fontSize: 16,
                     fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                    top: deviceWidth * 0.047
+                    top: deviceWidth * 0.057
                 }}
             >
                 {locales('labels.findBestSellersAndBuyers')}
@@ -575,7 +575,7 @@ const StepThree = _ => {
                     color: 'white',
                     fontSize: 16,
                     fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                    top: -(deviceWidth * 0.033)
+                    top: -(deviceWidth * 0.034)
                 }}
             >
                 {locales('labels.findBestPricesAllAroundTheCountry')}
