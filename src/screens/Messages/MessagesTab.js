@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, FlatList, StyleSheet, AppState } from 'react-native';
+import { View, Text, FlatList, StyleSheet, AppState, Image } from 'react-native';
 import { connect } from 'react-redux';
 import { useScrollToTop, useIsFocused } from '@react-navigation/native';
 import Entypo from 'react-native-vector-icons/dist/Entypo';
@@ -8,6 +8,7 @@ import { Navigation } from 'react-native-navigation';
 import messaging from '@react-native-firebase/messaging';
 import { Button } from 'native-base';
 
+import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 
 import * as messagesActions from '../../redux/messages/actions';
@@ -196,22 +197,78 @@ class ContactsList extends Component {
                         {locales('labels.noContactFound')}
                     </Text>
                 </View> :
-                <View style={{ flex: 1, alignSelf: 'center', marginTop: 50, justifyContent: 'center', alignItems: 'center' }}>
-                    <Entypo size={135} name='message' color='#BEBEBE' />
-                    <Text style={{ fontSize: 20, fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#7E7E7E' }}>
+                <View
+                    style={{
+                        alignSelf: 'center',
+                        justifyContent: 'center',
+                        alignContent: 'center',
+                        alignItems: 'center',
+                        width: deviceWidth,
+                        marginTop: 30
+                    }}>
+                    <Image
+                        style={{
+                            width: deviceWidth * 0.4,
+                            height: deviceWidth * 0.4,
+                        }}
+                        source={require('../../../assets/images/envelop-box.png')}
+                    />
+                    <Text
+                        style={{
+                            color: 'black',
+                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                            fontSize: 16,
+                            textAlign: 'center',
+                        }}
+                    >
                         {locales('labels.noChatFound')}
                     </Text>
-                    <Button
-                        onPress={() => this.props.navigation.navigate(is_seller ? 'RequestsStack' : 'Home')}
-                        style={[styles.loginButton]}
+                    <Text
+                        style={{
+                            color: 'black',
+                            fontFamily: 'IRANSansWeb(FaNum)',
+                            fontSize: 14,
+                            textAlign: 'center',
+                            marginTop: 20,
+                            width: '75%'
+                        }}
                     >
-                        <View style={[styles.textCenterView, styles.buttonText]}>
-                            <Text style={[styles.textWhite, styles.textBold,
-                            styles.textSize18, { marginTop: 3 }]}>
-                                {is_seller ? locales('titles.seeBuyAds') : locales('labels.seeProductsList')}
-                            </Text>
-                        </View>
-
+                        {locales('labels.sendMessageToConnectUsers')}
+                    </Text>
+                    <Button
+                        onPress={_ => is_seller ?
+                            this.props.navigation.navigate('RequestsStack', { screen: 'Requests' })
+                            :
+                            this.props.navigation.navigate('RegisterRequestStack', { screen: 'RegisterRequest' })
+                        }
+                        style={{
+                            flexDirection: 'row-reverse',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            alignSelf: "center",
+                            width: '50%',
+                            borderRadius: 10,
+                            backgroundColor: "#FF9828",
+                            elevation: 0,
+                            marginTop: 20
+                        }}
+                    >
+                        <FontAwesome5
+                            name='user-friends'
+                            size={16}
+                            color='white'
+                        />
+                        <Text
+                            style={{
+                                color: 'white',
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                fontSize: 16,
+                                textAlign: 'center',
+                                marginHorizontal: 8
+                            }}
+                        >
+                            {is_seller ? locales('labels.seeBuyers') : locales('labels.seeSellers')}
+                        </Text>
                     </Button>
                 </View>
     };
