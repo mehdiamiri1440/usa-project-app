@@ -14,7 +14,7 @@ import {
     UIManager,
     Platform
 } from 'react-native';
-import { deviceWidth } from '../../utils/deviceDimenssions';
+import { deviceHeight, deviceWidth } from '../../utils/deviceDimenssions';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import LinearGradient from 'react-native-linear-gradient';
 import Svg, { Path } from "react-native-svg";
@@ -187,7 +187,7 @@ class Intro extends Component {
                             style={{
                                 flexDirection: 'row-reverse',
                                 alignItems: 'center',
-                                width: '25%',
+                                width: '28%',
                                 borderTopLeftRadius: 20,
                                 borderBottomLeftRadius: 20,
                                 padding: 7,
@@ -197,7 +197,7 @@ class Intro extends Component {
                         >
                             <Text
                                 style={{
-                                    color: '#FF9828',
+                                    color: '#FF6600',
                                     fontFamily: 'IRANSansWeb(FaNum)_Medium',
                                     fontSize: 18
                                 }}
@@ -210,11 +210,11 @@ class Intro extends Component {
                             style={{
                                 flexDirection: 'row-reverse',
                                 alignItems: 'center',
-                                width: '25%',
+                                width: '28%',
                                 borderBottomRightRadius: 20,
                                 borderTopRightRadius: 20,
                                 padding: 7,
-                                justifyContent: 'space-around',
+                                justifyContent: 'center',
                                 backgroundColor: '#FF9828'
                             }}
                         >
@@ -222,7 +222,8 @@ class Intro extends Component {
                                 style={{
                                     color: 'white',
                                     fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                    fontSize: 18
+                                    fontSize: 18,
+                                    marginHorizontal: 10
                                 }}
                             >
                                 {locales('titles.next')}
@@ -230,7 +231,7 @@ class Intro extends Component {
                             <FontAwesome5
                                 name='arrow-left'
                                 color='white'
-                                size={20}
+                                size={16}
                             />
                         </Pressable>
                     </View>
@@ -253,9 +254,9 @@ const StepOne = _ => {
                     alignSelf: 'center',
                     justifyContent: 'center',
                     alignItems: 'center',
-                    width: deviceWidth,
                     top: -20,
-                    height: deviceWidth,
+                    width: deviceWidth * 1.06,
+                    height: deviceWidth * 1.06,
                     borderWidth: 2,
                     borderColor: 'rgba(240, 243, 245, 0.1)',
                     borderRadius: 1000
@@ -266,8 +267,8 @@ const StepOne = _ => {
                         alignSelf: 'center',
                         justifyContent: 'center',
                         alignItems: 'center',
-                        width: 320,
-                        height: 320,
+                        width: deviceWidth * 0.78,
+                        height: deviceWidth * 0.78,
                         borderWidth: 2,
                         borderColor: 'rgba(240, 243, 245, 0.3)',
                         borderRadius: 1000
@@ -278,8 +279,8 @@ const StepOne = _ => {
                             alignSelf: 'center',
                             justifyContent: 'center',
                             alignItems: 'center',
-                            width: 200,
-                            height: 200,
+                            width: deviceWidth * 0.45,
+                            height: deviceWidth * 0.45,
                             borderWidth: 2,
                             borderColor: 'rgba(240, 243, 245, 0.6)',
                             borderRadius: 1000
@@ -290,8 +291,8 @@ const StepOne = _ => {
                                 alignSelf: 'center',
                                 justifyContent: 'center',
                                 alignItems: 'center',
-                                width: 120,
-                                height: 120,
+                                width: deviceWidth * 0.25,
+                                height: deviceWidth * 0.25,
                                 borderWidth: 2,
                                 borderColor: 'rgba(240, 243, 245, 0.9)',
                                 borderRadius: 1000
@@ -299,8 +300,8 @@ const StepOne = _ => {
                         >
                             <Image
                                 style={{
-                                    width: 70,
-                                    height: 70,
+                                    width: deviceWidth * 0.15,
+                                    height: deviceWidth * 0.15,
                                     borderRadius: 300
                                 }}
                                 source={require('../../../assets/images/7.jpg')}
@@ -319,16 +320,16 @@ const StepOne = _ => {
                         </View>
                         <Svg
                             xmlns="http://www.w3.org/2000/svg"
-                            width="36"
-                            height="57"
+                            width="56"
+                            height="77"
                             fill="none"
                             style={
                                 {
                                     alignItems: 'center',
                                     justifyContent: 'center',
                                     position: 'absolute',
-                                    right: '-9%',
-                                    top: '34%'
+                                    left: deviceWidth * 0.356,
+                                    top: deviceWidth * 0.08
                                 }
                             }
                             viewBox="0 0 36 47"
@@ -340,13 +341,13 @@ const StepOne = _ => {
                             </Path>
                             <Image
                                 style={{
-                                    width: 20,
-                                    height: 20,
+                                    width: 34,
+                                    height: 34,
                                     top: 12,
-                                    left: 8,
-                                    borderRadius: 200
+                                    borderRadius: 300,
+                                    left: 11
                                 }}
-                                source={require('../../../assets/images/womane.jpg')}
+                                source={require('../../../assets/images/5.jpg')}
                             />
                         </Svg>
                         <View
@@ -362,16 +363,16 @@ const StepOne = _ => {
                     </View>
                     <Svg
                         xmlns="http://www.w3.org/2000/svg"
-                        width="56"
-                        height="77"
+                        width="43"
+                        height="64"
                         fill="none"
                         style={
                             {
                                 alignItems: 'center',
                                 justifyContent: 'center',
                                 position: 'absolute',
-                                left: '5%',
-                                top: '62%'
+                                left: deviceWidth * 0.05,
+                                top: deviceWidth * 0.49
                             }
                         }
                         viewBox="0 0 36 47"
@@ -383,13 +384,13 @@ const StepOne = _ => {
                         </Path>
                         <Image
                             style={{
-                                width: 34,
-                                height: 34,
+                                width: 25,
+                                height: 25,
                                 top: 12,
-                                borderRadius: 300,
-                                left: 11
+                                left: 9,
+                                borderRadius: 200
                             }}
-                            source={require('../../../assets/images/5.jpg')}
+                            source={require('../../../assets/images/womane.jpg')}
                         />
                     </Svg>
                     <Svg
@@ -402,8 +403,8 @@ const StepOne = _ => {
                                 alignItems: 'center',
                                 justifyContent: 'center',
                                 position: 'absolute',
-                                left: '35%',
-                                top: '-11%'
+                                left: deviceWidth * 0.3,
+                                top: -deviceWidth * 0.11
                             }
                         }
                         viewBox="0 0 36 47"
@@ -446,8 +447,8 @@ const StepOne = _ => {
                             alignItems: 'center',
                             justifyContent: 'center',
                             position: 'absolute',
-                            right: '25%',
-                            top: '86%'
+                            right: deviceWidth * 0.25,
+                            top: deviceWidth * 0.88
                         }
                     }
                     viewBox="0 0 36 47"
@@ -529,9 +530,8 @@ const StepTwo = _ => {
         >
             <Image
                 style={{
-                    width: '100%',
-                    height: '65%',
-                    resizeMode: 'contain',
+                    width: deviceWidth,
+                    height: deviceHeight * 0.35,
                 }}
                 source={require('../../../assets/images/hands.png')}
             />
@@ -540,7 +540,8 @@ const StepTwo = _ => {
                     textAlign: 'center',
                     color: 'white',
                     fontSize: 16,
-                    fontFamily: 'IRANSansWeb(FaNum)_Medium'
+                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                    top: deviceWidth * 0.057
                 }}
             >
                 {locales('labels.findBestSellersAndBuyers')}
@@ -573,7 +574,8 @@ const StepThree = _ => {
                     textAlign: 'center',
                     color: 'white',
                     fontSize: 16,
-                    fontFamily: 'IRANSansWeb(FaNum)_Medium'
+                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                    top: -(deviceWidth * 0.034)
                 }}
             >
                 {locales('labels.findBestPricesAllAroundTheCountry')}

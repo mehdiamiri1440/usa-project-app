@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Text, FlatList, View, Pressable, StyleSheet, ActivityIndicator } from 'react-native';
+import {
+    Text,
+    FlatList,
+    View,
+    Pressable,
+    StyleSheet,
+    ActivityIndicator,
+    Image
+} from 'react-native';
 import { connect } from 'react-redux';
 import { Card, CardItem, Body, Button } from 'native-base';
 import { Dialog, Portal, Paragraph } from 'react-native-paper';
@@ -403,28 +411,90 @@ const MyRequests = props => {
 
     const renderListEmptyComponent = _ => {
         return (
-            !myRequestsLoading ? <View
-                style={{
-                    flex: 1,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    alignContent: 'center',
-                    height: deviceHeight,
-                    width: deviceWidth
-                }}
-            >
-                <Fontisto size={35} name='list-1' color='#777777' />
-                <Text
+            !myRequestsLoading ?
+                <View
                     style={{
-                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                        fontSize: 18,
-                        marginTop: 10,
-                        color: '#777777'
-                    }}
-                >
-                    {locales('titles.noRequestFound')}.
-                </Text>
-            </View>
+                        alignSelf: 'center',
+                        justifyContent: 'center',
+                        alignContent: 'center',
+                        alignItems: 'center',
+                        width: deviceWidth,
+                        height: deviceHeight * 0.78
+                    }}>
+                    <Image
+                        style={{
+                            width: deviceWidth * 0.4,
+                            height: deviceWidth * 0.4
+                        }}
+                        source={require('../../../../assets/images/envelop.png')}
+                    />
+                    <Text
+                        style={{
+                            color: 'black',
+                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                            fontSize: 16,
+                            textAlign: 'center',
+                            width: '60%',
+                        }}
+                    >
+                        {locales('labels.noNewRequestOr')} <Text
+                            style={{
+                                color: '#0097C1',
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                fontSize: 16,
+                                textAlign: 'center',
+                                fontWeight: "200"
+                            }}
+                        >
+                            {locales("labels.watingForAcceptance")}
+                        </Text>
+                        {` ${locales("labels.is(Verb)")}`} !
+                    </Text>
+                    <Text
+                        style={{
+                            color: 'black',
+                            fontFamily: 'IRANSansWeb(FaNum)',
+                            fontSize: 14,
+                            textAlign: 'center',
+                            marginTop: 20,
+                            width: '75%'
+                        }}
+                    >
+                        {locales('labels.afterRegisterRequestPressButton')}
+                    </Text>
+                    <Button
+                        onPress={_ => props.navigation.navigate('RegisterRequestStack', { screen: 'RegisterRequest' })}
+                        style={{
+                            flexDirection: 'row-reverse',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            alignSelf: "center",
+                            width: '50%',
+                            borderRadius: 10,
+                            backgroundColor: "#FF9828",
+                            elevation: 0,
+                            marginTop: 20
+                        }}
+                    >
+                        <FontAwesome5
+                            name='plus'
+                            size={14}
+                            solid
+                            color='white'
+                        />
+                        <Text
+                            style={{
+                                color: 'white',
+                                fontFamily: 'IRANSansWeb(FaNum)',
+                                fontSize: 16,
+                                textAlign: 'center',
+                                marginHorizontal: 8
+                            }}
+                        >
+                            {locales('labels.registerRequest')}
+                        </Text>
+                    </Button>
+                </View>
                 : null
         )
     };

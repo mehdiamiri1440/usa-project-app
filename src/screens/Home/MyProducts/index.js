@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { Text, View, FlatList } from 'react-native';
+import { Text, View, FlatList, Image } from 'react-native';
 import { connect } from 'react-redux';
+import { Button } from 'native-base';
 import analytics from '@react-native-firebase/analytics';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import ContentLoader, { Rect } from "react-content-loader/native"
@@ -73,12 +74,86 @@ class MyProducts extends Component {
 
         if (!myProductsLoading) {
             return (
-                <View style={{
-                    alignSelf: 'center', justifyContent: 'center',
-                    alignContent: 'center', alignItems: 'center', width: deviceWidth, height: deviceHeight * 0.78
-                }}>
-                    <FontAwesome5 name='list-alt' size={80} color='#BEBEBE' solid />
-                    <Text style={{ color: '#7E7E7E', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 17, padding: 15, textAlign: 'center' }}>{locales('titles.noUserProductFound')}</Text>
+                <View
+                    style={{
+                        alignSelf: 'center',
+                        justifyContent: 'center',
+                        alignContent: 'center',
+                        alignItems: 'center',
+                        width: deviceWidth,
+                        height: deviceHeight * 0.78
+                    }}>
+                    <Image
+                        style={{
+                            width: deviceWidth * 0.4,
+                            height: deviceWidth * 0.4
+                        }}
+                        source={require('../../../../assets/images/my-products-empty.png')}
+                    />
+                    <Text
+                        style={{
+                            color: 'black',
+                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                            fontSize: 16,
+                            textAlign: 'center',
+                        }}
+                    >
+                        {locales('labels.noNewProductOr')}<Text
+                            style={{
+                                color: '#0097C1',
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                fontSize: 16,
+                                textAlign: 'center',
+                                fontWeight: "200"
+                            }}
+                        >
+                            {locales("labels.watingForAcceptance")}
+                        </Text>
+                        {` ${locales("labels.is(Verb)")}`} !
+                    </Text>
+                    <Text
+                        style={{
+                            color: 'black',
+                            fontFamily: 'IRANSansWeb(FaNum)',
+                            fontSize: 14,
+                            textAlign: 'center',
+                            marginTop: 20,
+                            width: '75%'
+                        }}
+                    >
+                        {locales('labels.pressButtonToRegisterProduct')}
+                    </Text>
+                    <Button
+                        onPress={_ => this.props.navigation.navigate('RegisterProductStack', { screen: 'RegisterProduct' })}
+                        style={{
+                            flexDirection: 'row-reverse',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            alignSelf: "center",
+                            width: '50%',
+                            borderRadius: 10,
+                            backgroundColor: "#FF9828",
+                            elevation: 0,
+                            marginTop: 20
+                        }}
+                    >
+                        <FontAwesome5
+                            name='plus'
+                            size={16}
+                            color='white'
+                        />
+                        <Text
+                            style={{
+                                color: 'white',
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                fontSize: 16,
+                                textAlign: 'center',
+                                marginHorizontal: 8
+                            }}
+                        >
+                            {locales('labels.registerProduct')}
+                        </Text>
+                    </Button>
                 </View>
             )
         }
@@ -157,7 +232,7 @@ class MyProducts extends Component {
                     keyboardDismissMode='on-drag'
                     keyboardShouldPersistTaps='handled'
                     refreshing={myProductsLoading}
-                    ListEmptyComponent={this.renderMyPorductListEmptyComponent()}
+                    ListEmptyComponent={this.renderMyPorductListEmptyComponent}
                     extraData={this.state}
                     onEndReached={() => {
                         if (loaded && myProductsArray.length >= this.state.to_record_number)

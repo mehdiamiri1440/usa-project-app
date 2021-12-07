@@ -180,37 +180,78 @@ class RequestsTab extends Component {
             </View>
 
         if (!relatedBuyAdRequestsList.length && !goldenBuyAdsList.length && !relatedBuyAdRequestsLoading)
-            return <View style={{ height: deviceHeight, paddingHorizontal: 10 }}>
-                <View style={{ height: deviceHeight / 2, justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
-                    <FontAwesome5 size={85} name='list-alt' solid color='#BEBEBE' />
-
-                    <Text style={{ fontSize: 16, fontFamily: 'IRANSansWeb(FaNum)_Bold', marginVertical: 15, color: '#777777', textAlign: 'center' }}>
-                        {locales('labels.registerProductToSeeSuggestedBuyers')}
-                    </Text>
-                </View>
-                <Button
-                    onPress={_ => this.props.navigation.navigate('RegisterProductStack')}
+            return (
+                <View
                     style={{
                         alignSelf: 'center',
-                        backgroundColor: '#00C569',
-                        width: deviceWidth * 0.6,
-                        alignItems: 'center',
                         justifyContent: 'center',
-                        height: 50,
-                        borderRadius: 4,
-                    }}
-                >
-
-                    <Text style={{
-                        color: 'white',
-                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                        fontSize: 18,
-                        textAlign: 'center', textAlignVertical: 'center'
+                        alignContent: 'center',
+                        alignItems: 'center',
+                        width: deviceWidth,
+                        marginTop: 30
                     }}>
-                        {locales('labels.registerProduct')}
+                    <Image
+                        style={{
+                            width: deviceWidth * 0.4,
+                            height: deviceWidth * 0.4
+                        }}
+                        source={require('../../../assets/images/envelop.png')}
+                    />
+                    <Text
+                        style={{
+                            color: 'black',
+                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                            fontSize: 16,
+                            textAlign: 'center',
+                        }}
+                    >
+                        {locales('labels.noRelatedBuyer')}
                     </Text>
-                </Button>
-            </View>
+                    <Text
+                        style={{
+                            color: 'black',
+                            fontFamily: 'IRANSansWeb(FaNum)',
+                            fontSize: 14,
+                            textAlign: 'center',
+                            marginTop: 20,
+                            width: '75%'
+                        }}
+                    >
+                        {locales('labels.registerProductToSeeBuyers')}
+                    </Text>
+                    <Button
+                        onPress={_ => this.props.navigation.navigate('RegisterProductStack', { screen: 'RegisterProduct' })}
+                        style={{
+                            flexDirection: 'row-reverse',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            alignSelf: "center",
+                            width: '50%',
+                            borderRadius: 10,
+                            backgroundColor: "#FF9828",
+                            elevation: 0,
+                            marginTop: 20
+                        }}
+                    >
+                        <FontAwesome5
+                            name='plus'
+                            size={16}
+                            color='white'
+                        />
+                        <Text
+                            style={{
+                                color: 'white',
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                fontSize: 16,
+                                textAlign: 'center',
+                                marginHorizontal: 8
+                            }}
+                        >
+                            {locales('labels.registerProduct')}
+                        </Text>
+                    </Button>
+                </View>
+            )
     };
 
     keyExtractor = item => item.id.toString();

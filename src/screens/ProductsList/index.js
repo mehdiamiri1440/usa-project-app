@@ -866,7 +866,9 @@ class ProductsList extends PureComponent {
 
         const {
             loaded,
-            preFetchLoading
+            preFetchLoading,
+            isFilterApplied,
+            searchText
         } = this.state;
 
         if (!productsListLoading && !preFetchLoading)
@@ -878,57 +880,103 @@ class ProductsList extends PureComponent {
                         alignContent: 'center',
                         alignItems: 'center',
                         width: deviceWidth,
-                        height: deviceHeight * 0.7
-                    }}
-                >
-                    <FontAwesome5 name='list-alt' size={80} color='#BEBEBE' solid />
+                        marginTop: 80
+                    }}>
+                    <Image
+                        style={{
+                            width: deviceWidth * 0.4,
+                            height: deviceWidth * 0.4
+                        }}
+                        source={require('../../../assets/images/magnifire-empty.png')}
+                    />
                     <Text
                         style={{
-                            color: '#7E7E7E',
-                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                            fontSize: 17,
-                            padding: 15,
-                            textAlign: 'center'
+                            color: 'black',
+                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                            fontSize: 16,
+                            textAlign: 'center',
+                            marginTop: 10
                         }}
                     >
-                        {locales('titles.noProductFound')}</Text>
-                    {
-                        is_seller ?
-                            <View >
-                                <Button
-                                    onPress={() => this.props.navigation.navigate('RegisterProductStack')}
-
-                                    style={styles.loginButton}>
-                                    <Text
-                                        style={[
-                                            styles.buttonText,
-                                            {
-                                                width: deviceWidth * 0.9,
-                                                fontFamily: 'IRANSansWeb(FaNum)_Bold'
-                                            }]}
+                        {
+                            isFilterApplied ?
+                                locales('labels.noSellerFound')
+                                : searchText && searchText.length
+                                    ? <Text
+                                        style={{
+                                            color: 'black',
+                                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                            fontSize: 16,
+                                            textAlign: 'center',
+                                            marginTop: 10
+                                        }}
                                     >
-                                        {locales('titles.registerNewProduct')}
+                                        {locales('labels.noCaseFor')}<Text
+                                            style={{
+                                                color: '#0097C1',
+                                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                                fontSize: 16,
+                                                textAlign: 'center',
+                                                marginTop: 10
+                                            }}
+                                        >
+                                            {` ${searchText} `}
+                                        </Text><Text
+                                            style={{
+                                                color: 'black',
+                                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                                fontSize: 16,
+                                                textAlign: 'center',
+                                                marginTop: 10
+                                            }}
+                                        >
+                                            {locales('labels.nothingFoundFor')}
+                                        </Text>
                                     </Text>
-                                </Button>
-                            </View>
+                                    : locales('labels.noSellerFound')
+                        }
+                    </Text>
+                    <Button
+                        onPress={_ => is_seller ?
+                            this.props.navigation.navigate('RegisterProductStack', { screen: 'RegisterProduct' })
                             :
-                            <View >
-                                <Button
-                                    onPress={() => this.props.navigation.navigate('RegisterRequestStack', { screen: 'RegisterRequest' })}
-                                    style={styles.loginButton}
-                                >
-                                    <Text
-                                        style={[
-                                            styles.buttonText,
-                                            {
-                                                width: deviceWidth * 0.9,
-                                                fontFamily: 'IRANSansWeb(FaNum)_Bold'
-                                            }]}
-                                    >
-                                        {locales('titles.registerBuyAdRequest')}
-                                    </Text>
-                                </Button>
-                            </View>}
+                            this.props.navigation.navigate('RegisterRequestStack', { screen: 'RegisterRequest' })
+                        }
+                        style={{
+                            alignSelf: "center",
+                            width: '50%',
+                            borderRadius: 10,
+                            backgroundColor: "#FF9828",
+                            elevation: 0,
+                            marginTop: 20
+                        }}
+                    >
+                        <View
+                            style={{
+                                flexDirection: 'row-reverse',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                width: '100%'
+                            }}
+                        >
+                            <FontAwesome5
+                                name='plus'
+                                size={14}
+                                color='white'
+                            />
+                            <Text
+                                style={{
+                                    color: 'white',
+                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                    fontSize: 16,
+                                    textAlign: 'center',
+                                    marginRight: 5
+                                }}
+                            >
+                                {is_seller ? locales('labels.registerProduct') : locales('labels.registerRequest')}
+                            </Text>
+                        </View>
+                    </Button>
                 </View>
             )
         if (!loaded || productsListLoading || preFetchLoading) {
