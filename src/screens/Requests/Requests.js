@@ -539,6 +539,11 @@ class Requests extends PureComponent {
             buyAdRequestLoading = false
         } = this.props;
 
+        const {
+            searchText,
+            selectedFilterName
+        } = this.state;
+
         if (!!buyAdRequestLoading)
             return [1, 2, 3, 4, 5].map((_, index) =>
                 <View
@@ -574,7 +579,7 @@ class Requests extends PureComponent {
                     justifyContent: 'center',
                     alignContent: 'center',
                     alignItems: 'center',
-                    flex: 1,
+                    width: deviceWidth,
                     marginTop: 80
                 }}>
                 <Image
@@ -593,8 +598,81 @@ class Requests extends PureComponent {
                         marginTop: 10
                     }}
                 >
-                    {locales('labels.noBuyerFound')}
+                    {
+                        selectedFilterName ?
+                            locales('labels.noBuyerFound')
+                            : searchText && searchText.length
+                                ? <Text
+                                    style={{
+                                        color: 'black',
+                                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                        fontSize: 16,
+                                        textAlign: 'center',
+                                        marginTop: 10
+                                    }}
+                                >
+                                    {locales('labels.noCaseFor')}<Text
+                                        style={{
+                                            color: '#0097C1',
+                                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                            fontSize: 16,
+                                            textAlign: 'center',
+                                            marginTop: 10
+                                        }}
+                                    >
+                                        {` ${searchText} `}
+                                    </Text><Text
+                                        style={{
+                                            color: 'black',
+                                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                            fontSize: 16,
+                                            textAlign: 'center',
+                                            marginTop: 10
+                                        }}
+                                    >
+                                        {locales('labels.nothingFoundFor')}
+                                    </Text>
+                                </Text>
+                                : locales('labels.noBuyerFound')
+                    }
                 </Text>
+                <Button
+                    onPress={_ => this.props.navigation.navigate('RegisterProductStack', { screen: 'RegisterProduct' })}
+                    style={{
+                        alignSelf: "center",
+                        width: '50%',
+                        borderRadius: 10,
+                        backgroundColor: "#FF9828",
+                        elevation: 0,
+                        marginTop: 20
+                    }}
+                >
+                    <View
+                        style={{
+                            flexDirection: 'row-reverse',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            width: '100%'
+                        }}
+                    >
+                        <FontAwesome5
+                            name='plus'
+                            size={14}
+                            color='white'
+                        />
+                        <Text
+                            style={{
+                                color: 'white',
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                fontSize: 16,
+                                textAlign: 'center',
+                                marginRight: 5
+                            }}
+                        >
+                            {locales('labels.registerProduct')}
+                        </Text>
+                    </View>
+                </Button>
             </View>
         )
     };
