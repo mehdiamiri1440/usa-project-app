@@ -188,7 +188,7 @@ class RequestsTab extends Component {
                         alignContent: 'center',
                         alignItems: 'center',
                         width: deviceWidth,
-                        marginTop: 30
+                        marginTop: deviceHeight * 0.13
                     }}>
                     <Image
                         style={{
@@ -213,7 +213,7 @@ class RequestsTab extends Component {
                             fontFamily: 'IRANSansWeb(FaNum)',
                             fontSize: 14,
                             textAlign: 'center',
-                            marginTop: 20,
+                            marginVertical: 20,
                             width: '75%'
                         }}
                     >
@@ -230,7 +230,6 @@ class RequestsTab extends Component {
                             borderRadius: 10,
                             backgroundColor: "#FF9828",
                             elevation: 0,
-                            marginTop: 20
                         }}
                     >
                         <FontAwesome5

@@ -1376,7 +1376,7 @@ const routes = props => {
                     (
                         <Tab.Navigator
                             shifting={false}
-                            activeColor="#00C569"
+                            activeColor="#FF9828"
                             inactiveColor="#FFFFFF"
                             barStyle={{
                                 backgroundColor: '#313A43',
@@ -1411,7 +1411,7 @@ const routes = props => {
                         <Tab.Navigator
                             initialRouteName={initialRoute}
                             shifting={false}
-                            activeColor="#00C569"
+                            activeColor="#FF9828"
                             inactiveColor="#FFFFFF"
                             barStyle={{ backgroundColor: '#313A43', display: shouldShowBottomMenu ? 'flex' : 'none' }}
                         >
@@ -1487,7 +1487,7 @@ const routes = props => {
                                             top: -4, borderRadius: 5, justifyContent: 'center', alignItems: 'center'
                                         }}
                                     >
-                                        <FontAwesome5 size={18} name='plus' solid color={!!focused ? '#fff' : '#00C569'} />
+                                        <FontAwesome5 size={18} name='plus' solid color={!!focused ? 'white' : '#264653'} />
                                     </View>,
                                 }}
                                 name={'RegisterProductStack'}
@@ -1511,7 +1511,7 @@ const routes = props => {
                                             width: 30, top: -4, borderRadius: 5, justifyContent: 'center', alignItems: 'center'
                                         }}
                                         >
-                                            <FontAwesome5 size={18} name='plus' solid color={!!focused ? '#fff' : '#00C569'} />
+                                            <FontAwesome5 size={18} name='plus' solid color={!!focused ? 'white' : '#264653'} />
                                         </View>,
                                     }}
                                     name={'RegisterRequestStack'}
@@ -1551,16 +1551,24 @@ const routes = props => {
                                     tabBarBadge: false,
                                     tabBarLabel: <Text style={{ fontFamily: "IRANSansWeb(FaNum)_Medium" }}>{locales('labels.myBuskool')}</Text>,
                                     tabBarIcon: ({ focused, color }) => (
-                                        <Image
-                                            style={{
-                                                borderRadius: deviceWidth * 0.032,
-                                                width: deviceWidth * 0.064, height: deviceWidth * 0.064
-                                            }}
-                                            source={profile_photo && profile_photo.length ?
-                                                { uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${profile_photo}` }
-                                                : require('../../assets/icons/user.png')
-                                            }
-                                        />
+                                        profile_photo && profile_photo.length ?
+                                            <Image
+                                                style={{
+                                                    borderRadius: deviceWidth * 0.032,
+                                                    borderColor: focused ? '#FF9828' : 'white',
+                                                    borderWidth: 1,
+                                                    width: deviceWidth * 0.064, height: deviceWidth * 0.064
+                                                }}
+                                                source={{ uri: `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${profile_photo}` }}
+                                            />
+                                            :
+                                            <FontAwesome5
+                                                name='user-circle'
+                                                size={20}
+                                                solid
+                                                color={focused ? 'orange' : 'white'}
+                                            />
+
                                     ),
                                 }}
                                 name='MyBuskool'
