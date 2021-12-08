@@ -1079,7 +1079,7 @@ export const unSignedInRoutes = [
     {
         label: 'labels.myBuskool',
         name: 'MyBuskool',
-        icon: 'user-alt',
+        icon: 'user-circle',
         key: 'MyBuskool'
     },
 ];

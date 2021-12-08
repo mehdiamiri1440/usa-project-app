@@ -90,11 +90,18 @@ const Messages = props => {
         <TabBar
             onTabPress={() => refreshTabs()}
             {...internalProps}
-            indicatorStyle={{ backgroundColor: '#00C569' }}
+            indicatorStyle={{
+                backgroundColor: '#FF9828',
+                padding: 2,
+                borderRadius: 8,
+                position: 'absolute',
+                bottom: -5
+            }}
             style={{
                 backgroundColor: '#ffffff',
-                borderBottomWidth: 1,
-                borderBottomColor: '#e0e0e0',
+                borderBottomColor: 'rgba(196, 196, 196, 0.5)',
+                borderBottomWidth: 6,
+                elevation: 0,
             }}
             renderLabel={({ route, focused, color }) => (
                 <View style={{
@@ -104,8 +111,9 @@ const Messages = props => {
                 }}>
                     <Text
                         style={{
-                            color: '#333',
-                            fontFamily: 'IRANSansWeb(FaNum)_Bold'
+                            color: focused ? '#FF9828' : 'rgba(0,0,0,0.7)',
+                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                            fontSize: focused ? 15 : 13
                         }}
                     >
                         {route.title}
@@ -148,82 +156,43 @@ const Messages = props => {
                     {...props}
                 />
 
-                {is_seller ?
-                    <View style={{
-                        paddingHorizontal: 15,
-                        left: 0,
-                        backgroundColor: 'white',
-                    }}>
-                        <InputGroup
-                            rounded
-                            style={{
-                                borderWidth: 0,
-                                borderColor: '#e0e0e0',
-                                borderBottomColor: '#e0e0e0',
-                                borderBottomWidth: 1,
-                                width: '100%',
-                                borderRadius: 0,
-
-                            }}>
-                            <Input
-                                value={searchText}
-                                ref={serachInputRef}
-                                onChangeText={handleSearch}
-                                style={{
-                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                    color: '#777'
-                                }}
-                                placeholder={locales('labels.search')}
-                                placeholderTextColor="#e0e0e0"
-
-                            />
-                            <Icon
-                                name='ios-search'
-                                style={{
-                                    color: '#e0e0e0',
-                                    marginHorizontal: 5
-                                }}
-                            />
-                        </InputGroup>
-                    </View>
-                    :
-                    <View
+                <View style={{
+                    paddingHorizontal: 15,
+                    left: 0,
+                    backgroundColor: 'white',
+                }}>
+                    <InputGroup
+                        rounded
                         style={{
-                            marginTop: 5,
-                            marginHorizontal: 5,
-                            padding: 4
-                        }}
-                    >
-                        <InputGroup
-                            rounded
+                            borderWidth: 0,
+                            borderColor: '#e0e0e0',
+                            borderBottomColor: '#e0e0e0',
+                            borderBottomWidth: 1,
+                            width: '100%',
+                            borderRadius: 0,
+
+                        }}>
+                        <Input
+                            value={searchText}
+                            ref={serachInputRef}
+                            onChangeText={handleSearch}
                             style={{
-                                backgroundColor: '#e0e0e0',
-                                elevation: 1
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                color: '#777'
                             }}
-                        >
-                            <Input
-                                value={searchText}
-                                ref={serachInputRef}
-                                onChangeText={handleSearch}
-                                style={{
-                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                    color: '#777'
-                                }}
-                                placeholder={locales('labels.searchContacts')}
-                                placeholderTextColor="#BEBEBE"
+                            placeholder={is_seller ? locales('labels.search') : locales('labels.searchContacts')}
+                            placeholderTextColor="#e0e0e0"
 
-                            />
-                            <Icon
-                                name='ios-search'
-                                style={{
-                                    color: '#7E7E7E',
-                                    marginHorizontal: 5
-                                }}
-                            />
-                        </InputGroup>
-                    </View>
-                }
-
+                        />
+                        <Icon
+                            name='ios-search'
+                            style={{
+                                color: '#e0e0e0',
+                                marginHorizontal: 5
+                            }}
+                        />
+                    </InputGroup>
+                </View>
 
                 {is_seller ?
                     <TabView

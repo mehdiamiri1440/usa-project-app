@@ -1160,7 +1160,7 @@ class ProductDetails extends PureComponent {
                                 <Button
                                     onPress={this.openCallPadFromAchivePrice}
                                     style={{
-                                        backgroundColor: '#FF6600',
+                                        backgroundColor: '#FF9828',
                                         borderRadius: 8,
                                         alignItems: 'center',
                                         justifyContent: 'center',
@@ -1226,7 +1226,7 @@ class ProductDetails extends PureComponent {
                                     style={{
                                         fontFamily: 'IRANSansWeb(FaNum)_Medium',
                                         fontSize: 18,
-                                        color: '#FF6600',
+                                        color: '#FF9828',
                                         textAlign: 'center',
                                         textAlignVertical: 'center',
                                         marginTop: 40,
@@ -2406,7 +2406,7 @@ class ProductDetails extends PureComponent {
                                             elevation: 0,
                                             borderRadius: 6,
                                             borderWidth: 1,
-                                            borderColor: '#FF6600',
+                                            borderColor: '#FF9828',
                                             backgroundColor: 'white',
                                             alignItems: 'center',
                                             justifyContent: 'center',
@@ -2423,7 +2423,7 @@ class ProductDetails extends PureComponent {
                                             viewBox="0 0 20 20"
                                         >
                                             <SvgPath
-                                                fill="#FF6600"
+                                                fill="#FF9828"
                                                 d="M19.388.405a.605.605 0 00-1.141.399c.929 2.67-.915 4.664-2.321 5.732l-.568-.814c-.191-.273-.618-.5-.95-.504l-3.188.014a2.162 2.162 0 00-1.097.338L.729 12.157a1.01 1.01 0 00-.247 1.404l4.269 6.108c.32.455.831.4 1.287.082l9.394-6.588c.27-.191.582-.603.692-.918l.998-3.145c.11-.314.043-.793-.148-1.066l-.346-.496c1.888-1.447 3.848-4.004 2.76-7.133zm-4.371 9.358a1.608 1.608 0 01-2.24-.396 1.614 1.614 0 01.395-2.246 1.607 1.607 0 011.868.017c-.272.164-.459.26-.494.275a.606.606 0 00.259 1.153c.086 0 .174-.02.257-.059.194-.092.402-.201.619-.33a1.615 1.615 0 01-.664 1.586z"
                                             ></SvgPath>
                                         </Svg>
@@ -2431,7 +2431,7 @@ class ProductDetails extends PureComponent {
                                             style={{
                                                 textAlign: 'center',
                                                 textAlignVertical: 'center',
-                                                color: '#FF6600',
+                                                color: '#FF9828',
                                                 fontSize: 16,
                                                 fontFamily: 'IRANSansWeb(FaNum)_Medium'
                                             }}
@@ -2970,7 +2970,7 @@ class ProductDetails extends PureComponent {
                                                 alignItems: 'center',
                                                 width: '45%',
                                                 justifyContent: 'center',
-                                                backgroundColor: isContactInfoShown ? '#E0E0E0' : '#FF6600'
+                                                backgroundColor: isContactInfoShown ? '#E0E0E0' : '#FF9828'
                                                 // width: !!is_elevated ? '50%' : '46%'
                                             }]}
                                         >
@@ -3014,7 +3014,7 @@ class ProductDetails extends PureComponent {
                                             zIndex: 1,
                                             width: (!is_seller && has_phone) ? '45%' : '95%',
                                             backgroundColor:
-                                                (!is_seller && has_phone) ? '#FFD5A8' : '#FF6600',
+                                                (!is_seller && has_phone) ? '#FFD5A8' : '#FF9828',
                                         }]}
                                     >
                                         <View style={[styles.textCenterView, styles.buttonText]}>
@@ -3032,13 +3032,13 @@ class ProductDetails extends PureComponent {
                                                     <SvgPath
                                                         fill={
                                                             (!is_seller && has_phone) ?
-                                                                "#F60" : "white"}
+                                                                "#FF9828" : "white"}
                                                         d="M4 18h2v4.081L11.101 18H16c1.103 0 2-.897 2-2V8c0-1.103-.897-2-2-2H4c-1.103 0-2 .897-2 2v8c0 1.103.897 2 2 2z"
                                                     ></SvgPath>
                                                     <SvgPath
                                                         fill={
                                                             (!is_seller && has_phone) ?
-                                                                "#F60" : "white"}
+                                                                "#FF9828" : "white"}
                                                         d="M20 2H8c-1.103 0-2 .897-2 2h12c1.103 0 2 .897 2 2v8c1.103 0 2-.897 2-2V4c0-1.103-.897-2-2-2z"
                                                     ></SvgPath>
                                                 </Svg>
@@ -3046,7 +3046,7 @@ class ProductDetails extends PureComponent {
                                             <Text style={[styles.textWhite, styles.margin5, styles.textBold, styles.textSize18,
                                             {
                                                 color: (!is_seller && has_phone) ?
-                                                    '#FF6600' : "white"
+                                                    '#FF9828' : "white"
                                             }
                                             ]}>
                                                 {locales('labels.chatWithSeller')}

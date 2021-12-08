@@ -425,11 +425,11 @@ const routes = props => {
         if (focused) {
             if (key == 'RegisterProductStack')
                 return 'white';
-            return '#00c569';
+            return '#FF9828';
         }
         else {
             if (key == 'RegisterProductStack')
-                return '#00c569';
+                return '#264653';
             return 'white';
         }
     };
@@ -1393,7 +1393,7 @@ const routes = props => {
                                         </Text>,
                                         tabBarIcon: ({ focused }) => <View
                                             style={item.key == 'RegisterProductStack' ? {
-                                                backgroundColor: !focused ? '#fff' : '#00C569', height: 30, width: 30,
+                                                backgroundColor: !focused ? '#fff' : '#FF9828', height: 30, width: 30,
                                                 top: -4, borderRadius: 5, justifyContent: 'center', alignItems: 'center'
                                             } : {}}
                                         >
