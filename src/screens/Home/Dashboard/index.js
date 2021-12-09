@@ -170,7 +170,7 @@ const Dashboard = props => {
                             }}
                             onPress={() => props.navigation.navigate('PromoteRegistration')}
                             style={{
-                                backgroundColor: '#00C569',
+                                backgroundColor: '#FF9828',
                                 flexDirection: 'row-reverse',
                                 justifyContent: 'center',
                                 alignItems: 'center',
