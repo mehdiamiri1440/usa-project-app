@@ -306,7 +306,7 @@ const Wallet = props => {
                             flexDirection: 'row-reverse',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            backgroundColor: inventory == 150000 ? '#00C569' : '#F9FAF5',
+                            backgroundColor: inventory == 150000 ? '#FF9828' : '#F9FAF5',
                             borderRadius: 25,
                             padding: 11,
                         }}
@@ -339,7 +339,7 @@ const Wallet = props => {
                             flexDirection: 'row-reverse',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            backgroundColor: inventory == 100000 ? '#00C569' : '#F9FAF5',
+                            backgroundColor: inventory == 100000 ? '#FF9828' : '#F9FAF5',
                             borderRadius: 25,
                             marginHorizontal: 5,
                             padding: 11
@@ -373,7 +373,7 @@ const Wallet = props => {
                             flexDirection: 'row-reverse',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            backgroundColor: inventory == 50000 ? '#00C569' : '#F9FAF5',
+                            backgroundColor: inventory == 50000 ? '#FF9828' : '#F9FAF5',
                             borderRadius: 25,
                             padding: 11
                         }}

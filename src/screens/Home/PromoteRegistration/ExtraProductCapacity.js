@@ -415,7 +415,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         margin: 10,
         borderRadius: 4,
-        backgroundColor: '#00C569',
+        backgroundColor: '#FF9828',
         color: 'white',
     },
     forgotContainer: {

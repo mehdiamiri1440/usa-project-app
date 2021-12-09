@@ -415,7 +415,7 @@ const styles = StyleSheet.create({
         height: 40,
         elevation: 0,
         borderRadius: 4,
-        backgroundColor: '#00C569',
+        backgroundColor: '#FF9828',
         color: 'white',
     },
     dialogWrapper: {
@@ -501,7 +501,7 @@ const styles = StyleSheet.create({
 
     },
     greenButton: {
-        backgroundColor: '#00C569',
+        backgroundColor: '#FF9828',
     },
     redButton: {
         backgroundColor: '#E41C39',

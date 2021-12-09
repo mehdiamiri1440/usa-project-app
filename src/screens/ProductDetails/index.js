@@ -1983,7 +1983,7 @@ class ProductDetails extends PureComponent {
                                 alignItems: 'center',
                                 justifyContent: 'center',
                                 width: '50%',
-                                backgroundColor: '#00C569',
+                                backgroundColor: '#FF9828',
                                 elevation: 0,
                                 borderRadius: 8,
                                 alignSelf: 'center'
@@ -2608,7 +2608,7 @@ class ProductDetails extends PureComponent {
                                         alignSelf: 'center',
                                         marginBottom: 30,
                                         borderRadius: 12,
-                                        borderColor: active_pakage_type == 3 ? '#00C569' : '#E9ECEF',
+                                        borderColor: active_pakage_type == 3 ? '#00c569' : '#E9ECEF',
                                         borderWidth: 1,
                                         backgroundColor: 'white',
                                         paddingHorizontal: 10,
@@ -3259,7 +3259,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         margin: 10,
         borderRadius: 4,
-        backgroundColor: '#00C569',
+        backgroundColor: '#FF9828',
         color: 'white',
         elevation: 0
     },
@@ -3346,7 +3346,7 @@ const styles = StyleSheet.create({
 
     },
     greenButton: {
-        backgroundColor: '#00C569',
+        backgroundColor: '#FF9828',
     },
     forgotContainer: {
         flexDirection: 'row',

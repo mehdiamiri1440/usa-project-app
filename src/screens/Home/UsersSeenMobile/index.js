@@ -142,7 +142,7 @@ const UsersSeenMobile = props => {
                             height: 40,
                             alignItems: 'center',
                             flexDirection: 'row-reverse',
-                            backgroundColor: '#00C569'
+                            backgroundColor: '#FF9828'
                         }}
                     >
                         <FontAwesome5
@@ -223,7 +223,7 @@ const UsersSeenMobile = props => {
                         alignItems: 'center',
                         alignSelf: 'center',
                         flexDirection: 'row-reverse',
-                        backgroundColor: '#00C569'
+                        backgroundColor: '#FF9828'
                     }}
                 >
                     <Text
