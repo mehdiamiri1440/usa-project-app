@@ -427,7 +427,7 @@ class RegisterProductSuccessfully extends Component {
                                 this.fetchContactInfo(item, index);
                             }}
                             style={{
-                                borderColor: !!item.is_golden ? '#c7a84f' : '#00C569',
+                                borderColor: !!item.is_golden ? '#c7a84f' : '#FF9828',
                                 width: '50%',
                                 zIndex: 1000,
                                 marginHorizontal: 10,
@@ -440,7 +440,7 @@ class RegisterProductSuccessfully extends Component {
                                 start={{ x: 0, y: 0.51, z: 1 }}
                                 end={{ x: 0.8, y: 0.2, z: 1 }}
                                 colors={!item.isContactInfoShown ?
-                                    (!item.is_golden ? ['#00C569', '#00C569', '#00C569']
+                                    (!item.is_golden ? ['#FF9828', '#FF9828', '#FF9828']
                                         : ['#c7a84f', '#f9f29f', '#c7a84f'])
                                     : ['#E0E0E0', '#E0E0E0']}
                                 style={{
@@ -504,11 +504,11 @@ class RegisterProductSuccessfully extends Component {
                             start={{ x: 0, y: 0.51, z: 1 }}
                             end={{ x: 0.8, y: 0.2, z: 1 }}
                             colors={item.has_phone ? ['#fff', '#fff']
-                                : (!item.is_golden ? ['#00C569', '#00C569', '#00C569'] : ['#c7a84f', '#f9f29f', '#c7a84f'])
+                                : (!item.is_golden ? ['#FF9828', '#FF9828', '#FF9828'] : ['#c7a84f', '#f9f29f', '#c7a84f'])
                             }
                             style={{
                                 width: '100%',
-                                borderColor: item.has_phone ? '#556080' : (!!item.is_golden ? '#c7a84f' : '#00C569'),
+                                borderColor: item.has_phone ? '#556080' : (!!item.is_golden ? '#c7a84f' : '#FF9828'),
                                 paddingHorizontal: 10,
                                 flexDirection: 'row-reverse',
                                 borderWidth: 1,
@@ -1319,7 +1319,7 @@ const styles = StyleSheet.create({
     },
 
     greenButton: {
-        backgroundColor: '#00C569',
+        backgroundColor: '#FF9828',
     },
     redButton: {
         backgroundColor: '#E41C39',
@@ -1432,7 +1432,7 @@ const styles = StyleSheet.create({
         elevation: 0,
         marginBottom: 10,
         borderRadius: 4,
-        backgroundColor: '#00C569',
+        backgroundColor: '#FF9828',
         color: 'white',
     },
     forgotContainer: {

@@ -746,7 +746,7 @@ const styles = StyleSheet.create({
         textAlign: 'center'
     },
     greenButton: {
-        backgroundColor: '#00C569',
+        backgroundColor: '#FF9828',
     },
     redButton: {
         backgroundColor: '#E41C39',

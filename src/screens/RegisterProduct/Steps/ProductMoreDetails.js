@@ -458,12 +458,12 @@ class ProductMoreDetails extends Component {
                                 style={[styles.addMoreButton, {
                                     borderWidth: 1,
                                     elevation: 0,
-                                    borderColor: '#00C569'
+                                    borderColor: '#FF9828'
                                 }]}
                                 rounded
                             >
                                 <Text style={styles.addMoreButtonText}>{locales('labels.addMore')}</Text>
-                                <FontAwesome5 name='plus' size={14} color='#00C569' />
+                                <FontAwesome5 name='plus' size={14} color='#FF9828' />
                             </Button>
                         </View>
                         <View style={{ marginVertical: 20, flexDirection: 'row', justifyContent: 'space-between' }}>
@@ -522,7 +522,7 @@ const styles = StyleSheet.create({
         fontFamily: 'IRANSansWeb(FaNum)_Bold'
     },
     addMoreButtonText: {
-        color: '#00C569',
+        color: '#FF9828',
         marginRight: 5,
         fontFamily: 'IRANSansWeb(FaNum)_Light',
         textAlign: 'center',
@@ -561,7 +561,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         margin: 10,
         width: '37%',
-        backgroundColor: '#00C569',
+        backgroundColor: '#FF9828',
         borderRadius: 5,
         color: 'white',
         alignItems: 'center',
@@ -577,7 +577,7 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         paddingHorizontal: 10,
         // width: '30%',
-        color: '#00C569',
+        color: '#FF9828',
         alignItems: 'center',
         alignSelf: 'flex-start',
         justifyContent: 'center'

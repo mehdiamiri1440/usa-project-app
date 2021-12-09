@@ -284,7 +284,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         margin: 10,
         elevation: 0,
-        backgroundColor: '#00C569',
+        backgroundColor: '#FF9828',
         borderRadius: 5,
         width: '37%',
         color: 'white',
