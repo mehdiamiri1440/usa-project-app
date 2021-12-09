@@ -1154,7 +1154,7 @@ export const InstagramStoryPreview = ({
                 <Button
                     onPress={captureImage}
                     style={{
-                        backgroundColor: "#00C569",
+                        backgroundColor: "#FF9828",
                         position: 'absolute',
                         bottom: 20,
                         borderRadius: 12,

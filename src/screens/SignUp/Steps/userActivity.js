@@ -97,7 +97,7 @@ class UserActivity extends React.Component {
                         onPress={() => this.setState({ activityType: 'buyer', activityTypeError: '' })}
                         style={{
                             width: deviceWidth * 0.4,
-                            borderWidth: 1, borderColor: activityTypeError ? '#D50000' : (activityType == 'buyer' ? '#00C569' : '#BDC4CC'),
+                            borderWidth: 1, borderColor: activityTypeError ? '#D50000' : (activityType == 'buyer' ? '#FF9828' : '#BDC4CC'),
                             paddingHorizontal: 20,
                             paddingVertical: 10,
                             borderRadius: 5,
@@ -111,7 +111,7 @@ class UserActivity extends React.Component {
                             selected={activityType === 'buyer'}
                             color={"#BEBEBE"}
                             // style={{ marginHorizontal: 10 }}
-                            selectedColor={"#00C569"}
+                            selectedColor={"#FF9828"}
                         />
                         <View style={{ flexDirection: 'row-reverse' }}>
                             <Image
@@ -130,7 +130,7 @@ class UserActivity extends React.Component {
                         }}
                         style={{
                             width: deviceWidth * 0.4,
-                            borderWidth: 1, borderColor: activityTypeError ? '#D50000' : (activityType == 'seller' ? '#00C569' : '#BDC4CC'),
+                            borderWidth: 1, borderColor: activityTypeError ? '#D50000' : (activityType == 'seller' ? '#FF9828' : '#BDC4CC'),
                             paddingHorizontal: 20,
                             paddingVertical: 10,
                             borderRadius: 5,
@@ -147,7 +147,7 @@ class UserActivity extends React.Component {
                             selected={activityType === 'seller'}
                             color={"#BEBEBE"}
                             // style={{ marginHorizontal: 10 }}
-                            selectedColor={"#00C569"}
+                            selectedColor={"#FF9828"}
                         />
                         <View style={{ flexDirection: 'row-reverse' }}>
                             <Image
@@ -352,7 +352,7 @@ const styles = StyleSheet.create({
     loginButton: {
         textAlign: 'center',
         margin: 10,
-        backgroundColor: '#00C569',
+        backgroundColor: '#FF9828',
         borderRadius: 5,
         width: deviceWidth * 0.4,
         color: 'white',

@@ -893,7 +893,7 @@ const styles = StyleSheet.create({
     loginButton: {
         textAlign: 'center',
         margin: 10,
-        backgroundColor: '#00C569',
+        backgroundColor: '#FF9828',
         borderRadius: 5,
         width: '37%',
 

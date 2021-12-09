@@ -502,7 +502,7 @@ const GetMobileNumber = props => {
                 onPress={submitMobileNumber}
                 style={{
                     backgroundColor: mobileNumber.length && validator.isMobileNumber(mobileNumber) ?
-                        '#00C569' :
+                        '#FF9828' :
                         '#E0E0E0',
                     width: '45%',
                     alignItems: 'center',
@@ -1106,7 +1106,7 @@ const GetFullName = props => {
                         onPress={onSubmit}
                         style={{
                             backgroundColor: lastName.length && firstName.length && !firstNameError && !lastNameError ?
-                                '#00C569' :
+                                '#FF9828' :
                                 '#E0E0E0',
                             width: '45%',
                             alignItems: 'center',
@@ -2296,7 +2296,7 @@ const GetIntentToSendBuyAdRequest = props => {
                             onPress={onSubmit}
                             style={{
                                 backgroundColor: amount && amount.length && !amountError && !productTypeError ?
-                                    '#00C569' :
+                                    '#FF9828' :
                                     '#E0E0E0',
                                 width: '45%',
                                 alignItems: 'center',
@@ -2464,7 +2464,7 @@ const styles = StyleSheet.create({
     },
     loginButton: {
         textAlign: 'center',
-        backgroundColor: '#00C569',
+        backgroundColor: '#FF9828',
         elevation: 0,
         borderRadius: 8,
         width: deviceWidth * 0.4,

@@ -888,7 +888,7 @@ class Requests extends PureComponent {
                                 this.props.navigation.navigate('PromoteRegistration')
                             }}
                             style={{
-                                borderRadius: 5, backgroundColor: '#00C569',
+                                borderRadius: 5, backgroundColor: '#FF9828',
                                 alignSelf: 'center', margin: 10, width: deviceWidth * 0.3
                             }}
                         >
@@ -1369,7 +1369,7 @@ const styles = StyleSheet.create({
     loginButton: {
         textAlign: 'center',
         margin: 10,
-        backgroundColor: '#00C569',
+        backgroundColor: '#FF9828',
         width: deviceWidth * 0.5,
         color: 'white',
         alignItems: 'center',
@@ -1462,7 +1462,7 @@ const styles = StyleSheet.create({
 
     },
     greenButton: {
-        backgroundColor: '#00C569',
+        backgroundColor: '#FF9828',
     },
     redButton: {
         backgroundColor: '#E41C39',
