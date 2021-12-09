@@ -928,11 +928,6 @@ class ProductDetails extends PureComponent {
 
     renderFullScreenImage = ({ item }) => {
 
-        const {
-            photos,
-            currentSlide
-        } = this.state;
-
         return (
             <View style={{
                 backgroundColor: 'rgba(59,59,59,0.85)',
@@ -943,32 +938,7 @@ class ProductDetails extends PureComponent {
                 justifyContent: 'center',
                 flexDirection: 'row-reverse'
             }}>
-                {currentSlide == photos.length - 1 ?
-                    null
-                    :
-                    <Pressable
-                        onPress={this.onNextButtonOfImagesClicked}
-                        style={{
-                            width: 30,
-                            height: 30,
-                            borderRadius: 300,
-                            padding: 5,
-                            alignItems: 'center',
-                            alignSelf: 'center',
-                            justifyContent: 'center',
-                            backgroundColor: 'rgba(0,0,0,0.8)',
-                            position: 'absolute',
-                            left: 0,
-                            zIndex: 1000
-                        }}
-                    >
-                        <FontAwesome5
-                            name='angle-right'
-                            size={20}
-                            color='white'
-                        />
-                    </Pressable>
-                }
+
                 <ImageZoom
                     cropHeight={deviceHeight}
                     cropWidth={deviceWidth}
@@ -987,32 +957,7 @@ class ProductDetails extends PureComponent {
                         source={{ uri: item }}
                     />
                 </ImageZoom>
-                {currentSlide == 0 ?
-                    null
-                    :
-                    <Pressable
-                        onPress={this.onPrevButtonOfImagesClicked}
-                        style={{
-                            width: 30,
-                            height: 30,
-                            borderRadius: 300,
-                            padding: 5,
-                            alignItems: 'center',
-                            alignSelf: 'center',
-                            justifyContent: 'center',
-                            backgroundColor: 'rgba(0,0,0,0.8)',
-                            position: 'absolute',
-                            right: 0,
-                            zIndex: 1000
-                        }}
-                    >
-                        <FontAwesome5
-                            name='angle-left'
-                            size={20}
-                            color='white'
-                        />
-                    </Pressable>
-                }
+
             </View>
         )
     };
@@ -1108,7 +1053,8 @@ class ProductDetails extends PureComponent {
 
             isScrollForButtonsReached,
 
-            animatedValue
+            animatedValue,
+            currentSlide
         } = this.state;
 
 
@@ -1936,6 +1882,33 @@ class ProductDetails extends PureComponent {
                             color='white'
                         />
                     </Pressable>
+                    {currentSlide == 0 ?
+                        null
+                        :
+                        <Pressable
+                            onPress={this.onPrevButtonOfImagesClicked}
+                            style={{
+                                width: 30,
+                                height: 30,
+                                borderRadius: 300,
+                                padding: 5,
+                                alignItems: 'center',
+                                alignSelf: 'center',
+                                justifyContent: 'center',
+                                backgroundColor: 'rgba(0,0,0,0.8)',
+                                position: 'absolute',
+                                left: 0,
+                                top: '50%',
+                                zIndex: 1000
+                            }}
+                        >
+                            <FontAwesome5
+                                name='angle-left'
+                                size={20}
+                                color='white'
+                            />
+                        </Pressable>
+                    }
                     <FlatList
                         pagingEnabled
                         renderItem={this.renderFullScreenImage}
@@ -1950,6 +1923,33 @@ class ProductDetails extends PureComponent {
                         ref={this.flatListRef}
                         showsHorizontalScrollIndicator={false}
                     />
+                    {currentSlide == photos.length - 1 ?
+                        null
+                        :
+                        <Pressable
+                            onPress={this.onNextButtonOfImagesClicked}
+                            style={{
+                                width: 30,
+                                height: 30,
+                                borderRadius: 300,
+                                padding: 5,
+                                alignItems: 'center',
+                                alignSelf: 'center',
+                                justifyContent: 'center',
+                                backgroundColor: 'rgba(0,0,0,0.8)',
+                                position: 'absolute',
+                                right: 0,
+                                top: '50%',
+                                zIndex: 1000
+                            }}
+                        >
+                            <FontAwesome5
+                                name='angle-right'
+                                size={20}
+                                color='white'
+                            />
+                        </Pressable>
+                    }
                 </Modal>
 
                 <Header
