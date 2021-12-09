@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import {
     Text, Image, View, StyleSheet, Modal, ScrollView,
     Pressable, Linking, Share, RefreshControl,
-    ActivityIndicator, Animated
+    ActivityIndicator, Animated, FlatList
 } from 'react-native';
 import RBSheet from "react-native-raw-bottom-sheet";
 import { Dialog, Portal, Paragraph } from 'react-native-paper';
@@ -117,7 +117,8 @@ class ProductDetails extends PureComponent {
 
             isScrollForButtonsReached: false,
 
-            animatedValue: new Animated.Value(screenHeight + 140)
+            animatedValue: new Animated.Value(screenHeight + 140),
+            currentSlide: 0
         }
     }
 
@@ -128,6 +129,7 @@ class ProductDetails extends PureComponent {
     minimumPriceRef = React.createRef();
     refRBSheet = React.createRef();
     priceRBSheet = React.createRef();
+    flatListRef = React.createRef();
 
 
     wrapper = React.createRef();
@@ -893,6 +895,130 @@ class ProductDetails extends PureComponent {
                     useNativeDriver: true
                 }).start()
             });
+    };
+
+    onPrevButtonOfImagesClicked = _ => {
+        const {
+            currentSlide
+        } = this.state;
+
+        if (currentSlide !== 0) {
+            this.flatListRef?.current?.scrollToIndex({
+                index: this.state.currentSlide - 1,
+                animated: true,
+            });
+        }
+        this.setState({ currentSlide: this.state.currentSlide - 1 });
+    };
+
+    onNextButtonOfImagesClicked = _ => {
+        const {
+            currentSlide,
+            photos
+        } = this.state;
+
+        if (currentSlide !== photos.length) {
+            this.flatListRef?.current?.scrollToIndex({
+                index: this.state.currentSlide + 1,
+                animated: true,
+            });
+        }
+        this.setState({ currentSlide: this.state.currentSlide + 1 });
+    };
+
+    renderFullScreenImage = ({ item }) => {
+
+        const {
+            photos,
+            currentSlide
+        } = this.state;
+
+        return (
+            <View style={{
+                backgroundColor: 'rgba(59,59,59,0.85)',
+                height: deviceHeight,
+                width: deviceWidth,
+                alignItems: 'center',
+                alignSelf: 'center',
+                justifyContent: 'center',
+                flexDirection: 'row-reverse'
+            }}>
+                {currentSlide == photos.length - 1 ?
+                    null
+                    :
+                    <Pressable
+                        onPress={this.onNextButtonOfImagesClicked}
+                        style={{
+                            width: 30,
+                            height: 30,
+                            borderRadius: 300,
+                            padding: 5,
+                            alignItems: 'center',
+                            alignSelf: 'center',
+                            justifyContent: 'center',
+                            backgroundColor: 'rgba(0,0,0,0.8)',
+                            position: 'absolute',
+                            left: 0,
+                            zIndex: 1000
+                        }}
+                    >
+                        <FontAwesome5
+                            name='angle-right'
+                            size={20}
+                            color='white'
+                        />
+                    </Pressable>
+                }
+                <ImageZoom
+                    cropHeight={deviceHeight}
+                    cropWidth={deviceWidth}
+                    imageHeight={deviceHeight}
+                    imageWidth={deviceWidth}
+                >
+                    <Image
+                        style={{
+                            width: deviceWidth,
+                            height: deviceHeight,
+                            alignItems: 'center',
+                            alignSelf: 'center',
+                            justifyContent: 'center',
+                            resizeMode: 'contain'
+                        }}
+                        source={{ uri: item }}
+                    />
+                </ImageZoom>
+                {currentSlide == 0 ?
+                    null
+                    :
+                    <Pressable
+                        onPress={this.onPrevButtonOfImagesClicked}
+                        style={{
+                            width: 30,
+                            height: 30,
+                            borderRadius: 300,
+                            padding: 5,
+                            alignItems: 'center',
+                            alignSelf: 'center',
+                            justifyContent: 'center',
+                            backgroundColor: 'rgba(0,0,0,0.8)',
+                            position: 'absolute',
+                            right: 0,
+                            zIndex: 1000
+                        }}
+                    >
+                        <FontAwesome5
+                            name='angle-left'
+                            size={20}
+                            color='white'
+                        />
+                    </Pressable>
+                }
+            </View>
+        )
+    };
+
+    onViewableItemsChanged = ({ viewableItems, changed }) => {
+        this.setState({ currentSlide: viewableItems[0].index })
     };
 
     render() {
@@ -1788,30 +1914,42 @@ class ProductDetails extends PureComponent {
                     visible={showFullSizeImageModal}
                     onRequestClose={() => this.setState({ showFullSizeImageModal: false })}
                 >
-                    <View style={{
-                        backgroundColor: 'rgba(59,59,59,0.85)',
-                        height: deviceHeight, alignItems: 'center', justifyContent: 'center'
-                    }}>
-                        <AntDesign name='arrowright' size={30} color='white'
-                            style={{ alignSelf: 'flex-end', justifyContent: 'center', position: 'absolute', right: 10, top: 10 }}
-                            onPress={() => this.setState({ showFullSizeImageModal: false })}
+                    <Pressable
+                        style={{
+                            position: 'absolute',
+                            top: 10,
+                            right: 10,
+                            backgroundColor: 'rgba(0,0,0,0.8)',
+                            width: 25,
+                            height: 25,
+                            borderRadius: 300,
+                            padding: 5,
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            zIndex: 10000
+                        }}
+                        onPress={() => this.setState({ showFullSizeImageModal: false })}
+                    >
+                        <FontAwesome5
+                            name='times'
+                            size={16}
+                            color='white'
                         />
-                        <ImageZoom
-                            cropWidth={deviceWidth}
-                            cropHeight={deviceHeight * 0.9}
-                            imageWidth={deviceWidth}
-                            imageHeight={deviceHeight * 0.9}
-                        >
-                            <Image
-                                style={{
-                                    alignSelf: 'center',
-                                    width: '100%',
-                                    height: '100%',
-                                    resizeMode: 'contain'
-                                }}
-                                source={{ uri: photosWithCompletePath[selectedImage] }} />
-                        </ImageZoom>
-                    </View>
+                    </Pressable>
+                    <FlatList
+                        pagingEnabled
+                        renderItem={this.renderFullScreenImage}
+                        initialScrollIndex={selectedImage}
+                        data={photosWithCompletePath}
+                        keyExtractor={(_, index) => index.toString()}
+                        horizontal
+                        onViewableItemsChanged={this.onViewableItemsChanged}
+                        viewabilityConfig={{
+                            itemVisiblePercentThreshold: 50
+                        }}
+                        ref={this.flatListRef}
+                        showsHorizontalScrollIndicator={false}
+                    />
                 </Modal>
 
                 <Header
