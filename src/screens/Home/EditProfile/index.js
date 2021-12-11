@@ -857,39 +857,6 @@ class EditProfile extends Component {
                     </View>
 
                 </ScrollView>
-
-                <Pressable
-                    android_ripple={{
-                        color: '#ededed'
-                    }}
-                    activeOpacity={1}
-                    onPress={this.shareProfile}
-                    style={{
-                        width: deviceWidth,
-                        flexDirection: 'row-reverse',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        backgroundColor: '#4eb9fb',
-                        padding: 10
-                    }}
-                >
-                    <FontAwesome
-                        name='address-card'
-                        color='white'
-                        size={20}
-                    />
-                    <Text
-                        style={{
-                            color: 'white',
-                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                            marginHorizontal: 7,
-                            fontSize: 16
-                        }}
-                    >
-                        {locales('labels.sendYourProfileToYourFriends')}
-                    </Text>
-                </Pressable>
-
             </>
         )
     }
