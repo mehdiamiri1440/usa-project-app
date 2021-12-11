@@ -113,22 +113,23 @@ const Messages = props => {
                         style={{
                             color: focused ? '#FF9828' : 'rgba(0,0,0,0.7)',
                             fontFamily: focused ? 'IRANSansWeb(FaNum)_Medium' : 'IRANSansWeb(FaNum)_Light',
-                            fontSize: focused ? 17 : 15,
+                            fontSize: focused ? 16 : 14,
                             top: focused ? -2 : 0,
-                            width: '80%'
+                            width: '90%',
+                            textAlign: 'center',
                         }}
                     >
                         {route.title}
                     </Text>
                     {route.key == 'requests' ?
                         <View style={{
-                            marginTop: 1,
-                            marginLeft: 7
+                            marginTop: 3,
+                            left: focused ? -7 : -13
                         }}>
                             <Svg
 
                                 xmlns="http://www.w3.org/2000/svg"
-                                width="23" height="22.014" viewBox="0 0 23 22.014"
+                                width="18" height="17" viewBox="0 0 23 22.014"
                             >
                                 <Defs>
                                     <LinearGradient id="grad" x2="0.864" y2="1">

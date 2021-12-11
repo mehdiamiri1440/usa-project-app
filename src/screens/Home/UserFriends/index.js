@@ -15,7 +15,6 @@ import {
 } from 'react-native';
 import { connect } from 'react-redux';
 import { Button } from 'native-base';
-import LinearGradient from "react-native-linear-gradient";
 import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
 import ContentLoader, { Rect, Circle } from "react-content-loader/native";
 import BgLinearGradient from "react-native-linear-gradient";
