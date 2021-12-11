@@ -183,6 +183,10 @@ class ProductDetails extends PureComponent {
                             });
                 });
         }
+        return this.props.navigation.navigate('Home',
+            {
+                screen: 'ProductsList'
+            });
     };
 
     componentDidUpdate(prevProps, prevState) {
