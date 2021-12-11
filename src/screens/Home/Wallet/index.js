@@ -472,7 +472,7 @@ const Wallet = props => {
                     start={{ x: 0, y: 1 }}
                     end={{ x: 0.8, y: 0.2 }}
                     style={{ width: '70%', borderRadius: 5, alignSelf: 'center', padding: 10, margin: 20 }}
-                    colors={['#21AD93', '#00C569']}
+                    colors={['#FF9727', '#FF6701']}
                 >
                     <TouchableOpacity
                         onPress={_ => !userProfileLoading && onSubmit()}

@@ -1096,7 +1096,7 @@ class ChatScreen extends Component {
                                             margin: 20,
                                             minHeight: 60,
                                         }}
-                                        colors={['#21AD93', '#00C569']}
+                                        colors={['#FF9727', '#FF6701']}
                                     >
                                         <Pressable
                                             android_ripple={{

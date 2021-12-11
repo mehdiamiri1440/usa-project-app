@@ -341,7 +341,7 @@ class GuidToRegisterProduct extends React.Component {
                         <FontAwesome5
                             name='arrow-down'
                             size={30}
-                            color='#20AE91'
+                            color='#FF9828'
                             style={{ marginTop: 20, marginBottom: 10 }}
                         />
                     </Animated.View>
@@ -354,7 +354,7 @@ class GuidToRegisterProduct extends React.Component {
                             start={{ x: 0, y: 1 }}
                             style={[styles.loginButton, { width: 240, height: 55 }]}
                             end={{ x: 0.8, y: 0.2 }}
-                            colors={['#21AD93', '#00C569']}
+                            colors={['#FF9727', '#FF6701']}
                         >
                             <FontAwesome name='plus-square' size={25} color='white' style={{ marginHorizontal: 9 }} />
                             <Text style={[styles.buttonText, { fontSize: 18 }]}>{locales('titles.registerNewProduct')}</Text>
