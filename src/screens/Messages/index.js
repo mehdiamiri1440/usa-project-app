@@ -114,7 +114,8 @@ const Messages = props => {
                             color: focused ? '#FF9828' : 'rgba(0,0,0,0.7)',
                             fontFamily: focused ? 'IRANSansWeb(FaNum)_Medium' : 'IRANSansWeb(FaNum)_Light',
                             fontSize: focused ? 17 : 15,
-                            top: focused ? -2 : 0
+                            top: focused ? -2 : 0,
+                            width: '80%'
                         }}
                     >
                         {route.title}
