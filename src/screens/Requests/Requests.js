@@ -13,6 +13,7 @@ import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import ContentLoader, { Rect } from "react-content-loader/native"
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import LinearGradient from 'react-native-linear-gradient';
+import Svg, { Path } from 'react-native-svg';
 
 import { deviceWidth, deviceHeight, enumHelper, dataGenerator } from '../../utils';
 import * as homeActions from '../../redux/home/actions';
@@ -747,12 +748,13 @@ class Requests extends PureComponent {
                     }}
                     onPress={() => this.setState({ sortModalFlag: true })}
                     style={{
-                        borderRadius: 12,
+                        borderRadius: 8,
                         marginTop: 7,
                         marginBottom: 8,
                         marginHorizontal: 5,
-                        borderColor: '#EDEDED',
+                        borderColor: 'rgba(38, 70, 83, 0.5)',
                         borderWidth: 1,
+                        paddingVertical: 1,
                         paddingHorizontal: 10,
                         flexDirection: 'row-reverse',
                         alignItems: 'center',
@@ -762,11 +764,28 @@ class Requests extends PureComponent {
                         backgroundColor: '#FFFFFF',
                         minHeight: 30
                     }}>
-                    <FontAwesome5 name='sort-amount-down-alt' size={12} color='#707070' />
+
+                    <Svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="20"
+                        fill="none"
+                        viewBox="0 0 24 20"
+                    >
+                        <Path
+                            fill="#2E3A59"
+                            d="M15 16.175l-2.7-2.25 1.414-1.18L15 13.82l5.008-4.167 1.411 1.181L15 16.175zm-4-2.009H2V12.5h9v1.666zm4-3.333H2V9.166h13v1.667zM15 7.5H2V5.833h13V7.5z"
+                        ></Path>
+                    </Svg>
+
                     <Text
                         style={{
-                            textAlign: 'center', textAlignVertical: 'center', fontSize: 15,
-                            color: '#707070', marginRight: 2, fontFamily: 'IRANSansWeb(FaNum)_Medium'
+                            textAlign: 'center',
+                            textAlignVertical: 'center',
+                            fontSize: 16,
+                            color: 'black',
+                            marginRight: 2,
+                            fontFamily: 'IRANSansWeb(FaNum)'
                         }}
                     >
                         {locales('labels.sort')}
@@ -780,36 +799,36 @@ class Requests extends PureComponent {
                 }}
                 onPress={() => this.handleSortItemClick(BM)}
                 style={{
-                    borderRadius: 12,
+                    borderRadius: 8,
                     marginTop: 7,
                     marginBottom: 8,
                     marginHorizontal: 5,
-                    borderColor: '#FA8888',
+                    borderColor: '#F03738',
                     borderWidth: 1,
                     flexDirection: 'row-reverse',
                     alignItems: 'center',
                     justifyContent: 'center',
                     maxWidth: 120,
                     alignSelf: 'flex-end',
-                    backgroundColor: '#FCF6F6',
+                    backgroundColor: 'rgba(240, 55, 56, 0.35)',
                     minHeight: 30,
                     paddingHorizontal: 10
                 }}>
-                <FontAwesome5 name='sort-amount-down-alt' size={12} color='#E41C38' />
+                <FontAwesome5 name='sort-amount-down-alt' size={12} color='#F24E1E' />
                 <Text
                     style={{
                         textAlign: 'center',
                         textAlignVertical: 'center',
-                        fontSize: 15,
+                        fontSize: 16,
                         paddingHorizontal: 3,
-                        color: '#E41C38',
+                        color: 'black',
                         marginRight: 2,
-                        fontFamily: 'IRANSansWeb(FaNum)_Medium'
+                        fontFamily: 'IRANSansWeb(FaNum)'
                     }}
                 >
                     {enumHelper.convertEnumValueToTitle(list, sort_by)}
                 </Text>
-                <FontAwesome5 name='times' size={12} color='#E41C38' />
+                <FontAwesome5 name='times' size={12} color='#F24E1E' />
             </Pressable>
         );
     };
@@ -825,21 +844,50 @@ class Requests extends PureComponent {
                 }}
                 onPress={() => this.setState({ showFilters: true })}
                 style={{
-                    borderRadius: 12, marginTop: 7, marginBottom: 8,
-                    borderColor: '#EDEDED',
+                    borderRadius: 8,
+                    marginTop: 7,
+                    marginBottom: 8,
+                    borderColor: 'rgba(38, 70, 83, 0.5)',
                     borderWidth: 1,
-                    flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
-                    backgroundColor: '#FAFAFA', minHeight: 30, paddingHorizontal: 15
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    backgroundColor: '#FAFAFA',
+                    minHeight: 30,
+                    paddingHorizontal: 15
                 }}>
                 <Text
                     style={{
-                        textAlign: 'center', textAlignVertical: 'center', fontSize: 15,
-                        color: '#707070', marginRight: 2, fontFamily: 'IRANSansWeb(FaNum)_Medium'
+                        textAlign: 'center',
+                        textAlignVertical: 'center',
+                        fontSize: 16,
+                        color: 'black',
+                        marginRight: 2,
+                        fontFamily: 'IRANSansWeb(FaNum)'
                     }}
                 >
-                    {locales('labels.classifications')}
+                    {locales('titles.categories')}
                 </Text>
-                <FontAwesome5 name='list' size={12} color='#707070' />
+                <Svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="18"
+                    height="18"
+                    fill="none"
+                    viewBox="0 0 18 18"
+                    style={{
+                        marginHorizontal: 2
+                    }}
+                >
+                    <Path
+                        fill="#264653"
+                        d="M12.396.667h2.822c1.169 0 2.116.955 2.116 2.133v2.846a2.124 2.124 0 01-2.116 2.133h-2.822a2.124 2.124 0 01-2.115-2.133V2.8c0-1.178.947-2.133 2.115-2.133z"
+                        opacity="0.4"
+                    ></Path>
+                    <Path
+                        fill="#264653"
+                        d="M5.604 10.222c1.168 0 2.115.955 2.115 2.133V15.2a2.125 2.125 0 01-2.115 2.134H2.782A2.125 2.125 0 01.667 15.2v-2.845c0-1.178.947-2.133 2.115-2.133h2.822zm9.614 0c1.169 0 2.115.955 2.115 2.133V15.2a2.125 2.125 0 01-2.115 2.134h-2.822a2.125 2.125 0 01-2.115-2.134v-2.845c0-1.178.947-2.133 2.115-2.133h2.822zM5.604.667c1.168 0 2.115.955 2.115 2.133v2.846a2.124 2.124 0 01-2.115 2.133H2.782A2.124 2.124 0 01.667 5.646V2.8c0-1.178.947-2.133 2.115-2.133h2.822z"
+                    ></Path>
+                </Svg>
             </Pressable>
         )
     };
@@ -979,30 +1027,31 @@ class Requests extends PureComponent {
                         }}
                         onPress={() => this.removeFilter()}
                         style={{
-                            borderRadius: 12,
+                            borderRadius: 8,
                             marginHorizontal: 5,
-                            borderColor: '#FA8888',
+                            borderColor: '#F03738',
                             borderWidth: 1,
                             flexDirection: 'row-reverse',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            backgroundColor: '#FCF6F6',
+                            backgroundColor: 'rgba(240, 55, 56, 0.35)',
                             minHeight: 30,
+                            paddingVertical: 1,
                             paddingHorizontal: 15
                         }}>
                         <Text
                             style={{
                                 textAlign: 'center',
                                 textAlignVertical: 'center',
-                                fontSize: 15,
+                                fontSize: 16,
                                 paddingLeft: 10,
-                                color: '#E41C38',
-                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                color: 'black',
+                                fontFamily: 'IRANSansWeb(FaNum)',
                             }}
                         >
                             {searchText}
                         </Text>
-                        <FontAwesome5 name='times' size={12} color='#E41C38' />
+                        <FontAwesome5 name='times' size={12} color='#F24E1E' />
                     </Pressable>
                     :
                     null}
@@ -1604,30 +1653,46 @@ class Requests extends PureComponent {
                     {...this.props}
                 />
 
-                <View
-                    style={{ backgroundColor: 'white', borderBottomWidth: 1, borderColor: '#EDEDED' }}
-                >
-                    <InputGroup style={{ borderRadius: 5, backgroundColor: '#F2F2F2', paddingHorizontal: 10 }}>
-                        <Icon name='ios-search' style={{ color: '#7E7E7E', marginHorizontal: 5 }} />
-                        <Input
-                            value={searchText}
-                            ref={this.serachInputRef}
-                            onChangeText={text => this.handleSearch(text)}
-                            style={{
-                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                paddingBottom: 10, color: '#777', textAlignVertical: 'bottom'
-                            }}
-                            placeholderTextColor="#bebebe"
-                            placeholder={locales('labels.searchBuyAdRequest')} />
-                    </InputGroup>
 
-                </View>
+                <InputGroup
+                    style={{
+                        borderRadius: 5,
+                        backgroundColor: '#F2F2F2',
+                        paddingHorizontal: 10,
+                        width: deviceWidth * 0.98,
+                        marginVertical: 10,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        alignSelf: 'center'
+                    }}
+                >
+                    <Input
+                        value={searchText}
+                        ref={this.serachInputRef}
+                        onChangeText={text => this.handleSearch(text)}
+                        style={{
+                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                            paddingBottom: 10,
+                            color: '#777',
+                            textAlignVertical: 'bottom'
+                        }}
+                        placeholderTextColor="#bebebe"
+                        placeholder={locales('labels.searchBuyAdRequest')}
+                    />
+                    <Icon
+                        name='ios-search'
+                        style={{
+                            color: '#7E7E7E',
+                            right: -5
+                        }}
+                    />
+                </InputGroup>
 
 
                 <View
                     style={{
                         flexDirection: 'row-reverse',
-                        justifyContent: 'center',
+                        justifyContent: 'flex-start',
                         alignItems: 'center',
                         borderBottomColor: '#EBEBEB',
                         borderBottomWidth: 1,
@@ -1635,8 +1700,9 @@ class Requests extends PureComponent {
                         maxHeight: 50,
                     }}
                 >
-                    {this.renderAllCategoriesIcon()}
 
+                    {this.renderFilterHeaderComponent()}
+                    {!isFilterApplied ? this.renderAllCategoriesIcon() : null}
                     {showFilters ?
                         <Filters
                             selectedFilter={this.selectedFilter}
@@ -1645,22 +1711,6 @@ class Requests extends PureComponent {
                         />
                         : null}
 
-                    <FlatList
-                        contentContainerStyle={{
-                            alignItems: 'center',
-                            justifyContent: 'flex-start',
-                            minWidth: '100%'
-                        }}
-                        ref={this.categoryFiltersRef}
-                        data={(isFilterApplied && searchText && searchText.length) ? [] : categoriesList}
-                        keyExtractor={(_, index) => index.toString()}
-                        horizontal={true}
-                        showsHorizontalScrollIndicator={false}
-                        inverted={true}
-                        ListEmptyComponent={this.renderCategoriesFilterListEmptyComponent}
-                        ListHeaderComponent={this.renderFilterHeaderComponent}
-                        renderItem={({ item }) => this.renderCategoriesListItem(item, false)}
-                    />
                 </View>
 
                 <FlatList
