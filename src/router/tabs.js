@@ -1061,7 +1061,7 @@ export const unSignedInRoutes = [
     {
         label: 'labels.buyers',
         name: 'RequestsStack',
-        icon: 'list-ul',
+        icon: 'user-friends',
         key: 'RequestsStack'
     },
     {

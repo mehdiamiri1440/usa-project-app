@@ -828,7 +828,7 @@ const routes = props => {
                                         solid
                                         name='user-circle'
                                         color='#adadad'
-                                        size={16}
+                                        size={22}
                                     />
                                     <Text
                                         style={{
@@ -1564,7 +1564,7 @@ const routes = props => {
                                             :
                                             <FontAwesome5
                                                 name='user-circle'
-                                                size={20}
+                                                size={22}
                                                 solid
                                                 color={focused ? 'orange' : 'white'}
                                             />
@@ -1601,7 +1601,7 @@ const routes = props => {
                         justifyContent: 'center',
                     }}
                 >
-                    <FontAwesome5 name='list-alt' color='white' size={22} solid />
+                    <FontAwesome5 name='user-friends' color='white' size={22} solid />
                     <Text style={{
                         color: 'white',
                         fontFamily: 'IRANSansWeb(FaNum)_Medium',

@@ -847,6 +847,7 @@ class Requests extends PureComponent {
                     borderRadius: 8,
                     marginTop: 7,
                     marginBottom: 8,
+                    marginRight: 4,
                     borderColor: 'rgba(38, 70, 83, 0.5)',
                     borderWidth: 1,
                     flexDirection: 'row',
@@ -1701,7 +1702,6 @@ class Requests extends PureComponent {
                     }}
                 >
 
-                    {this.renderFilterHeaderComponent()}
                     {!isFilterApplied ? this.renderAllCategoriesIcon() : null}
                     {showFilters ?
                         <Filters
@@ -1710,6 +1710,7 @@ class Requests extends PureComponent {
                             showFilters={showFilters}
                         />
                         : null}
+                    {this.renderFilterHeaderComponent()}
 
                 </View>
 

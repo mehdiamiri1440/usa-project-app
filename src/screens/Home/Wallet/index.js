@@ -275,16 +275,7 @@ const Wallet = props => {
                 >
                     {locales('titles.increaseInventory')}
                 </Text>
-                <View
-                    style={{
-                        backgroundColor: '#00C569',
-                        width: 100,
-                        height: 4,
-                        alignSelf: 'flex-end',
-                        marginHorizontal: 10,
-                        marginTop: 15
-                    }}
-                ></View>
+
                 <View
                     style={{
                         flexDirection: 'row-reverse',
