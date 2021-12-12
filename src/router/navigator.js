@@ -1437,7 +1437,7 @@ const routes = props => {
                                 options={{
                                     tabBarBadge: false,
                                     tabBarLabel: <Text style={{ fontFamily: "IRANSansWeb(FaNum)_Medium" }}>{locales('labels.buyers')}</Text>,
-                                    tabBarIcon: ({ focused, color }) => <FontAwesome5 size={20} name='list-ul' solid color={color} />,
+                                    tabBarIcon: ({ focused, color }) => <FontAwesome5 size={20} name='user-friends' solid color={color} />,
                                 }}
                                 name={'RequestsStack'}
                                 component={RequestsStack}

@@ -261,7 +261,7 @@ class ContactsList extends Component {
                         onPress={_ => is_seller ?
                             this.props.navigation.navigate('RequestsStack', { screen: 'Requests' })
                             :
-                            this.props.navigation.navigate('RegisterRequestStack', { screen: 'RegisterRequest' })
+                            this.props.navigation.navigate('SpecialProducts', { screen: 'SpecialProducts' })
                         }
                         style={{
                             flexDirection: 'row-reverse',
