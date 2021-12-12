@@ -1660,7 +1660,7 @@ class Requests extends PureComponent {
                         backgroundColor: '#F2F2F2',
                         paddingHorizontal: 10,
                         width: deviceWidth * 0.98,
-                        marginVertical: 10,
+                        marginTop: 10,
                         alignItems: 'center',
                         justifyContent: 'center',
                         alignSelf: 'center'
