@@ -105,7 +105,7 @@ module.exports = {
     "labels.selectActivityZone": "حوزه فعالیت را مشخص کنید",
     'labels.welcomeToBiggestSellersAndBuyersSociety': 'به اجتماع بزرگ خریداران و فروشندگان عمده بپیوندید.',
     'labels.findBestSellersAndBuyers': 'خریداران و فروشندگان معتبر را برای معامله پیدا کنید.',
-    'labels.findBestPricesAllAroundTheCountry': 'از قیمت های روز بازار در سراسر کشور آگاه شودید.',
+    'labels.findBestPricesAllAroundTheCountry': 'از قیمت های روز بازار در سراسر کشور آگاه شوید.',
     'labels.notRegistered': 'ثبت نشده‌است',
     'labels.companyName': 'نام شرکت',
     'labels.justSubmit': 'ثبت',
