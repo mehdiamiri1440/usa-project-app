@@ -141,7 +141,7 @@ class RequestsTab extends Component {
 
     renderListEmptyComponent = _ => {
         const { relatedBuyAdRequestsLoading } = this.props;
-        const { relatedBuyAdRequestsList = [], goldenBuyAdsList = [] } = this.state;
+        const { relatedBuyAdRequestsList = [], goldenBuyAdsList = [], searchText } = this.state;
 
         if (goldenBuyAdsList && goldenBuyAdsList.length)
             if (relatedBuyAdRequestsList && !relatedBuyAdRequestsList.length)
@@ -179,8 +179,35 @@ class RequestsTab extends Component {
                 </View>)}
             </View>
 
-        if (!relatedBuyAdRequestsList.length && !goldenBuyAdsList.length && !relatedBuyAdRequestsLoading)
-            return (
+        if (!relatedBuyAdRequestsList.length && !goldenBuyAdsList.length && !relatedBuyAdRequestsLoading) {
+            return searchText ? <View
+                style={{
+                    alignSelf: 'center',
+                    justifyContent: 'center',
+                    alignContent: 'center',
+                    alignItems: 'center',
+                    width: deviceWidth,
+                    marginTop: 30
+                }}>
+                <Image
+                    style={{
+                        width: deviceWidth * 0.4,
+                        height: deviceWidth * 0.4,
+                    }}
+                    source={require('../../../assets/images/magnifire-empty.png')}
+                />
+                <Text
+                    style={{
+                        color: 'black',
+                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                        fontSize: 16,
+                        textAlign: 'center',
+                        marginTop: 10
+                    }}
+                >
+                    {locales('labels.noBuyerFound')}
+                </Text>
+            </View> :
                 <View
                     style={{
                         alignSelf: 'center',
@@ -250,7 +277,7 @@ class RequestsTab extends Component {
                         </Text>
                     </Button>
                 </View>
-            )
+        }
     };
 
     keyExtractor = item => item.id.toString();

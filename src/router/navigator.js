@@ -690,7 +690,7 @@ const routes = props => {
                                     margin: 20,
                                     minHeight: 60,
                                 }}
-                                colors={['#21AD93', '#00C569']}
+                                colors={['#FF9828', '#FF6600']}
                             >
                                 <Pressable
                                     android_ripple={{
