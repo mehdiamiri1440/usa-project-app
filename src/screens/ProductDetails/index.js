@@ -282,10 +282,10 @@ class ProductDetails extends PureComponent {
             } = productDetailsInfo[1];
 
             this.setState({
-                minimumOrder: min_sale_amount?.toString(),
-                maximumPrice: max_sale_price?.toString(),
-                minimumPrice: min_sale_price?.toString(),
-                amount: stock?.toString(),
+                minimumOrder: min_sale_amount ? min_sale_amount?.toString() : 0,
+                maximumPrice: max_sale_price ? max_sale_price?.toString() : 0,
+                minimumPrice: min_sale_price ? min_sale_price?.toString() : 0,
+                amount: stock ? stock?.toString() : 0,
                 loaded: true,
 
                 related_products,
@@ -869,7 +869,7 @@ class ProductDetails extends PureComponent {
         } = this.state;
 
         if (
-            event.nativeEvent.contentOffset.y > 60
+            event?.nativeEvent?.contentOffset?.y > 60
             && !isScrollForButtonsReached
         )
 
@@ -887,7 +887,7 @@ class ProductDetails extends PureComponent {
                 }).start()
             });
         else if (
-            event.nativeEvent.contentOffset.y < 60
+            event?.nativeEvent?.contentOffset?.y < 60
             && isScrollForButtonsReached
         )
             this.setState({
