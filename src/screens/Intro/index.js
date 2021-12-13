@@ -541,7 +541,7 @@ const StepTwo = _ => {
                     color: 'white',
                     fontSize: 16,
                     fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                    top: deviceWidth * 0.057
+                    top: deviceWidth * 0.063
                 }}
             >
                 {locales('labels.findBestSellersAndBuyers')}
@@ -575,7 +575,7 @@ const StepThree = _ => {
                     color: 'white',
                     fontSize: 16,
                     fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                    top: -(deviceWidth * 0.034)
+                    top: -(deviceWidth * 0.04)
                 }}
             >
                 {locales('labels.findBestPricesAllAroundTheCountry')}
