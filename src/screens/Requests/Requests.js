@@ -744,48 +744,30 @@ class Requests extends PureComponent {
             return (
                 <Pressable
                     android_ripple={{
-                        color: '#ededed'
+                        color: '#ededed',
+                        radius: 12
                     }}
                     onPress={() => this.setState({ sortModalFlag: true })}
                     style={{
-                        borderRadius: 8,
+                        borderRadius: 12,
                         marginTop: 7,
                         marginBottom: 8,
                         marginHorizontal: 5,
-                        borderColor: 'rgba(38, 70, 83, 0.5)',
+                        borderColor: '#EDEDED',
                         borderWidth: 1,
-                        paddingVertical: 1,
                         paddingHorizontal: 10,
                         flexDirection: 'row-reverse',
                         alignItems: 'center',
-                        alignSelf: 'flex-end',
                         justifyContent: 'center',
-                        maxWidth: '100%',
+                        minWidth: 100,
                         backgroundColor: '#FFFFFF',
                         minHeight: 30
                     }}>
-
-                    <Svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="20"
-                        fill="none"
-                        viewBox="0 0 24 20"
-                    >
-                        <Path
-                            fill="#2E3A59"
-                            d="M15 16.175l-2.7-2.25 1.414-1.18L15 13.82l5.008-4.167 1.411 1.181L15 16.175zm-4-2.009H2V12.5h9v1.666zm4-3.333H2V9.166h13v1.667zM15 7.5H2V5.833h13V7.5z"
-                        ></Path>
-                    </Svg>
-
+                    <FontAwesome5 name='sort-amount-down-alt' size={12} color='#707070' />
                     <Text
                         style={{
-                            textAlign: 'center',
-                            textAlignVertical: 'center',
-                            fontSize: 16,
-                            color: 'black',
-                            marginRight: 2,
-                            fontFamily: 'IRANSansWeb(FaNum)'
+                            textAlign: 'center', textAlignVertical: 'center', fontSize: 15,
+                            color: '#707070', marginRight: 2, fontFamily: 'IRANSansWeb(FaNum)_Medium'
                         }}
                     >
                         {locales('labels.sort')}
@@ -844,51 +826,36 @@ class Requests extends PureComponent {
                 }}
                 onPress={() => this.setState({ showFilters: true })}
                 style={{
-                    borderRadius: 8,
+                    borderRadius: 12,
                     marginTop: 7,
                     marginBottom: 8,
-                    marginRight: 4,
-                    borderColor: 'rgba(38, 70, 83, 0.5)',
+                    borderColor: '#EDEDED',
                     borderWidth: 1,
                     flexDirection: 'row',
                     alignItems: 'center',
                     justifyContent: 'center',
                     backgroundColor: '#FAFAFA',
                     minHeight: 30,
-                    paddingHorizontal: 15
+                    paddingHorizontal: 15,
+                    marginHorizontal: 5
                 }}>
                 <Text
                     style={{
                         textAlign: 'center',
                         textAlignVertical: 'center',
-                        fontSize: 16,
-                        color: 'black',
+                        fontSize: 15,
+                        color: '#707070',
                         marginRight: 2,
-                        fontFamily: 'IRANSansWeb(FaNum)'
+                        fontFamily: 'IRANSansWeb(FaNum)_Medium'
                     }}
                 >
-                    {locales('titles.categories')}
+                    {locales('labels.classifications')}
                 </Text>
-                <Svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="18"
-                    height="18"
-                    fill="none"
-                    viewBox="0 0 18 18"
-                    style={{
-                        marginHorizontal: 2
-                    }}
-                >
-                    <Path
-                        fill="#264653"
-                        d="M12.396.667h2.822c1.169 0 2.116.955 2.116 2.133v2.846a2.124 2.124 0 01-2.116 2.133h-2.822a2.124 2.124 0 01-2.115-2.133V2.8c0-1.178.947-2.133 2.115-2.133z"
-                        opacity="0.4"
-                    ></Path>
-                    <Path
-                        fill="#264653"
-                        d="M5.604 10.222c1.168 0 2.115.955 2.115 2.133V15.2a2.125 2.125 0 01-2.115 2.134H2.782A2.125 2.125 0 01.667 15.2v-2.845c0-1.178.947-2.133 2.115-2.133h2.822zm9.614 0c1.169 0 2.115.955 2.115 2.133V15.2a2.125 2.125 0 01-2.115 2.134h-2.822a2.125 2.125 0 01-2.115-2.134v-2.845c0-1.178.947-2.133 2.115-2.133h2.822zM5.604.667c1.168 0 2.115.955 2.115 2.133v2.846a2.124 2.124 0 01-2.115 2.133H2.782A2.124 2.124 0 01.667 5.646V2.8c0-1.178.947-2.133 2.115-2.133h2.822z"
-                    ></Path>
-                </Svg>
+                <FontAwesome5
+                    name='list'
+                    size={12}
+                    color='#707070'
+                />
             </Pressable>
         )
     };
