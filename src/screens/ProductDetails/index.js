@@ -11,7 +11,6 @@ import { Navigation } from 'react-native-navigation';
 import analytics from '@react-native-firebase/analytics';
 import { connect } from 'react-redux';
 import {
-    responsiveHeight,
     responsiveScreenHeight
 } from "react-native-responsive-dimensions";
 import { Input, Label, Item, Button, Toast } from 'native-base';
