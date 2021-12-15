@@ -781,7 +781,7 @@ class Requests extends PureComponent {
                 }}
                 onPress={() => this.handleSortItemClick(BM)}
                 style={{
-                    borderRadius: 8,
+                    borderRadius: 12,
                     marginTop: 7,
                     marginBottom: 8,
                     marginHorizontal: 5,
@@ -995,7 +995,7 @@ class Requests extends PureComponent {
                         }}
                         onPress={() => this.removeFilter()}
                         style={{
-                            borderRadius: 8,
+                            borderRadius: 12,
                             marginHorizontal: 5,
                             borderColor: '#F03738',
                             borderWidth: 1,
