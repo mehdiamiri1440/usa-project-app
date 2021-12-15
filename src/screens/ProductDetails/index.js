@@ -861,14 +861,26 @@ class ProductDetails extends PureComponent {
         })
     };
 
-    handleScrollChange = event => {
+    handleScrollChange = (event = {}) => {
 
         const {
             isScrollForButtonsReached
         } = this.state;
 
+        const {
+            nativeEvent = {}
+        } = event;
+
+        const {
+            contentOffset = {}
+        } = nativeEvent;
+
+        const {
+            y
+        } = contentOffset;
+
         if (
-            event?.nativeEvent?.contentOffset?.y > 60
+            y > 60
             && !isScrollForButtonsReached
         )
 
@@ -886,7 +898,7 @@ class ProductDetails extends PureComponent {
                 }).start()
             });
         else if (
-            event?.nativeEvent?.contentOffset?.y < 60
+            y < 60
             && isScrollForButtonsReached
         )
             this.setState({
@@ -917,7 +929,7 @@ class ProductDetails extends PureComponent {
     onNextButtonOfImagesClicked = _ => {
         const {
             currentSlide,
-            photos
+            photos = []
         } = this.state;
 
         if (currentSlide !== photos.length) {
