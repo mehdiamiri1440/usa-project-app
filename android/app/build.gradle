@@ -159,7 +159,9 @@ android {
       pickFirst '**/arm64-v8a/libc++_shared.so'
       pickFirst '**/libjsc.so'
    }
-
+  dexOptions {
+      javaMaxHeapSize "4g"
+   }
     defaultConfig {
         applicationId "com.buskool"
         minSdkVersion rootProject.ext.minSdkVersion
