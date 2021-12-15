@@ -1154,8 +1154,6 @@ class ProductDetails extends PureComponent {
 
             shouldShowPriceSheet,
 
-            isScrollForButtonsReached,
-
             animatedValue,
             currentSlide
         } = this.state;
@@ -1443,7 +1441,12 @@ class ProductDetails extends PureComponent {
                         >
                             <Text
                                 onPress={_ => this.closeContactInfoSlider()}
-                                style={{ width: '100%', textAlign: 'right', paddingHorizontal: 20 }}>
+                                style={{
+                                    width: '100%',
+                                    textAlign: 'right',
+                                    paddingHorizontal: 20
+                                }}
+                            >
                                 <EvilIcons name='close-o' size={35} color='#777777' />
                             </Text>
 
@@ -1571,7 +1574,6 @@ class ProductDetails extends PureComponent {
 
                             <AntDesign name="exclamation" color="#f8bb86" size={70} style={[
                                 styles.dialogIcon, {
-
                                     borderColor: '#facea8',
                                 }]}
                             />
