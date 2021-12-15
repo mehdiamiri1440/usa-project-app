@@ -274,25 +274,25 @@ class ProductDetails extends PureComponent {
             } = profile_info;
 
             const {
-                address,
+                address = '',
                 category_id,
-                category_name,
+                category_name = '',
                 city_id,
-                city_name,
+                city_name = '',
                 confirmed,
-                description,
+                description = '',
                 is_elevated,
                 max_sale_price = 0,
                 min_sale_amount = 0,
                 min_sale_price = 0,
                 myuser_id,
-                product_name,
+                product_name = '',
                 province_id,
-                province_name,
+                province_name = '',
                 stock = 0,
                 sub_category_id,
-                sub_category_name,
-                updated_at,
+                sub_category_name = '',
+                updated_at = '',
                 id: productIdFromProductDetails
             } = main;
 
@@ -663,6 +663,7 @@ class ProductDetails extends PureComponent {
 
             const {
                 sub_category_name = '',
+                category_name = '',
                 id
             } = main;
 
