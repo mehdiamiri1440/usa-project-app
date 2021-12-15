@@ -1569,36 +1569,24 @@ class ProductDetails extends PureComponent {
                                 alignItems: 'center'
                             }}>
 
-                            <AntDesign name="exclamation" color="#f8bb86" size={70} style={[styles.dialogIcon, {
-                                borderColor: '#facea8',
-                            }]} />
+                            <AntDesign name="exclamation" color="#f8bb86" size={70} style={[
+                                styles.dialogIcon, {
+
+                                    borderColor: '#facea8',
+                                }]}
+                            />
 
                         </View>
                         <Paragraph
-                            style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#e41c38', paddingHorizontal: 15, textAlign: 'center' }}>
+                            style={{
+                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                color: '#e41c38',
+                                paddingHorizontal: 15,
+                                textAlign: 'center'
+                            }}
+                        >
                             {accessToContactInfoErrorMessage}
                         </Paragraph>
-                        {/* <View style={{
-                            width: '100%',
-                            textAlign: 'center',
-                            alignItems: 'center'
-                        }}>
-                            <Button
-                                style={[styles.modalButton, styles.greenButton]}
-                                onPress={() => {
-                                    this.setState({ showMobileNumberWarnModal: false });
-                                    this.props.navigation.navigate('MyBuskool', { screen: 'PromoteRegistration' });
-                                }}
-                            >
-
-                                <Text style={[{ fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16 },
-                                styles.buttonText]}>{locales('titles.promoteRegistration')}
-                                </Text>
-                            </Button>
-                        </View> */}
-
-
-
 
                         <Dialog.Actions style={{
                             justifyContent: 'center',
@@ -1690,7 +1678,8 @@ class ProductDetails extends PureComponent {
                                             regular
                                             style={{
                                                 borderColor: amountError ? '#D50000' : amount && amount.length ? '#00C569' : '#a8a8a8',
-                                                borderRadius: 5, padding: 3
+                                                borderRadius: 5,
+                                                padding: 3
                                             }}>
                                             <Input
                                                 style={{
@@ -1714,16 +1703,23 @@ class ProductDetails extends PureComponent {
 
                                             />
                                         </Item>
-                                        <Label style={{
-                                            height: 20,
-                                            fontFamily: 'IRANSansWeb(FaNum)_Light',
-                                            textAlign: !amountError && amount && amount.length ? 'left' : 'right'
-                                        }}>
-
-                                            {!!amountError && <Text style={{
-                                                fontSize: 14, color: '#D81A1A',
+                                        <Label
+                                            style={{
+                                                height: 20,
                                                 fontFamily: 'IRANSansWeb(FaNum)_Light',
-                                            }}> {amountError}</Text>}
+                                                textAlign: !amountError && amount && amount.length ? 'left' : 'right'
+                                            }}>
+
+                                            {
+                                                !!amountError && <Text
+                                                    style={{
+                                                        fontSize: 14,
+                                                        color: '#D81A1A',
+                                                        fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                                    }}>
+                                                    {amountError}
+                                                </Text>
+                                            }
                                         </Label>
                                     </View>
                                     <View
@@ -1772,10 +1768,15 @@ class ProductDetails extends PureComponent {
                                             textAlign: !minimumOrderError && minimumOrder && minimumOrder.length ? 'left' : 'right'
                                         }}>
 
-                                            {!!minimumOrderError && <Text style={{
-                                                fontSize: 14, color: '#D81A1A',
-                                                fontFamily: 'IRANSansWeb(FaNum)_Light',
-                                            }}> {minimumOrderError}</Text>}
+                                            {
+                                                !!minimumOrderError && <Text
+                                                    style={{
+                                                        fontSize: 14, color: '#D81A1A',
+                                                        fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                                    }}>
+                                                    {minimumOrderError}
+                                                </Text>
+                                            }
                                         </Label>
                                     </View>
                                     <View
@@ -1818,10 +1819,14 @@ class ProductDetails extends PureComponent {
                                                 placeholderTextColor="#BEBEBE"
                                             />
                                         </Item>
-                                        <Label style={{
-                                            fontSize: 14, color: '#D81A1A', height: 20,
-                                            fontFamily: 'IRANSansWeb(FaNum)_Light',
-                                        }}>
+                                        <Label
+                                            style={{
+                                                fontSize: 14,
+                                                color: '#D81A1A',
+                                                height: 20,
+                                                fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                            }}
+                                        >
                                             {!!minimumPriceError ? minimumPriceError : null}
                                         </Label>
                                     </View>
@@ -2121,13 +2126,15 @@ class ProductDetails extends PureComponent {
                                 </ContentLoader>
                             </View>
 
-                            <ShadowView style={{
-                                shadowColor: 'black',
-                                shadowOpacity: 0.13,
-                                shadowRadius: 1,
-                                shadowOffset: { width: 0, height: 2 },
+                            <ShadowView
+                                style={{
+                                    shadowColor: 'black',
+                                    shadowOpacity: 0.13,
+                                    shadowRadius: 1,
+                                    shadowOffset: { width: 0, height: 2 },
 
-                            }}>
+                                }}
+                            >
                                 <View style={{
                                     paddingTop: 20,
                                     alignItems: 'center',
@@ -2243,12 +2250,20 @@ class ProductDetails extends PureComponent {
 
                                 <View
                                     style={{
-                                        flexDirection: 'row-reverse', alignItems: 'center',
-                                        marginVertical: 30, width: deviceWidth, justifyContent: 'space-between',
+                                        flexDirection: 'row-reverse',
+                                        alignItems: 'center',
+                                        marginVertical: 30,
+                                        width: deviceWidth,
+                                        justifyContent: 'space-between',
                                         paddingHorizontal: 15
                                     }}>
                                     <Text
-                                        style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', width: '68%', fontSize: 20 }}>
+                                        style={{
+                                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                            width: '68%',
+                                            fontSize: 20
+                                        }}
+                                    >
                                         {product_name ? product_name : '---'}
                                     </Text>
                                     <View>
@@ -2389,11 +2404,28 @@ class ProductDetails extends PureComponent {
                                         onPress={() => Toast.show({
                                             text: locales('titles.elevatorHasAdded'),
                                             position: "bottom",
-                                            style: { borderRadius: 10, bottom: 100, width: '90%', alignSelf: 'center' },
-                                            textStyle: { fontFamily: 'IRANSansWeb(FaNum)_Light', textAlign: 'center' },
+                                            style: {
+                                                borderRadius: 10,
+                                                bottom: 100,
+                                                width: '90%',
+                                                alignSelf: 'center'
+                                            },
+                                            textStyle: {
+                                                fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                                textAlign: 'center'
+                                            },
                                             duration: 3000
-                                        })} name='chart-line' size={25} color='white'
-                                        style={{ backgroundColor: '#7E7E7E', borderRadius: 4, padding: 10, elevation: 1 }} />
+                                        })}
+                                        name='chart-line'
+                                        size={25}
+                                        color='white'
+                                        style={{
+                                            backgroundColor: '#7E7E7E',
+                                            borderRadius: 4,
+                                            padding: 10,
+                                            elevation: 1
+                                        }}
+                                    />
                                         : null
                                     }
                                 </View>
@@ -2683,19 +2715,30 @@ class ProductDetails extends PureComponent {
                                     : null}
 
                                 <View
-
                                     style={{
                                         paddingVertical: 5,
-                                        marginVertical: 10, width: deviceWidth * 0.97,
+                                        marginVertical: 10,
+                                        width: deviceWidth * 0.97,
                                         paddingHorizontal: 10
                                     }}>
-                                    <Text style={{ fontSize: 18, fontFamily: 'IRANSansWeb(FaNum)_Bold', marginBottom: 15 }}>
+                                    <Text
+                                        style={{
+                                            fontSize: 18,
+                                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                            marginBottom: 15
+                                        }}
+                                    >
                                         {locales('titles.headerDescription')}
                                     </Text>
-                                    <Text style={{
-                                        fontSize: 16, color: '#777777', marginBottom: 20,
-                                        fontFamily: 'IRANSansWeb(FaNum)_Light',
-                                    }}>{descriptionWithoutHtml ? descriptionWithoutHtml : '---'}</Text>
+                                    <Text
+                                        style={{
+                                            fontSize: 16,
+                                            color: '#777777',
+                                            marginBottom: 20,
+                                            fontFamily: 'IRANSansWeb(FaNum)_Light',
+                                        }}>
+                                        {descriptionWithoutHtml ? descriptionWithoutHtml : '---'}
+                                    </Text>
                                 </View>
 
                                 <Pressable
