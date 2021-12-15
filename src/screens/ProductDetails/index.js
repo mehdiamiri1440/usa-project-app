@@ -1,35 +1,72 @@
-import React, { PureComponent } from 'react';
+import React, {
+    PureComponent
+} from 'react';
 import {
-    Text, Image, View, StyleSheet, Modal, ScrollView,
-    Pressable, Linking, Share, RefreshControl,
-    ActivityIndicator, Animated, FlatList
+    Text,
+    Image,
+    View,
+    StyleSheet,
+    Modal,
+    ScrollView,
+    Pressable,
+    Linking,
+    RefreshControl,
+    ActivityIndicator,
+    Animated,
+    FlatList
 } from 'react-native';
 import RBSheet from "react-native-raw-bottom-sheet";
-import { Dialog, Portal, Paragraph } from 'react-native-paper';
-import { CommonActions } from '@react-navigation/native';
-import { Navigation } from 'react-native-navigation';
+import {
+    Dialog,
+    Portal,
+    Paragraph
+} from 'react-native-paper';
+import {
+    CommonActions
+} from '@react-navigation/native';
+import {
+    Navigation
+} from 'react-native-navigation';
 import analytics from '@react-native-firebase/analytics';
-import { connect } from 'react-redux';
+import {
+    connect
+} from 'react-redux';
 import {
     responsiveScreenHeight
 } from "react-native-responsive-dimensions";
-import { Input, Label, Item, Button, Toast } from 'native-base';
-import { REACT_APP_API_ENDPOINT_RELEASE, REACT_APP_API_ENDPOINT_BLOG_RELEASE } from '@env';
-import * as productListActions from '../../redux/productsList/actions';
+import {
+    Input,
+    Label,
+    Item,
+    Button,
+    Toast
+} from 'native-base';
+import {
+    REACT_APP_API_ENDPOINT_RELEASE,
+    REACT_APP_API_ENDPOINT_BLOG_RELEASE
+} from '@env';
+import ContentLoader, { Rect, Circle } from "react-content-loader/native"
 import ShadowView from '@vikasrg/react-native-simple-shadow-view'
-import * as profileActions from '../../redux/profile/actions';
-import { deviceWidth, deviceHeight, screenHeight } from '../../utils/deviceDimenssions';
+import ImageZoom from 'react-native-image-pan-zoom';
+import Svg, { Path as SvgPath, G, Defs, Pattern, Image as SvgImage, Circle as SvgCircle } from "react-native-svg"
+
 import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
 import EvilIcons from 'react-native-vector-icons/dist/EvilIcons';
-import ContentLoader, { Rect, Circle } from "react-content-loader/native"
-import Svg, { Path as SvgPath, G, Defs, Pattern, Image as SvgImage, Circle as SvgCircle } from "react-native-svg"
-import ImageZoom from 'react-native-image-pan-zoom';
-
 import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
-import Feather from 'react-native-vector-icons/dist/Feather';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
-import { validator, formatter } from '../../utils';
+
+import * as productListActions from '../../redux/productsList/actions';
+import * as profileActions from '../../redux/profile/actions';
+import {
+    deviceWidth,
+    deviceHeight,
+    screenHeight
+} from '../../utils/deviceDimenssions';
+import {
+    validator,
+    formatter
+} from '../../utils';
 import ValidatedUserIcon from '../../components/validatedUserIcon';
 import RelatedProductsList from './RelatedProductsList';
 import ProductImages from './ProductImages';
@@ -218,7 +255,8 @@ class ProductDetails extends PureComponent {
             this.setState({ loaded: false });
             this.props.fetchAllProductInfo(productId);
         }
-        if ((this.state.loaded == false || prevState.loaded == false) && this.props.productDetailsInfo && this.props.productDetailsInfo.length) {
+        if ((this.state.loaded == false || prevState.loaded == false) &&
+            this.props.productDetailsInfo && Array.isArray(this.props.productDetailsInfo) && this.props.productDetailsInfo.length) {
 
             const {
                 productDetailsInfo = []
@@ -226,7 +264,7 @@ class ProductDetails extends PureComponent {
 
             const {
                 main = {},
-                photos,
+                photos = [],
                 profile_info = {},
                 user_info = {}
             } = productDetailsInfo[0].product;
@@ -333,8 +371,6 @@ class ProductDetails extends PureComponent {
     showFullSizeImage = index => {
         this.setState({ showFullSizeImageModal: true, selectedImage: index })
     };
-
-
 
     onAmountSubmit = field => {
         this.setState(() => ({
@@ -493,7 +529,33 @@ class ProductDetails extends PureComponent {
 
     onSubmit = () => {
 
-        let { minimumOrder, maximumPrice, minimumPrice, amount } = this.state;
+        let {
+            minimumOrder,
+            maximumPrice,
+            minimumPrice,
+            amount
+        } = this.state;
+
+        const {
+            productDetailsInfo = [],
+            route = {}
+        } = this.props;
+
+        const {
+            params = {}
+        } = route;
+
+        const {
+            productId
+        } = params;
+
+        const {
+            main = {}
+        } = productDetailsInfo[0].product;
+
+        const {
+            id
+        } = main;
 
         let minimumOrderError = '', maximumPriceError = '', minimumPriceError = '', amountError = '';
 
@@ -524,7 +586,6 @@ class ProductDetails extends PureComponent {
             minimumOrderError = '';
         }
 
-
         if (!maximumPrice) {
             maximumPriceError = locales('errors.pleaseEnterField', { fieldName: locales('titles.maxPriceNeeded') })
         }
@@ -534,8 +595,6 @@ class ProductDetails extends PureComponent {
         else {
             maximumPriceError = '';
         }
-
-
 
         if (!minimumPrice) {
             minimumPriceError = locales('errors.pleaseEnterField', { fieldName: locales('titles.minPriceNeeded') })
@@ -548,13 +607,19 @@ class ProductDetails extends PureComponent {
         }
 
         this.setState({
-            minimumOrderClicked: true, maxPriceClicked: true,
-            minPriceClicked: true, amountClicked: true, minimumOrderError, maximumPriceError, minimumPriceError, amountError
+            minimumOrderClicked: true,
+            maxPriceClicked: true,
+            minPriceClicked: true,
+            amountClicked: true,
+            minimumOrderError,
+            maximumPriceError,
+            minimumPriceError,
+            amountError
         })
 
         if (!minimumOrderError && !minimumPriceError && !maximumPriceError && !amountError) {
             let productObject = {
-                product_id: this.props.productDetailsInfo[0].product.main.id,
+                product_id: id,
                 stock: amount,
                 min_sale_amount: minimumOrder,
                 max_sale_price: maximumPrice,
@@ -577,7 +642,7 @@ class ProductDetails extends PureComponent {
                     showEditionMessage: true,
                     editionMessageText: editProductMessage
                 }, () => {
-                    this.props.fetchAllProductInfo(this.props.route.params.productId)
+                    this.props.fetchAllProductInfo(productId)
                     setTimeout(() => {
                         this.setState({ showEditionMessage: false, editionFlag: false })
                     }, 4000);
@@ -587,15 +652,29 @@ class ProductDetails extends PureComponent {
     };
 
     getProductUrl = _ => {
-        if (this.props.productDetailsInfo && this.props.productDetailsInfo.length)
+        const {
+            productDetailsInfo = []
+        } = this.props;
+
+        if (productDetailsInfo && productDetailsInfo.length) {
+            const {
+                main = {}
+            } = productDetailsInfo[0].product;
+
+            const {
+                sub_category_name = '',
+                id
+            } = main;
+
             return (
                 "/product-view/خرید-عمده-" +
-                this.props.productDetailsInfo[0].product.main.sub_category_name.replace(" ", "-") +
+                sub_category_name.replace(" ", "-") +
                 "/" +
-                this.props.productDetailsInfo[0].product.main.category_name.replace(" ", "-") +
+                category_name.replace(" ", "-") +
                 "/" +
-                this.props.productDetailsInfo[0].product.main.id
+                id
             );
+        }
     };
 
     // shareProductLink = async (url) => {
@@ -748,8 +827,17 @@ class ProductDetails extends PureComponent {
         } = this.state;
 
         const {
-            loggedInUserId
+            loggedInUserId,
+            route = {}
         } = this.props;
+
+        const {
+            params = {}
+        } = route;
+
+        const {
+            productId
+        } = params;
 
         if (!loggedInUserId)
             return this.setState({ shouldShowRegisterationModal: true, RegisterationModalReturnType: 0 });
@@ -761,9 +849,9 @@ class ProductDetails extends PureComponent {
             user_name,
             is_verified
         }
-        if (this.props?.route?.params?.productId)
+        if (productId)
             analytics().logEvent('open_chat', {
-                product_id: this.props?.route?.params?.productId
+                product_id: productId
             });
         this.props.navigation.navigate('Chat', {
             contact: selectedContact,
@@ -977,7 +1065,7 @@ class ProductDetails extends PureComponent {
         )
     };
 
-    onViewableItemsChanged = ({ viewableItems, changed }) => {
+    onViewableItemsChanged = ({ viewableItems = [{ index: 0 }], changed }) => {
         this.setState({ currentSlide: viewableItems[0].index })
     };
 
