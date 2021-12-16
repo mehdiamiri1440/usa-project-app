@@ -88,7 +88,7 @@ const ProductImages = props => {
                         paginationButtons.map((_, index) => (
                             <View
                                 style={{
-                                    backgroundColor: currentSlide == index ? "#00c569" : "#bebebe",
+                                    backgroundColor: currentSlide == index ? "#FF9828" : "#979797",
                                     width: 10,
                                     height: 10,
                                     marginHorizontal: 2,
