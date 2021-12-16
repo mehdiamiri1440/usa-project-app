@@ -1163,8 +1163,6 @@ class ProductDetails extends PureComponent {
 
             photos = [],
 
-            description,
-
             product_name,
             min_sale_price,
             province_name,
@@ -1564,7 +1562,7 @@ class ProductDetails extends PureComponent {
                     </>
                     : null}
 
-                < Portal
+                {showMobileNumberWarnModal ? <Portal
                     style={{
                         padding: 0,
                         margin: 0
@@ -1630,6 +1628,7 @@ class ProductDetails extends PureComponent {
                         </Dialog.Actions>
                     </Dialog>
                 </Portal >
+                    : null}
 
 
                 {editionFlag ? <Modal
@@ -1988,7 +1987,7 @@ class ProductDetails extends PureComponent {
                 </Modal >
                     : null}
 
-                <Modal
+                {showFullSizeImageModal ? <Modal
                     animationType="fade"
                     transparent
                     visible={showFullSizeImageModal}
@@ -2085,11 +2084,14 @@ class ProductDetails extends PureComponent {
                         </Pressable>
                     }
                 </Modal>
+                    : null
+                }
 
                 <Header
                     title={(`${category_name} ${category_name ? ' | ' : ''} ${sub_category_name}`) || '---'}
                     {...this.props}
                 />
+
                 {productDetailsInfoError || productDetailsInfoFailed ?
                     <View
                         style={{
