@@ -154,7 +154,11 @@ class ProductDetails extends PureComponent {
             isScrollForButtonsReached: false,
 
             animatedValue: new Animated.Value(screenHeight + 140),
-            currentSlide: 0
+            currentSlide: 0,
+            url: '',
+            photosWithCompletePath: [],
+            descriptionWithoutHtml: '',
+            splittedDescription: ''
         }
     }
 
@@ -202,7 +206,44 @@ class ProductDetails extends PureComponent {
         } = params;
 
         if (productId) {
-            return this.props.fetchAllProductInfo(productId)
+            return this.props.fetchAllProductInfo(productId).then(({ payload = [] }) => {
+                if (payload && payload.length) {
+                    const {
+                        photos = [],
+                        main = {}
+                    } = payload[0].product;
+
+                    const {
+                        description = ''
+                    } = main;
+
+
+                    let photosWithCompletePath = Array.from(photos).map(item => `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${item.file_path}`);
+                    let descriptionWithoutHtml = '';
+                    if (description != undefined && typeof (description) == 'string' && !!description && description.length) {
+                        descriptionWithoutHtml = description.replace(new RegExp('<hr/>', 'g'), "\n")
+                    }
+
+                    let splittedDescription = '';
+                    if (description && description.length) {
+                        splittedDescription = description.split('<hr/>').slice(2).filter(item => item);
+
+                        splittedDescription = splittedDescription.map(item => {
+                            const splittedDescriptionItem = item.split(":");
+                            splittedDescriptionItem[0] = `*${splittedDescriptionItem[0].trim()}*`;
+                            return splittedDescriptionItem[0] + " : " + splittedDescriptionItem[1];
+                        })
+                        splittedDescription = splittedDescription.filter(item => item && item.length).join('\n\n');
+
+                        splittedDescription = `${description.split('<hr/>').slice(0, 1)}\n\n${splittedDescription}`;
+                    }
+
+                    var url = REACT_APP_API_ENDPOINT_RELEASE + this.getProductUrl();
+
+                    this.setState({ url, photosWithCompletePath, descriptionWithoutHtml, splittedDescription });
+
+                }
+            })
                 .catch(({ response = {} }) => {
 
                     const {
@@ -1156,31 +1197,13 @@ class ProductDetails extends PureComponent {
             shouldShowPriceSheet,
 
             animatedValue,
-            currentSlide
+            currentSlide,
+
+            splittedDescription,
+            photosWithCompletePath,
+            descriptionWithoutHtml,
+            url
         } = this.state;
-
-
-        let photosWithCompletePath = Array.from(photos).map(item => `${REACT_APP_API_ENDPOINT_RELEASE}/storage/${item.file_path}`);
-        let descriptionWithoutHtml = '';
-        if (description != undefined && typeof (description) == 'string' && !!description && description.length) {
-            descriptionWithoutHtml = description.replace(new RegExp('<hr/>', 'g'), "\n")
-        }
-
-        let splittedDescription = '';
-        if (description && description.length) {
-            splittedDescription = description.split('<hr/>').slice(2).filter(item => item);
-
-            splittedDescription = splittedDescription.map(item => {
-                const splittedDescriptionItem = item.split(":");
-                splittedDescriptionItem[0] = `*${splittedDescriptionItem[0].trim()}*`;
-                return splittedDescriptionItem[0] + " : " + splittedDescriptionItem[1];
-            })
-            splittedDescription = splittedDescription.filter(item => item && item.length).join('\n\n');
-
-            splittedDescription = `${description.split('<hr/>').slice(0, 1)}\n\n${splittedDescription}`;
-        }
-
-        var url = REACT_APP_API_ENDPOINT_RELEASE + this.getProductUrl();
 
         return (
             <>
@@ -3259,8 +3282,6 @@ class ProductDetails extends PureComponent {
         )
     }
 }
-
-
 
 const styles = StyleSheet.create({
     loginFailedContainer: {
