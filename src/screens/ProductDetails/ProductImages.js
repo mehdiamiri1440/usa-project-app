@@ -1,49 +1,106 @@
 
-
-import React, { memo, useState } from 'react';
-import { View } from 'react-native';
+import React, { memo, useRef, useState } from 'react';
+import { View, FlatList, Pressable } from 'react-native';
 import FastImage from 'react-native-fast-image'
-import { SliderBox } from "react-native-image-slider-box";
 import { deviceWidth, deviceHeight } from '../../utils';
 
 const ProductImages = props => {
-    const { photosWithCompletePath } = props
-    const [width, setWidth] = useState(deviceWidth * 0.98);
 
-    const onLayout = e => {
-        setWidth(e.nativeEvent.layout.width);
+    const flatListRef = useRef();
+
+    const { photosWithCompletePath } = props;
+
+    const [currentSlide, setCurrentSlide] = useState(0);
+
+    const paginationButtons = Array.from(Array(photosWithCompletePath.length).keys());
+
+    const onViewableItemsChanged = ({
+        viewableItems,
+    }) => {
+        if (viewableItems && viewableItems.length)
+            return setCurrentSlide(viewableItems[0].index);
     };
 
-    return (
+    const viewabilityConfigCallbackPairs = useRef([
+        { onViewableItemsChanged },
+    ]);
 
-        (photosWithCompletePath && photosWithCompletePath.length) ?
-            <View
-                style={{
-                    width,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    alignSelf: 'center',
-                    height: deviceHeight * 0.29,
-                    borderWidth: 2,
-                    borderColor: 'rgba(0, 0, 0, 0.05)',
-                    marginTop: 10
-                }}
-                onLayout={onLayout}
+
+    const renderItem = ({ item, index }) => {
+        return (
+            <Pressable
+                onPress={_ => props.showFullSizeImage(index)}
             >
-                <SliderBox
-                    dotColor='#00C569'
-                    ImageComponent={FastImage}
-                    inactiveDotColor='#A8A8A8'
-                    sliderBoxHeight='100%'
-                    paginationBoxStyle={{}}
-                    dotStyle={{ width: 9, height: 9, borderRadius: 5, marginHorizontal: -10 }}
-                    images={photosWithCompletePath}
-                    imageLoadingColor='#e41c38'
-                    resizeMode='cover'
-                    resizeMethod='resize'
-                    onCurrentImagePressed={index => props.showFullSizeImage(index)}
+                <FastImage
+                    style={{
+                        width: deviceWidth * 0.94,
+                        height: deviceHeight * 0.3,
+                        alignItems: 'center',
+                        alignSelf: 'center',
+                        justifyContent: 'center'
+                    }}
+                    source={{
+                        uri: item,
+                        priority: FastImage.priority.normal,
+                    }}
+                    resizeMode={FastImage.resizeMode.cover}
                 />
-            </View>
+            </Pressable>
+        )
+    };
+
+
+    return (
+        (photosWithCompletePath && photosWithCompletePath.length) ?
+            <>
+                <View
+                    style={{
+                        alignItems: 'center',
+                        alignSelf: 'center',
+                        justifyContent: 'center',
+                        width: deviceWidth * 0.95,
+                        height: deviceHeight * 0.29,
+                        borderWidth: 2,
+                        borderColor: 'rgba(0, 0, 0, 0.05)',
+                        marginTop: 10
+                    }}
+                >
+                    <FlatList
+                        viewabilityConfigCallbackPairs={viewabilityConfigCallbackPairs.current}
+                        renderItem={renderItem}
+                        data={photosWithCompletePath}
+                        keyExtractor={(_, index) => index.toString()}
+                        pagingEnabled
+                        horizontal
+                        ref={flatListRef}
+                        showsHorizontalScrollIndicator={false}
+                    />
+                </View>
+                <View
+                    style={{
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        alignSelf: 'center',
+                        flexDirection: 'row',
+                    }}
+                >
+                    {photosWithCompletePath && photosWithCompletePath.length ?
+                        paginationButtons.map((_, index) => (
+                            <View
+                                style={{
+                                    backgroundColor: currentSlide == index ? "#00c569" : "#bebebe",
+                                    width: 10,
+                                    height: 10,
+                                    marginHorizontal: 2,
+                                    marginTop: 5,
+                                    borderRadius: 200,
+                                }}
+                            >
+                            </View>
+                        ))
+                        : null}
+                </View>
+            </>
             : null
 
     )
