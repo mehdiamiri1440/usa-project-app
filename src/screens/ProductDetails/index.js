@@ -11,7 +11,6 @@ import {
     Pressable,
     Linking,
     RefreshControl,
-    ActivityIndicator,
     Animated,
     FlatList
 } from 'react-native';
@@ -76,6 +75,7 @@ import ContactsListModal from '../../components/contactsListModal';
 import { shareToSocial } from '../../components/shareToSocial';
 import { numberWithCommas } from '../../utils/formatter';
 import ProductDetailsContentLoading from './ProductDetailsContentLoading';
+import FooterButtons from './FooterButtons';
 class ProductDetails extends PureComponent {
     constructor(props) {
         super(props);
@@ -991,7 +991,6 @@ class ProductDetails extends PureComponent {
     };
 
     handleScrollChange = (event = {}) => {
-
         const {
             isScrollForButtonsReached
         } = this.state;
@@ -1118,8 +1117,6 @@ class ProductDetails extends PureComponent {
             productDetailsInfoLoading,
             productDetailsInfoError,
             productDetailsInfoFailed,
-
-            sellerMobileNumberLoading,
 
             userProfile = {}
         } = this.props;
@@ -2149,7 +2146,7 @@ class ProductDetails extends PureComponent {
 
                             }}
                             ref={this.wrapper}
-                            onScroll={this.handleScrollChange}
+                            onMomentumScrollEnd={this.handleScrollChange}
                             refreshControl={
                                 <RefreshControl
                                     refreshing={!!this.props?.productDetailsInfoLoading}
@@ -3031,156 +3028,15 @@ class ProductDetails extends PureComponent {
 
                         </ScrollView>
                 }
-                {
-                    productDetailsInfoFailed || productDetailsInfoError ? null :
-                        !this.props.productDetailsInfoLoading
-                            && userId != loggedInUserId ?
-                            <Animated.View
-                                style={{
-                                    transform: [{
-                                        translateY: animatedValue
-                                    }],
-                                    backgroundColor: 'white',
-                                    width: '100%',
-                                    position: 'absolute',
-                                }}
-                            >
-                                <ShadowView
-                                    style={{
-                                        shadowColor: 'black',
-                                        backgroundColor: 'white',
-                                        shadowRadius: 1,
-                                        shadowOffset: { width: 0, height: 2 },
-                                        flexDirection: 'row-reverse',
-                                        justifyContent: 'space-between',
-                                        alignItems: 'center',
-                                        shadowOpacity: 0.13,
-                                    }}
-                                >
-                                    {(has_phone && !is_seller) ?
-                                        <Button
-                                            onPress={() => {
-                                                analytics().logEvent('click_on_call_info_button_product');
-                                                this.fetchContactInfo(productIdFromProductDetails, userId);
-                                            }}
-                                            style={[
-                                                styles.loginButton,
-                                                {
-                                                    alignItems: 'center',
-                                                    width: '45%',
-                                                    justifyContent: 'center',
-                                                    backgroundColor: isContactInfoShown ? '#E0E0E0' : '#FF9828'
-                                                    // width: !!is_elevated ? '50%' : '46%'
-                                                }]}
-                                        >
-                                            <View
-                                                style={[
-                                                    styles.textCenterView,
-                                                    styles.buttonText
-                                                ]}
-                                            >
-                                                {!sellerMobileNumberLoading ? <Text
-                                                    style={[
-                                                        styles.textWhite,
-                                                        {
-                                                            top: 10
-                                                        }
-                                                    ]}
-                                                >
-                                                    <FontAwesome5
-                                                        solid
-                                                        name='phone-alt'
-                                                        size={18}
-                                                    />
-                                                </Text> :
-                                                    <ActivityIndicator
-                                                        animating={true}
-                                                        size={20}
-                                                        color='white'
-                                                    />
-                                                }
-                                                <Text
-                                                    style={
-                                                        [
-                                                            styles.textWhite,
-                                                            styles.margin5,
-                                                            styles.textBold,
-                                                            styles.textSize18
-                                                        ]}
-                                                >
-                                                    {locales('labels.callWithSeller')}
-                                                </Text>
-                                            </View>
-                                        </Button>
-                                        : null}
-                                    <Button
-                                        onPress={this.openChat}
-                                        style={[
-                                            styles.loginButton,
-                                            {
-                                                zIndex: 1,
-                                                width: (!is_seller && has_phone) ? '45%' : '95%',
-                                                backgroundColor: (!is_seller && has_phone) ? '#FFD5A8' : '#FF9828',
-                                            }]}
-                                    >
-                                        <View
-                                            style={[
-                                                styles.textCenterView,
-                                                styles.buttonText]}
-                                        >
-                                            <Text
-                                                style={[
-                                                    styles.textWhite,
-                                                    styles.margin5,
-                                                    {
-                                                        marginTop: 7,
-                                                        color: (!is_seller && has_phone) ? '#556080' : 'white',
-                                                    }
-                                                ]
-                                                }
-                                            >
-                                                <Svg
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    width="24"
-                                                    height="24"
-                                                    fill="none"
-                                                    viewBox="0 0 24 24"
-                                                >
-                                                    <SvgPath
-                                                        fill={
-                                                            (!is_seller && has_phone) ?
-                                                                "#FF9828" : "white"}
-                                                        d="M4 18h2v4.081L11.101 18H16c1.103 0 2-.897 2-2V8c0-1.103-.897-2-2-2H4c-1.103 0-2 .897-2 2v8c0 1.103.897 2 2 2z"
-                                                    ></SvgPath>
-                                                    <SvgPath
-                                                        fill={
-                                                            (!is_seller && has_phone) ?
-                                                                "#FF9828" : "white"}
-                                                        d="M20 2H8c-1.103 0-2 .897-2 2h12c1.103 0 2 .897 2 2v8c1.103 0 2-.897 2-2V4c0-1.103-.897-2-2-2z"
-                                                    ></SvgPath>
-                                                </Svg>
-                                            </Text>
-                                            <Text
-                                                style={[
-                                                    styles.textWhite,
-                                                    styles.margin5,
-                                                    styles.textBold,
-                                                    styles.textSize18,
-                                                    {
-                                                        color: (!is_seller && has_phone) ?
-                                                            '#FF9828' : "white"
-                                                    }
-                                                ]}
-                                            >
-                                                {locales('labels.chatWithSeller')}
-                                            </Text>
-                                        </View>
-
-                                    </Button>
-                                </ShadowView>
-                            </Animated.View>
-                            : null
-                }
+                <FooterButtons
+                    userId={userId}
+                    has_phone={has_phone}
+                    productIdFromProductDetails={productIdFromProductDetails}
+                    isContactInfoShown={isContactInfoShown}
+                    openChat={this.openChat}
+                    fetchContactInfo={this.fetchContactInfo}
+                    animatedValue={animatedValue}
+                />
             </>
         )
     }
