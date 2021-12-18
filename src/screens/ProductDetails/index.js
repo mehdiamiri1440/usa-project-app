@@ -2271,10 +2271,19 @@ class ProductDetails extends PureComponent {
                                     shadowRadius: 1,
                                     shadowOffset: { width: 0, height: 2 },
                                 }}>
-                                <ProductImages
-                                    showFullSizeImage={this.showFullSizeImage}
-                                    photosWithCompletePath={photosWithCompletePath}
-                                />
+                                <View
+                                    style={{
+                                        width: '95%',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        alignSelf: 'center'
+                                    }}
+                                >
+                                    <ProductImages
+                                        showFullSizeImage={this.showFullSizeImage}
+                                        photosWithCompletePath={photosWithCompletePath}
+                                    />
+                                </View>
 
                                 <View
                                     style={{

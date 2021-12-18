@@ -1,6 +1,6 @@
 
 import React, { memo, useRef, useState } from 'react';
-import { View, FlatList, Pressable } from 'react-native';
+import { Image, View, FlatList, Pressable } from 'react-native';
 import FastImage from 'react-native-fast-image'
 import { deviceWidth, deviceHeight } from '../../utils';
 
@@ -33,11 +33,8 @@ const ProductImages = props => {
             >
                 <FastImage
                     style={{
-                        width: deviceWidth * 0.94,
-                        height: deviceHeight * 0.3,
-                        alignItems: 'center',
-                        alignSelf: 'center',
-                        justifyContent: 'center'
+                        width: deviceWidth * 0.95,
+                        height: deviceHeight * 0.29
                     }}
                     source={{
                         uri: item,
@@ -53,29 +50,21 @@ const ProductImages = props => {
     return (
         (photosWithCompletePath && photosWithCompletePath.length) ?
             <>
-                <View
+                <FlatList
+                    viewabilityConfigCallbackPairs={viewabilityConfigCallbackPairs.current}
+                    renderItem={renderItem}
+                    data={photosWithCompletePath}
+                    keyExtractor={(_, index) => index.toString()}
+                    pagingEnabled
                     style={{
-                        alignItems: 'center',
-                        alignSelf: 'center',
-                        justifyContent: 'center',
-                        width: deviceWidth * 0.95,
-                        height: deviceHeight * 0.29,
-                        borderWidth: 2,
-                        borderColor: 'rgba(0, 0, 0, 0.05)',
-                        marginTop: 10
+                        borderWidth: 1,
+                        marginTop: 10,
+                        borderColor: 'rgba(0,0,0,0.5)'
                     }}
-                >
-                    <FlatList
-                        viewabilityConfigCallbackPairs={viewabilityConfigCallbackPairs.current}
-                        renderItem={renderItem}
-                        data={photosWithCompletePath}
-                        keyExtractor={(_, index) => index.toString()}
-                        pagingEnabled
-                        horizontal
-                        ref={flatListRef}
-                        showsHorizontalScrollIndicator={false}
-                    />
-                </View>
+                    horizontal
+                    ref={flatListRef}
+                    showsHorizontalScrollIndicator={false}
+                />
                 <View
                     style={{
                         alignItems: 'center',
