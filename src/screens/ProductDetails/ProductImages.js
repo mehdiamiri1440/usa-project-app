@@ -1,6 +1,6 @@
 
 import React, { memo, useRef, useState } from 'react';
-import { Image, View, FlatList, Pressable } from 'react-native';
+import { View, FlatList, Pressable } from 'react-native';
 import FastImage from 'react-native-fast-image'
 import { deviceWidth, deviceHeight } from '../../utils';
 
