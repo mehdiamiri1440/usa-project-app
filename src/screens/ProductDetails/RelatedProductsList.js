@@ -43,7 +43,7 @@ const RelatedProductsList = props => {
                 activeOpacity={1}
                 onPress={() => {
                     analytics().logEvent('click_on_related_product');
-                    props.navigation.push('ProductDetails', { productId: item.id })
+                    props.navigation.navigate('ProductDetails', { productId: item.id })
                 }}>
                 <FastImage
                     resizeMethod='resize'
