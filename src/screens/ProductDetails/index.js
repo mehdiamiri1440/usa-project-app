@@ -3147,7 +3147,6 @@ const mapStateToProps = (state) => {
         profileReducer,
         authReducer,
         productsListReducer,
-        buyAdRequestReducer,
     } = state;
 
     const {
