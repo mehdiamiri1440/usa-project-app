@@ -293,7 +293,7 @@ class ProductDetails extends PureComponent {
 
         if (prevPropsProductId != productId) {
             this.setState({ loaded: false });
-            this.props.fetchAllProductInfo(productId);
+            this.initialCall();
         }
         if ((this.state.loaded == false || prevState.loaded == false) &&
             this.props.productDetailsInfo && Array.isArray(this.props.productDetailsInfo) && this.props.productDetailsInfo.length) {
