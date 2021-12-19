@@ -76,6 +76,7 @@ const ProductImages = props => {
                     {photosWithCompletePath && photosWithCompletePath.length ?
                         paginationButtons.map((_, index) => (
                             <View
+                                key={index}
                                 style={{
                                     backgroundColor: currentSlide == index ? "#FF9828" : "#979797",
                                     width: 10,
