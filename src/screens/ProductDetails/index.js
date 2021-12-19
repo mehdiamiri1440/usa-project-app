@@ -3043,26 +3043,6 @@ class ProductDetails extends PureComponent {
 }
 
 const styles = StyleSheet.create({
-    loginFailedContainer: {
-        backgroundColor: '#F8D7DA',
-        padding: 10,
-        borderRadius: 5
-    },
-    loginFailedText: {
-        textAlign: 'center',
-        width: deviceWidth,
-        color: '#761C24'
-    },
-    deletationSuccessfullContainer: {
-        backgroundColor: '#00C569',
-        padding: 10,
-        borderRadius: 5
-    },
-    deletationSuccessfullText: {
-        textAlign: 'center',
-        width: deviceWidth,
-        color: 'white'
-    },
     buttonText: {
         color: 'white',
         fontSize: 18,
@@ -3070,26 +3050,8 @@ const styles = StyleSheet.create({
         width: '100%',
         textAlign: 'center'
     },
-    disableLoginButton: {
-        textAlign: 'center',
-        margin: 10,
-        width: deviceWidth * 0.8,
-        color: 'white',
-        alignItems: 'center',
-        alignSelf: 'center',
-        justifyContent: 'center',
-        elevation: 0
-    },
-    fontAwesomeEnvelope: {
-        color: "#fff",
-        margin: '15px'
-    },
     textWhite: {
         color: "#fff"
-    },
-    textCenterView: {
-        justifyContent: 'center',
-        flexDirection: "row-reverse",
     },
     textBold: {
         fontFamily: 'IRANSansWeb(FaNum)_Bold'
@@ -3144,18 +3106,6 @@ const styles = StyleSheet.create({
         paddingHorizontal: 15,
         width: '100%'
     },
-    modalButton: {
-        textAlign: 'center',
-        width: '100%',
-        fontSize: 16,
-        maxWidth: 145,
-        marginVertical: 10,
-        color: 'white',
-        alignItems: 'center',
-        borderRadius: 5,
-        alignSelf: 'center',
-        justifyContent: 'center',
-    },
     modalCloseButton: {
         textAlign: 'center',
         width: '100%',
@@ -3184,63 +3134,11 @@ const styles = StyleSheet.create({
         marginTop: 20
 
     },
-    greenButton: {
-        backgroundColor: '#FF9828',
-    },
-    forgotContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center'
-    },
-    forgotPassword: {
-        textAlign: 'center',
-        color: '#7E7E7E',
-        fontSize: 16,
-        padding: 10,
-    },
-    linearGradient: {
-        height: deviceHeight * 0.15,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    headerTextStyle: {
-        color: 'white',
-        position: 'absolute',
-        textAlign: 'center',
-        fontSize: 26,
-        bottom: 40
-    },
     textInputPadding: {
         paddingVertical: 5,
     },
-    userText: {
-        flexWrap: 'wrap',
-        paddingTop: '3%',
-        fontSize: 20,
-        padding: 20,
-        textAlign: 'center',
-        color: '#7E7E7E'
-    },
-    marginTop5: {
-        marginTop: 5
-    },
-    marginTop10: {
-        marginTop: 10
-    },
-    margin5: {
-        margin: 5
-    },
-    margin10: {
-        margin: 10
-    },
-    textSize15: {
-        fontSize: 15
-    },
     textSize18: {
         fontSize: 18
-    },
-    textSize20: {
-        fontSize: 20
     },
 });
 
