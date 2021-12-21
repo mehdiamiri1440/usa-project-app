@@ -587,71 +587,47 @@ const routes = props => {
                 null
             }
 
-            {showPromotionModal ?
+            {!showPromotionModal ?
                 <Modal
                     onRequestClose={closePromotionModal}
-                    visible={showPromotionModal}
+                    visible={!showPromotionModal}
                     transparent={true}
                     animationType="fade"
                     onDismiss={closePromotionModal}
                 >
+                    <Image
+                        style={{
+                            alignSelf: 'center',
+                            position: 'absolute',
+                            top: '10%',
+                            zIndex: 1,
+                        }}
+                        source={require('../../assets/icons/racket.png')}
+                    />
                     <Dialog
                         onDismiss={closePromotionModal}
-                        visible={showPromotionModal}
+                        visible={!showPromotionModal}
                         style={{ ...styles.dialogWrapper }}
                     >
                         <View
                             style={{
-                                backgroundColor: '#E7F9FF',
-                                width: '100%',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                alignSelf: 'center',
+                                backgroundColor: '#FFC985'
                             }}
                         >
-                            <FontAwesome5
-                                onPress={closePromotionModal}
-                                solid
-                                size={20}
-                                color='#808C9B'
-                                name='times'
-                                style={{
-                                    position: 'absolute',
-                                    right: 0,
-                                    top: 0,
-                                    paddingVertical: 10,
-                                    paddingHorizontal: 15
-                                }}
-                            />
-
                             <Image
                                 style={{
-                                    width: '90%',
-                                    marginVertical: 20,
-                                    alignSelf: 'center'
+                                    backgroundColor: '#FFC985',
+                                    alignSelf: 'center',
+                                    borderWidth: 0,
+                                    height: 200
                                 }}
-                                resizeMode='contain'
-                                source={require('../../assets/images/promotion-icon.png')}
+                                source={require('../../assets/icons/wave.png')}
                             />
-                            <View
-                                style={{
-                                    width: deviceWidth * 2,
-                                    height: deviceWidth * 2,
-                                    borderTopLeftRadius: deviceWidth * 1.5,
-                                    borderTopRightRadius: deviceWidth * 1.5,
-                                    zIndex: -10,
-                                    backgroundColor: 'white',
-                                    top: 100,
-                                    position: 'absolute'
-                                }}
-                            >
-
-                            </View>
                         </View>
-
                         <View
                             style={{
                                 paddingHorizontal: 10,
+                                backgroundColor: '#F0F3F5'
                             }}
                         >
                             <Text
