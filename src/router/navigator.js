@@ -47,6 +47,7 @@ import * as profileActions from '../redux/profile/actions';
 import * as requestActions from '../redux/buyAdRequest/actions';
 import { navigationRef, isReadyRef } from './rootNavigation';
 import linking from './linking';
+import Entypo from 'react-native-vector-icons/dist/Entypo';
 
 let currentRoute = '',
     promotionModalTimeout,
@@ -1261,32 +1262,53 @@ const routes = props => {
                         style={styles.dialogWrapper}
                     >
                         <Dialog.Actions
-                            style={styles.dialogHeader}
-                        >
-                            {!isForceUpdate ? <Button
-                                onPress={() => setUpdateModalFlag(false)}
-                                style={styles.closeDialogModal}>
-                                <FontAwesome5 name="times" color="#777" solid size={18} />
-                            </Button> : null}
-                            <Paragraph style={styles.headerTextDialogModal}>
-                                {locales('titles.update')}
-                            </Paragraph>
-                        </Dialog.Actions>
-                        <View
                             style={{
-                                width: '100%',
-                                alignItems: 'center'
-                            }}>
-                            <AntDesign name="exclamation" color="#3fc3ee" size={70} style={[styles.dialogIcon, {
-                                borderColor: '#9de0f6',
-                            }]} />
-
-                        </View>
+                                alignSelf: 'flex-end',
+                                paddingRight: 15,
+                                paddingTop: 15
+                            }}
+                        >
+                            {!isForceUpdate ?
+                                <AntDesign
+                                    onPress={() => setUpdateModalFlag(false)}
+                                    name="close"
+                                    color="#264653"
+                                    solid
+                                    size={22}
+                                />
+                                :
+                                null
+                            }
+                        </Dialog.Actions>
+                        <Image
+                            source={require('../../assets/icons/Component.png')}
+                            style={{
+                                alignSelf: 'center'
+                            }}
+                        />
                         <Dialog.Actions style={styles.mainWrapperTextDialogModal}>
 
-                            <Text style={[styles.mainTextDialogModal, { fontSize: 18 }]}>
+                            <Text style={[styles.mainTextDialogModal, {
+                                fontSize: 18,
+                                color: '#15313C',
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                            }]}>
                                 {locales('titles.newVersionUpdate')}
                             </Text>
+                        </Dialog.Actions>
+                        <Dialog.Actions style={styles.mainWrapperTextDialogModal}>
+
+                            <Text style={{
+                                fontFamily: 'IRANSansWeb(FaNum)',
+                                textAlign: 'center',
+                                fontSize: 14,
+                                color: '#15313C',
+                                paddingHorizontal: 15,
+                                width: '100%'
+                            }}>
+                                {locales('titles.clickOnButtonToUpdateApp')}
+                            </Text>
+
                         </Dialog.Actions>
                         <View style={{
                             alignSelf: 'center',
@@ -1298,7 +1320,12 @@ const routes = props => {
                             alignItems: 'center'
                         }}>
                             <Button
-                                style={[styles.modalButton, styles.greenButton, { maxWidth: deviceWidth * 0.5 }]}
+                                style={[styles.modalButton, styles.greenButton, {
+                                    width: '70%',
+                                    flexDirection: 'row-reverse',
+                                    justifyContent: 'center',
+                                    alignItems: 'center'
+                                }]}
                                 onPress={() => {
                                     if (APP_UPDATE_TYPE == 'google') {
                                         Linking.canOpenURL('https://play.google.com/store/search?q=%D8%A8%D8%A7%D8%B3%DA%A9%D9%88%D9%84&c=apps')
@@ -1319,24 +1346,19 @@ const routes = props => {
                                     }
                                 }}
                             >
-
-                                <Text style={styles.buttonText}>{locales('titles.update')}
+                                <Entypo
+                                    name='google-play'
+                                    color='white'
+                                    size={22}
+                                    style={{
+                                        marginHorizontal: 10
+                                    }}
+                                />
+                                <Text style={styles.buttonText}>{locales('titles.updateBuskool')}
                                 </Text>
                             </Button>
                         </View>
-                        <Dialog.Actions style={{
-                            justifyContent: 'center',
-                            width: '100%',
-                            padding: 0
-                        }}>
-                            {!isForceUpdate ? <Button
-                                style={[styles.modalCloseButton,]}
-                                onPress={() => setUpdateModalFlag(false)}>
 
-                                <Text style={styles.closeButtonText}>{locales('titles.cancel')}
-                                </Text>
-                            </Button> : null}
-                        </Dialog.Actions>
                     </Dialog>
                 </Modal >
                 :
@@ -1622,7 +1644,6 @@ const styles = StyleSheet.create({
         color: 'white',
         fontSize: 18,
         fontFamily: 'IRANSansWeb(FaNum)_Medium',
-        width: '100%',
         textAlign: 'center'
     },
     loginButton: {
@@ -1683,7 +1704,6 @@ const styles = StyleSheet.create({
         width: '100%',
         fontSize: 16,
         fontFamily: 'IRANSansWeb(FaNum)_Bold',
-        maxWidth: 145,
         color: 'white',
         alignItems: 'center',
         borderRadius: 5,

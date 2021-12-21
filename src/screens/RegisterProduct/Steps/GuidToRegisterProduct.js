@@ -138,7 +138,8 @@ class GuidToRegisterProduct extends React.Component {
                         <Dialog.Actions
                             style={{
                                 alignSelf: 'flex-end',
-                                padding: 20
+                                paddingRight: 15,
+                                paddingTop: 15
                             }}
                         >
                             <AntDesign
