@@ -1,10 +1,10 @@
 import React from 'react';
-import { View, ActivityIndicator, Text, StyleSheet, Animated, TouchableOpacity, BackHandler } from 'react-native';
+import { View, Image, ActivityIndicator, Text, StyleSheet, Animated, TouchableOpacity, BackHandler } from 'react-native';
 import { Button } from 'native-base';
 import { Navigation } from 'react-native-navigation';
 import LinearGradient from 'react-native-linear-gradient';
 import { connect } from 'react-redux';
-import { Dialog, Portal, Paragraph } from 'react-native-paper';
+import { Dialog, Portal } from 'react-native-paper';
 
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
@@ -136,34 +136,35 @@ class GuidToRegisterProduct extends React.Component {
                         style={styles.dialogWrapper}
                     >
                         <Dialog.Actions
-                            style={styles.dialogHeader}
+                            style={{
+                                alignSelf: 'flex-end',
+                                padding: 20
+                            }}
                         >
-                            <Button
+                            <AntDesign
                                 onPress={this.hideDialog}
-                                style={styles.closeDialogModal}>
-                                <FontAwesome5 name="times" color="#777" solid size={18} />
-                            </Button>
-                            <Paragraph style={styles.headerTextDialogModal}>
-                                {locales('labels.registerProductLimit')}
-                            </Paragraph>
+                                name="close"
+                                color="#264653"
+                                solid
+                                size={22}
+                            />
                         </Dialog.Actions>
 
 
-
-                        <View
+                        <Image
+                            source={require('../../../../assets/icons/E-Commerce.png')}
                             style={{
-                                width: '100%',
-                                alignItems: 'center'
-                            }}>
-
-                            <AntDesign name="exclamation" color="#f8bb86" size={70} style={[styles.dialogIcon, {
-                                borderColor: '#facea8',
-                            }]} />
-
-                        </View>
+                                alignSelf: 'center'
+                            }}
+                        />
                         <Dialog.Actions style={styles.mainWrapperTextDialogModal}>
 
-                            <Text style={styles.mainTextDialogModal}>
+                            <Text style={[styles.mainTextDialogModal, {
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                fontSize: 18,
+                                color: '#15313C',
+
+                            }]}>
                                 {locales('titles.maximumProductRegisteration')}
                             </Text>
 
@@ -171,10 +172,10 @@ class GuidToRegisterProduct extends React.Component {
                         <Dialog.Actions style={styles.mainWrapperTextDialogModal}>
 
                             <Text style={{
-                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                fontFamily: 'IRANSansWeb(FaNum)',
                                 textAlign: 'center',
                                 fontSize: 14,
-                                color: '#e41c38',
+                                color: '#15313C',
                                 paddingHorizontal: 15,
                                 width: '100%'
                             }}>
@@ -183,41 +184,25 @@ class GuidToRegisterProduct extends React.Component {
 
                         </Dialog.Actions>
 
-                        <View style={{
-                            width: '100%',
-                            textAlign: 'center',
-                            alignItems: 'center'
-                        }}>
-                            <Button
-                                style={[styles.modalButton, styles.greenButton]}
-                                onPress={() => {
-                                    this.hideDialog();
-                                    this.props.navigation.navigate('ExtraProductCapacity');
-                                }}
-                            >
 
-                                <Text style={styles.buttonText}>{locales('titles.increaseCapacity')}
-                                </Text>
-                            </Button>
-                        </View>
+                        <Button
+                            style={[styles.modalButton, styles.greenButton, {
+                                width: '55%',
+                                marginBottom: 35
+                            }]}
+                            onPress={() => {
+                                this.hideDialog();
+                                this.props.navigation.navigate('ExtraProductCapacity');
+                            }}
+                        >
 
+                            <Text style={[styles.buttonText, {
+                                fontSize: 16,
+                                fontFamily: 'IRANSansWeb(FaNum)',
+                            }]}>{locales('titles.increaseCapacity')}
+                            </Text>
+                        </Button>
 
-
-
-                        <Dialog.Actions style={{
-                            justifyContent: 'center',
-                            width: '100%',
-                            padding: 0
-                        }}>
-                            <Button
-                                style={styles.modalCloseButton}
-                                onPress={this.hideDialog}
-                            >
-
-                                <Text style={styles.closeButtonText}>{locales('titles.close')}
-                                </Text>
-                            </Button>
-                        </Dialog.Actions>
                     </Dialog>
                 </Portal >
 
@@ -479,7 +464,6 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         width: '100%',
         fontSize: 16,
-        maxWidth: 145,
         marginVertical: 10,
         color: 'white',
         alignItems: 'center',
