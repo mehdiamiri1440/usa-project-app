@@ -587,10 +587,10 @@ const routes = props => {
                 null
             }
 
-            {!showPromotionModal ?
+            {showPromotionModal ?
                 <Modal
                     onRequestClose={closePromotionModal}
-                    visible={!showPromotionModal}
+                    visible={showPromotionModal}
                     transparent={true}
                     animationType="fade"
                     onDismiss={closePromotionModal}
@@ -606,8 +606,12 @@ const routes = props => {
                     />
                     <Dialog
                         onDismiss={closePromotionModal}
-                        visible={!showPromotionModal}
-                        style={{ ...styles.dialogWrapper }}
+                        visible={showPromotionModal}
+                        style={{
+                            ...styles.dialogWrapper,
+                            backgroundColor: '#F0F3F5',
+                            height: '73%'
+                        }}
                     >
                         <View
                             style={{
@@ -616,10 +620,8 @@ const routes = props => {
                         >
                             <Image
                                 style={{
-                                    backgroundColor: '#FFC985',
                                     alignSelf: 'center',
-                                    borderWidth: 0,
-                                    height: 200
+                                    top: 1
                                 }}
                                 source={require('../../assets/icons/wave.png')}
                             />
@@ -627,15 +629,27 @@ const routes = props => {
                         <View
                             style={{
                                 paddingHorizontal: 10,
+                                top: -50,
                                 backgroundColor: '#F0F3F5'
                             }}
                         >
                             <Text
                                 style={{
-                                    color: '#374761',
+                                    color: '#15313C',
                                     textAlign: 'center',
-                                    fontSize: 25,
-                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                    fontSize: 22,
+                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                    marginVertical: 10
+                                }}
+                            >
+                                {locales('titles.promoteYourUserAccount')}
+                            </Text>
+                            <Text
+                                style={{
+                                    color: '#15313C',
+                                    textAlign: 'center',
+                                    fontSize: 20,
+                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
                                     marginVertical: 10
                                 }}
                             >
@@ -643,16 +657,16 @@ const routes = props => {
                             </Text>
                             <Text
                                 style={{
-                                    color: '#38485F',
+                                    color: '#15313C',
                                     textAlign: 'center',
                                     width: '80%',
                                     alignSelf: 'center',
-                                    fontSize: 15,
-                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                    fontSize: 18,
+                                    fontFamily: 'IRANSansWeb(FaNum)',
                                     marginVertical: 15
                                 }}
                             >
-                                {locales('labels.promotionModalText')}
+                                {locales('titles.toAccessAllBuskoolSpecialFeaturesPromoteIt')}
                             </Text>
                             <LinearGradient
                                 start={{ x: 0, y: 1 }}
