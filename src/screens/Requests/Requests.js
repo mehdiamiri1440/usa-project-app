@@ -1456,77 +1456,71 @@ class Requests extends PureComponent {
                         style={styles.dialogWrapper}
                     >
                         <Dialog.Actions
-                            style={styles.dialogHeader}
+                            style={{
+                                alignSelf: 'flex-end',
+                                paddingRight: 15,
+                                paddingTop: 15
+                            }}
                         >
-                            <Button
+                            <AntDesign
                                 onPress={this.hideDialog}
-                                style={styles.closeDialogModal}>
-                                <FontAwesome5 name="times" color="#777" solid size={18} />
-                            </Button>
-                            <Paragraph style={styles.headerTextDialogModal}>
-                                {locales('labels.buyRequests')}
-                            </Paragraph>
+                                name="close"
+                                color="#264653"
+                                solid
+                                size={22}
+                            />
                         </Dialog.Actions>
 
 
-
-                        <View
+                        <Image
+                            source={require('../../../assets/icons/Connectivity.png')}
                             style={{
-                                width: '100%',
-                                alignItems: 'center'
-                            }}>
-
-                            <AntDesign name="exclamation" color="#f8bb86" size={70} style={[styles.dialogIcon, {
-                                borderColor: '#facea8',
-                            }]} />
-
-                        </View>
+                                alignSelf: 'center'
+                            }}
+                        />
                         <Dialog.Actions style={styles.mainWrapperTextDialogModal}>
 
-                            <Text style={styles.mainTextDialogModal}>
-                                {locales('titles.maximumBuyAdResponse')}
+                            <Text style={[styles.mainTextDialogModal, {
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                fontSize: 18,
+                                color: '#15313C',
+
+                            }]}>
+                                {locales('titles.youHaveReachedMaxSendingMessageLimitation')}
                             </Text>
 
                         </Dialog.Actions>
-                        <Paragraph
-                            style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#e41c38', paddingHorizontal: 15, textAlign: 'center' }}>
-                            {locales('titles.icreaseYouRegisterRequstCapacity')}
-                        </Paragraph>
+                        <Dialog.Actions style={styles.mainWrapperTextDialogModal}>
+
+                            <Text style={{
+                                fontFamily: 'IRANSansWeb(FaNum)',
+                                textAlign: 'center',
+                                fontSize: 14,
+                                color: '#15313C',
+                                paddingHorizontal: 15,
+                                width: '100%'
+                            }}>
+                                {locales('titles.IncreaseYourCapacityToSendMoreMessagesToBuyers')}
+                            </Text>
+
+                        </Dialog.Actions>
                         <View style={{
                             width: '100%',
                             textAlign: 'center',
                             alignItems: 'center'
                         }}>
                             <Button
-                                style={[styles.modalButton, styles.greenButton]}
+                                style={[styles.modalButton, styles.greenButton, { width: '60%', marginBottom: 30 }]}
                                 onPress={() => {
                                     this.hideDialog();
                                     this.props.navigation.navigate('ExtraBuyAdCapacity');
                                 }}
                             >
-
-                                <Text style={styles.buttonText}>{locales('titles.increaseCapacity')}
+                                <Text style={styles.buttonText}>
+                                    {locales('titles.increaseCapacity')}
                                 </Text>
                             </Button>
                         </View>
-
-
-
-
-                        <Dialog.Actions style={{
-                            justifyContent: 'center',
-                            width: '100%',
-                            padding: 0
-                        }}>
-                            <Button
-                                style={styles.modalCloseButton}
-                                onPress={this.hideDialog}
-                            >
-
-                                <Text style={styles.closeButtonText}>{locales('titles.close')}
-                                </Text>
-                            </Button>
-                        </Dialog.Actions>
                     </Dialog>
                 </Portal >
 
