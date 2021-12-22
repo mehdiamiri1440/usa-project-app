@@ -1371,42 +1371,65 @@ class Requests extends PureComponent {
                         style={styles.dialogWrapper}
                     >
                         <Dialog.Actions
-                            style={styles.dialogHeader}
+                            style={{
+                                alignSelf: 'flex-end',
+                                paddingRight: 15,
+                                paddingTop: 15
+                            }}
                         >
-                            <Button
+                            <AntDesign
                                 onPress={_ => this.openMobileNumberWarnModal(false)}
-                                style={styles.closeDialogModal}>
-                                <FontAwesome5 name="times" color="#777" solid size={18} />
-                            </Button>
-                            <Paragraph style={styles.headerTextDialogModal}>
-                                {locales('labels.callWithBuyer')}
-                            </Paragraph>
+                                name="close"
+                                color="#264653"
+                                solid
+                                size={22}
+                            />
                         </Dialog.Actions>
 
 
-
-                        <View
+                        <Image
+                            source={require('../../../assets/icons/Connectivity.png')}
                             style={{
-                                width: '100%',
-                                alignItems: 'center'
+                                alignSelf: 'center'
+                            }}
+                        />
+                        <Dialog.Actions style={styles.mainWrapperTextDialogModal}>
+
+                            <Text style={[styles.mainTextDialogModal, {
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                fontSize: 18,
+                                color: '#15313C',
+
+                            }]}>
+                                {locales('titles.canNotAccessBuyersNumbers')}
+                            </Text>
+
+                        </Dialog.Actions>
+                        <Dialog.Actions style={styles.mainWrapperTextDialogModal}>
+
+                            <Text style={{
+                                fontFamily: 'IRANSansWeb(FaNum)',
+                                textAlign: 'center',
+                                fontSize: 14,
+                                color: '#15313C',
+                                paddingHorizontal: 15,
+                                width: '100%'
                             }}>
+                                {locales('titles.pleasePromoteYourUserAccountToSeeBuyersMobiles')}
+                            </Text>
 
-                            <AntDesign name="exclamation" color="#f8bb86" size={70} style={[styles.dialogIcon, {
-                                borderColor: '#facea8',
-                            }]} />
-
-                        </View>
+                        </Dialog.Actions>
                         <Paragraph
                             style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#e41c38', paddingHorizontal: 15, textAlign: 'center' }}>
                             {accessToContactInfoErrorMessage}
                         </Paragraph>
-                        {statusCode == 423 ? <View style={{
+                        <View style={{
                             width: '100%',
                             textAlign: 'center',
                             alignItems: 'center'
                         }}>
-                            {active_pakage_type == 0 ? <Button
-                                style={[styles.modalButton, styles.greenButton]}
+                            <Button
+                                style={[styles.modalButton, styles.greenButton, { width: '60%', marginBottom: 30 }]}
                                 onPress={() => {
                                     this.openMobileNumberWarnModal(false);
                                     this.props.navigation.navigate('PromoteRegistration');
@@ -1416,26 +1439,8 @@ class Requests extends PureComponent {
                                 <Text style={[{ fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16 },
                                 styles.buttonText]}>{locales('titles.promoteRegistration')}
                                 </Text>
-                            </Button> : null}
-                        </View> : null}
-
-
-
-
-                        <Dialog.Actions style={{
-                            justifyContent: 'center',
-                            width: '100%',
-                            padding: 0
-                        }}>
-                            <Button
-                                style={styles.modalCloseButton}
-                                onPress={_ => this.openMobileNumberWarnModal(false)}
-                            >
-
-                                <Text style={styles.closeButtonText}>{locales('titles.close')}
-                                </Text>
                             </Button>
-                        </Dialog.Actions>
+                        </View>
                     </Dialog>
                 </Portal >
 
@@ -1860,7 +1865,6 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         width: '100%',
         fontSize: 16,
-        maxWidth: 145,
         marginVertical: 10,
         alignSelf: 'center',
         color: 'white',
