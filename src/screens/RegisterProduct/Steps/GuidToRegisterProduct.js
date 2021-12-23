@@ -182,9 +182,7 @@ class GuidToRegisterProduct extends React.Component {
                             }}>
                                 {locales('titles.clickExtraCapacityButton')}
                             </Text>
-
                         </Dialog.Actions>
-
 
                         <Button
                             style={[styles.modalButton, styles.greenButton, {
