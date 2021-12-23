@@ -59,7 +59,10 @@ class ProductsList extends PureComponent {
             isFilterApplied: false,
             preFetchLoading: true,
             showRefreshButton: false,
-            categoriesList: []
+            categoriesList: [],
+            tempCities: [],
+            tempProvince: null,
+            tempCity: []
         }
 
         this.isComponentMounted = false;
@@ -540,8 +543,15 @@ class ProductsList extends PureComponent {
     };
 
     searchLocation = () => {
-        const { searchText, province, city, sort_by } = this.state;
-        this.setState({ selectedButton: 1, productsListArray: [], locationsFlag: false });
+        const { searchText, province, city, sort_by, cities } = this.state;
+        this.setState({
+            selectedButton: 1,
+            productsListArray: [],
+            locationsFlag: false,
+            tempProvince: province,
+            tempCity: city,
+            tempCities: cities
+        });
         let searchItem = {
             from_record_number: 0,
             sort_by,
@@ -1671,6 +1681,9 @@ class ProductsList extends PureComponent {
             isFilterApplied,
             showRefreshButton,
             categoriesList,
+            tempCities,
+            tempProvince,
+            tempCity
         } = this.state;
 
 
@@ -1761,7 +1774,12 @@ class ProductsList extends PureComponent {
                         >
                             <Header
                                 title={locales('labels.locationsFilter')}
-                                onBackButtonPressed={_ => this.setState({ locationsFlag: false })}
+                                onBackButtonPressed={_ => this.setState({
+                                    locationsFlag: false,
+                                    cities: tempCities,
+                                    province: tempProvince,
+                                    city: tempCity
+                                })}
                                 {...this.props}
                             />
 
