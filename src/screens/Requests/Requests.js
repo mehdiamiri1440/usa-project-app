@@ -595,7 +595,7 @@ class Requests extends PureComponent {
                     alignContent: 'center',
                     alignItems: 'center',
                     width: deviceWidth,
-                    marginTop: 80
+                    marginTop: 30
                 }}>
                 <Image
                     style={{
@@ -651,6 +651,20 @@ class Requests extends PureComponent {
                                 : locales('labels.noBuyerFound')
                     }
                 </Text>
+                {selectedFilterName || (!selectedFilterName && !searchText) ? <Text
+                    style={{
+                        color: 'black',
+                        fontFamily: 'IRANSansWeb(FaNum)',
+                        fontSize: 14,
+                        textAlign: 'center',
+                        marginTop: 20,
+                        width: '75%'
+                    }}
+                >
+                    {locales('titles.registerProductIfYouHaveThisProductForSale')}
+                </Text>
+                    : null
+                }
                 <Button
                     onPress={_ => this.props.navigation.navigate('RegisterProductStack', { screen: 'RegisterProduct' })}
                     style={{
