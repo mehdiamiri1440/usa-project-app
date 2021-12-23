@@ -621,6 +621,8 @@ module.exports = {
     'titles.changePackageTypeToSeeMovileNumber': 'برای مشاهده اطلاعات تماس این کاربر ، نوع عضویت خود را ارتقا دهید .',
     "titles.signUpDoneSuccessfully": "ثبت‌نام با موفقیت انجام شد",
     'titles.enterYourRate': 'به این کاربر از 1 تا 5 امتیاز دهید',
+    'titles.registerBuyAdIfYouAreRealBuyer': 'درصورتی که خریدار این محصول هستید، درخواست خرید آن را ثبت کنید.',
+    'titles.registerProductIfYouHaveThisProductForSale': 'در صورتی که این محصول را برای فروش دارید، آن را ثبت کنید.',
     "titles.userName": "نام کاربری",
     'titles.sendVerificationCodeAgain': 'ارسال مجدد رمز عبور',
     'titles.register': 'ثبت نام',

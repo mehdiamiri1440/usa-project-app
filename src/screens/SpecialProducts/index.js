@@ -780,7 +780,7 @@ class SpecialProducts extends PureComponent {
                         alignContent: 'center',
                         alignItems: 'center',
                         width: deviceWidth,
-                        marginTop: 80
+                        marginTop: 30
                     }}>
                     <Image
                         style={{
@@ -836,6 +836,20 @@ class SpecialProducts extends PureComponent {
                                     : locales('labels.noSellerFound')
                         }
                     </Text>
+                    {isFilterApplied || (!isFilterApplied && !searchText) ? <Text
+                        style={{
+                            color: 'black',
+                            fontFamily: 'IRANSansWeb(FaNum)',
+                            fontSize: 14,
+                            textAlign: 'center',
+                            marginTop: 20,
+                            width: '75%'
+                        }}
+                    >
+                        {locales('titles.registerBuyAdIfYouAreRealBuyer')}
+                    </Text>
+                        : null
+                    }
                     <Button
                         onPress={_ => this.props.navigation.navigate('RegisterRequestStack', { screen: 'RegisterRequest' })}
                         style={{
