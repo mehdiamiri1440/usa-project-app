@@ -1382,7 +1382,7 @@ class Requests extends PureComponent {
                     <Dialog
                         visible={showMobileNumberWarnModal}
                         onDismiss={_ => this.openMobileNumberWarnModal(false)}
-                        style={styles.dialogWrapper}
+                        style={{ ...styles.dialogWrapper, height: '47%' }}
                     >
                         <Dialog.Actions
                             style={{
@@ -1404,15 +1404,17 @@ class Requests extends PureComponent {
                         <Image
                             source={require('../../../assets/icons/Connectivity.png')}
                             style={{
-                                alignSelf: 'center'
+                                alignSelf: 'center',
+                                top: -30
                             }}
                         />
                         <Dialog.Actions style={styles.mainWrapperTextDialogModal}>
 
                             <Text style={[styles.mainTextDialogModal, {
-                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                fontSize: 18,
+                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                fontSize: 16,
                                 color: '#15313C',
+                                top: -30
 
                             }]}>
                                 {locales('titles.canNotAccessBuyersNumbers')}
@@ -1424,10 +1426,11 @@ class Requests extends PureComponent {
                             <Text style={{
                                 fontFamily: 'IRANSansWeb(FaNum)',
                                 textAlign: 'center',
-                                fontSize: 14,
+                                fontSize: 13,
                                 color: '#15313C',
                                 paddingHorizontal: 15,
-                                width: '100%'
+                                width: '100%',
+                                top: -35
                             }}>
                                 {locales('titles.pleasePromoteYourUserAccountToSeeBuyersMobiles')}
                             </Text>
@@ -1443,7 +1446,7 @@ class Requests extends PureComponent {
                             alignItems: 'center'
                         }}>
                             <Button
-                                style={[styles.modalButton, styles.greenButton, { width: '60%', marginBottom: 30 }]}
+                                style={[styles.modalButton, styles.greenButton, { width: '80%', top: -55, marginBottom: 30 }]}
                                 onPress={() => {
                                     this.openMobileNumberWarnModal(false);
                                     this.props.navigation.navigate('PromoteRegistration');
