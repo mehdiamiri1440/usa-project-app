@@ -398,114 +398,114 @@ class Requests extends PureComponent {
             user_info = {}
         } = userProfile;
         const {
-            is_seller = true
         } = user_info;
 
         if ((index + 1) % 9 != 0 || index == 0)
             return null;
+
         return (
-            <ImageBackground
-                source={require('../../../assets/images/pattern2.png')}
-                style={styles.image}
+            <LinearGradient
+                start={{ x: 0, y: 1 }}
+                end={{ x: 0.8, y: 0.2 }}
+                style={{
+                    width: '95%',
+                    borderRadius: 6,
+                    alignSelf: 'center',
+                    justifyContent: 'space-between',
+                    padding: 15,
+                    overflow: 'hidden',
+                    height: 200
+                }}
+                colors={['#44A08D', '#093637']}
             >
-                <LinearGradient
-                    start={{ x: 0, y: 1 }}
-                    end={{ x: 0.8, y: 0.2 }}
+                <View
                     style={{
-                        width: deviceWidth, alignSelf: 'center',
-                        justifyContent: 'space-between',
-                        padding: 15, overflow: 'hidden', height: 200
+                        backgroundColor: 'transparent',
+                        width: 130,
+                        height: 110,
+                        borderWidth: 9,
+                        borderBottomLeftRadius: 100,
+                        borderBottomRightRadius: 100,
+                        borderColor: 'rgba(196, 196, 196, 0.5)',
+                        position: 'absolute',
+                        right: -10,
+                        top: -80,
+                        overflow: 'hidden'
                     }}
-                    colors={['#060446', '#21AD93']}
+                >
+                </View>
+                <Text
+                    style={{
+                        fontSize: 18,
+                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                        color: 'white',
+                    }}
+                >
+                    {locales('labels.CouldNotFindSellerYet')}
+                </Text>
+                <Text
+                    style={{
+                        fontSize: 16,
+                        fontFamily: 'IRANSansWeb(FaNum)',
+                        color: 'white',
+                    }}
+                >
+                    {locales('labels.registerProductToAccessBuyerListMadeForYou')}
+                </Text>
+                <Button
+                    onPress={_ => this.props.navigation.navigate('RegisterProductStack')}
+                    style={{
+                        backgroundColor: 'white',
+                        elevation: 0,
+                        borderRadius: 6,
+                        width: '70%',
+                        marginRight: 5,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        alignSelf: 'flex-end'
+                    }}
+                >
+                    <Text
+                        style={{
+                            fontSize: 18,
+                            fontFamily: 'IRANSansWeb(FaNum)',
+                            color: '#FF6600',
+                        }}
+                    >
+                        {locales('labels.registerProductAndFindBuyer')}
+                    </Text>
+                </Button>
+                <View
+                    style={{
+                        backgroundColor: 'transparent',
+                        width: 140,
+                        height: 150,
+                        borderWidth: 9,
+                        borderTopRightRadius: 100,
+                        borderBottomRightRadius: 30,
+                        borderColor: 'rgba(196, 196, 196, 0.5)',
+                        position: 'absolute',
+                        left: -40,
+                        bottom: -60,
+                        overflow: 'hidden'
+                    }}
                 >
                     <View
                         style={{
-                            backgroundColor: 'rgba(140,166,236,0.8)',
-                            width: 120,
-                            position: 'absolute',
-                            height: 120,
-                            borderRadius: 60,
-                            top: -60,
-                            left: 40,
-                            zIndex: 2
+                            backgroundColor: 'transparent',
+                            width: 100,
+                            height: 90,
+                            top: 6,
+                            borderWidth: 6,
+                            borderTopRightRadius: 100,
+                            borderBottomRightRadius: 10,
+                            borderColor: 'rgba(196, 196, 196, 0.5)',
+                            overflow: 'hidden'
                         }}
                     >
                     </View>
-
-                    <Image
-                        style={{
-                            width: 150,
-                            height: 150,
-                            borderRadius: 75,
-                            position: 'absolute',
-                            zIndex: 1,
-                            top: 30
-                        }}
-                        source={require('../../../assets/images/photo_2021-04-14_16-12-18.jpg')}
-                    />
-
-                    <Text
-                        style={{
-                            fontSize: 20,
-                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                            color: 'white',
-                            textAlignVertical: 'top',
-                            zIndex: 3
-                        }}
-                    >
-                        {locales('titles.didNotFindBuyAd')}
-                    </Text>
-                    <Text
-                        style={{
-                            fontSize: 19,
-                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                            color: 'white',
-                            textAlignVertical: 'top',
-                            zIndex: 3
-                        }}
-                    >
-                        {locales('titles.registerNewTestProduct')}
-                    </Text>
-
-                    <Button
-                        style={{
-                            backgroundColor: '#1DA1F2', borderRadius: 5,
-                            width: deviceWidth * 0.6, flexDirection: 'row-reverse',
-                            justifyContent: 'space-around', alignItems: 'center',
-                            alignSelf: 'flex-end', padding: 10
-                        }}
-                        onPress={_ => this.props.navigation.navigate(is_seller ? 'RegisterProductStack' : 'RegisterRequestStack')}
-                    >
-                        <Text style={{
-                            fontSize: 18,
-                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                            color: 'white'
-                        }}
-                        >
-                            {is_seller ? locales('titles.registerNewProduct') : locales('titles.registerBuyAdRequest')}
-                        </Text>
-                        <FontAwesome5
-                            name='arrow-left'
-                            color='white'
-                            size={25}
-                        />
-                    </Button>
-                    <View
-                        style={{
-                            backgroundColor: 'rgba(0,156,131,0.8)',
-                            width: 120,
-                            height: 120,
-                            borderRadius: 60,
-                            zIndex: 2,
-                            position: 'absolute',
-                            left: -60,
-                            bottom: -60
-                        }}
-                    >
-                    </View>
-                </LinearGradient>
-            </ImageBackground>
-
+                </View>
+            </LinearGradient>
         )
     };
 
@@ -524,12 +524,86 @@ class Requests extends PureComponent {
             user_info = {}
         } = userProfile;
         const {
-            is_seller
+            is_seller,
+            active_pakage_type
         } = user_info;
 
 
         return (
             <>
+                {index == 3 && is_seller && active_pakage_type == 0 ?
+                    <View
+                        style={{
+                            width: '98%',
+                            backgroundColor: '#FFC985',
+                            borderRadius: 4,
+                            overflow: 'hidden',
+                            padding: 10,
+                            height: 160,
+                            alignSelf: 'center'
+                        }}
+                    >
+                        <Image
+                            source={require('../../../assets/icons/wave-3.png')}
+                            style={{
+                                right: 0,
+                                bottom: -20,
+                                width: '59%',
+                                position: 'absolute',
+                            }}
+                        />
+                        <Text
+                            style={{
+                                color: '#004F46',
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                fontSize: 16,
+                                right: '22%'
+                            }}
+                        >
+                            {locales('labels.becomeBuskoolSpecialUser')}
+                        </Text>
+                        <Text
+                            style={{
+                                color: '#004F46',
+                                fontFamily: 'IRANSansWeb(FaNum)',
+                                fontSize: 14,
+                                right: '20%',
+                                marginTop: 5,
+                                width: '78%',
+                                marginRight: 10,
+                                alignSelf: 'flex-end',
+                            }}
+                        >
+                            {locales('labels.promoteYourAccountToAccessPhoneAndBuyers')}
+                        </Text>
+                        <Button
+                            onPress={_ => this.props.navigation.navigate('PromoteRegistration')}
+                            style={{
+                                backgroundColor: "#128C7E",
+                                elevation: 0,
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                borderRadius: 6,
+                                position: 'absolute',
+                                bottom: 20,
+                                left: 5,
+                                width: '50%'
+                            }}
+                        >
+                            <Text
+                                style={{
+                                    color: 'white',
+                                    fontFamily: 'IRANSansWeb(FaNum)',
+                                    fontSize: 16,
+                                }}
+                            >
+                                {locales('titles.promoteRegistration')}
+                            </Text>
+                        </Button>
+                    </View>
+                    :
+                    null
+                }
                 <BuyAdList
                     item={item}
                     setSelectedButton={this.setSelectedButton}
