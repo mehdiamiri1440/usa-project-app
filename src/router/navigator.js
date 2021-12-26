@@ -595,6 +595,7 @@ const routes = props => {
                     animationType="fade"
                     onDismiss={closePromotionModal}
                 >
+
                     <Image
                         style={{
                             alignSelf: 'center',
@@ -604,6 +605,7 @@ const routes = props => {
                         }}
                         source={require('../../assets/icons/racket.png')}
                     />
+
                     <Dialog
                         onDismiss={closePromotionModal}
                         visible={showPromotionModal}
@@ -618,6 +620,19 @@ const routes = props => {
                                 backgroundColor: '#FFC985'
                             }}
                         >
+                            <AntDesign
+                                onPress={closePromotionModal}
+                                name="close"
+                                color="red"
+                                solid
+                                style={{
+                                    position: 'absolute',
+                                    zIndex: 1,
+                                    right: 8,
+                                    top: 13
+                                }}
+                                size={22}
+                            />
                             <Image
                                 style={{
                                     alignSelf: 'center',
