@@ -10,9 +10,7 @@ import { deviceWidth, deviceHeight } from '../../utils';
 
 const ProductDetailsContentLoading = _ => {
     return (
-        <ScrollView style={{
-            backgroundColor: 'white',
-        }}>
+        <>
             <View>
                 <ContentLoader
                     speed={2}
@@ -117,7 +115,7 @@ const ProductDetailsContentLoading = _ => {
                     <Rect x="24" y="280" rx="3" ry="3" width="423" height="43" />
                 </ContentLoader>
             </ShadowView>
-        </ScrollView>
+        </>
     )
 };
 

@@ -599,7 +599,7 @@ const routes = props => {
                         style={{
                             alignSelf: 'center',
                             position: 'absolute',
-                            top: '10%',
+                            top: '16%',
                             zIndex: 1,
                         }}
                         source={require('../../assets/icons/racket.png')}
@@ -610,7 +610,7 @@ const routes = props => {
                         style={{
                             ...styles.dialogWrapper,
                             backgroundColor: '#F0F3F5',
-                            height: '73%'
+                            height: '55%'
                         }}
                     >
                         <View
@@ -637,7 +637,7 @@ const routes = props => {
                                 style={{
                                     color: '#15313C',
                                     textAlign: 'center',
-                                    fontSize: 22,
+                                    fontSize: 20,
                                     fontFamily: 'IRANSansWeb(FaNum)_Medium',
                                     marginVertical: 10
                                 }}
@@ -648,9 +648,8 @@ const routes = props => {
                                 style={{
                                     color: '#15313C',
                                     textAlign: 'center',
-                                    fontSize: 20,
+                                    fontSize: 18,
                                     fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                    marginVertical: 10
                                 }}
                             >
                                 {locales('titles.fastAndEasySale')}
@@ -661,9 +660,8 @@ const routes = props => {
                                     textAlign: 'center',
                                     width: '80%',
                                     alignSelf: 'center',
-                                    fontSize: 18,
+                                    fontSize: 16,
                                     fontFamily: 'IRANSansWeb(FaNum)',
-                                    marginVertical: 15
                                 }}
                             >
                                 {locales('titles.toAccessAllBuskoolSpecialFeaturesPromoteIt')}
@@ -672,14 +670,14 @@ const routes = props => {
                                 start={{ x: 0, y: 1 }}
                                 end={{ x: 0.8, y: 0.2 }}
                                 style={{
-                                    width: '70%',
+                                    width: '80%',
                                     borderRadius: 8,
                                     alignSelf: 'center',
                                     padding: 10,
                                     alignItems: 'center',
                                     justifyContent: 'center',
                                     margin: 20,
-                                    minHeight: 60,
+                                    minHeight: 40,
                                 }}
                                 colors={['#FF9828', '#FF6600']}
                             >

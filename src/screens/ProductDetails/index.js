@@ -2134,25 +2134,25 @@ class ProductDetails extends PureComponent {
                         </Button>
                     </View>
                     :
-                    (productDetailsInfoLoading || editProductLoading) ?
-                        <ProductDetailsContentLoading />
-                        :
-                        <ScrollView
-                            style={{
-                                backgroundColor: 'white',
-                            }}
-                            contentContainerStyle={{
-                                paddingBottom: 55
+                    <ScrollView
+                        style={{
+                            backgroundColor: 'white',
+                        }}
+                        contentContainerStyle={{
+                            paddingBottom: 55
 
-                            }}
-                            ref={this.wrapper}
-                            onMomentumScrollEnd={this.handleScrollChange}
-                            refreshControl={
-                                <RefreshControl
-                                    refreshing={!!this.props?.productDetailsInfoLoading}
-                                    onRefresh={this.initialCall}
-                                />
-                            }>
+                        }}
+                        ref={this.wrapper}
+                        onMomentumScrollEnd={this.handleScrollChange}
+                        refreshControl={
+                            <RefreshControl
+                                refreshing={false}
+                                onRefresh={this.initialCall}
+                            />
+                        }>
+                        {(productDetailsInfoLoading || editProductLoading) ?
+                            <ProductDetailsContentLoading />
+                            :
                             <ShadowView
                                 style={{
                                     shadowColor: 'black',
@@ -3025,8 +3025,8 @@ class ProductDetails extends PureComponent {
                                 </View>
 
                             </ShadowView>
-
-                        </ScrollView>
+                        }
+                    </ScrollView>
                 }
                 <FooterButtons
                     userId={userId}
