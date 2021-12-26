@@ -133,7 +133,7 @@ class GuidToRegisterProduct extends React.Component {
                     <Dialog
                         visible={showModal}
                         onDismiss={this.hideDialog}
-                        style={{ ...styles.dialogWrapper, height: '49%' }}
+                        style={{ ...styles.dialogWrapper, height: '52%' }}
                     >
                         <Dialog.Actions
                             style={{

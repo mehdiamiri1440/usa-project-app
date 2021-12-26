@@ -1382,7 +1382,7 @@ class Requests extends PureComponent {
                     <Dialog
                         visible={showMobileNumberWarnModal}
                         onDismiss={_ => this.openMobileNumberWarnModal(false)}
-                        style={{ ...styles.dialogWrapper, height: '47%' }}
+                        style={{ ...styles.dialogWrapper, height: '52%' }}
                     >
                         <Dialog.Actions
                             style={{
@@ -1446,7 +1446,7 @@ class Requests extends PureComponent {
                             alignItems: 'center'
                         }}>
                             <Button
-                                style={[styles.modalButton, styles.greenButton, { width: '80%', top: -55, marginBottom: 30 }]}
+                                style={[styles.modalButton, styles.greenButton, { width: '80%', top: -35, marginBottom: 30 }]}
                                 onPress={() => {
                                     this.openMobileNumberWarnModal(false);
                                     this.props.navigation.navigate('PromoteRegistration');
@@ -1470,7 +1470,7 @@ class Requests extends PureComponent {
                     <Dialog
                         visible={showDialog}
                         onDismiss={this.hideDialog}
-                        style={{ ...styles.dialogWrapper, height: '47%' }}
+                        style={{ ...styles.dialogWrapper, height: '52%' }}
                     >
                         <Dialog.Actions
                             style={{
@@ -1553,7 +1553,7 @@ class Requests extends PureComponent {
                     <Dialog
                         visible={showGoldenModal}
                         onDismiss={() => { this.setState({ showGoldenModal: false }) }}
-                        style={{ ...styles.dialogWrapper, height: "47%" }}
+                        style={{ ...styles.dialogWrapper, height: "52%" }}
                     >
                         <Dialog.Actions
                             style={{
