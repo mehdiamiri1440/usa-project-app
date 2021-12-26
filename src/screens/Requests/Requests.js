@@ -1470,7 +1470,7 @@ class Requests extends PureComponent {
                     <Dialog
                         visible={showDialog}
                         onDismiss={this.hideDialog}
-                        style={styles.dialogWrapper}
+                        style={{ ...styles.dialogWrapper, height: '47%' }}
                     >
                         <Dialog.Actions
                             style={{
@@ -1492,14 +1492,16 @@ class Requests extends PureComponent {
                         <Image
                             source={require('../../../assets/icons/Connectivity.png')}
                             style={{
-                                alignSelf: 'center'
+                                alignSelf: 'center',
+                                top: -30
                             }}
                         />
                         <Dialog.Actions style={styles.mainWrapperTextDialogModal}>
 
                             <Text style={[styles.mainTextDialogModal, {
                                 fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                fontSize: 18,
+                                fontSize: 16,
+                                top: -30,
                                 color: '#15313C',
 
                             }]}>
@@ -1512,10 +1514,11 @@ class Requests extends PureComponent {
                             <Text style={{
                                 fontFamily: 'IRANSansWeb(FaNum)',
                                 textAlign: 'center',
-                                fontSize: 14,
+                                fontSize: 15,
                                 color: '#15313C',
                                 paddingHorizontal: 15,
-                                width: '100%'
+                                width: '100%',
+                                top: -35
                             }}>
                                 {locales('titles.IncreaseYourCapacityToSendMoreMessagesToBuyers')}
                             </Text>
@@ -1527,7 +1530,7 @@ class Requests extends PureComponent {
                             alignItems: 'center'
                         }}>
                             <Button
-                                style={[styles.modalButton, styles.greenButton, { width: '60%', marginBottom: 30 }]}
+                                style={[styles.modalButton, styles.greenButton, { width: '80%', top: -30, marginBottom: 30 }]}
                                 onPress={() => {
                                     this.hideDialog();
                                     this.props.navigation.navigate('ExtraBuyAdCapacity');
