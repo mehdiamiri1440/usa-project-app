@@ -48,6 +48,7 @@ import * as requestActions from '../redux/buyAdRequest/actions';
 import { navigationRef, isReadyRef } from './rootNavigation';
 import linking from './linking';
 import Entypo from 'react-native-vector-icons/dist/Entypo';
+import { responsiveHeight } from 'react-native-responsive-dimensions';
 
 let currentRoute = '',
     promotionModalTimeout,
@@ -612,7 +613,7 @@ const routes = props => {
                         style={{
                             ...styles.dialogWrapper,
                             backgroundColor: '#F0F3F5',
-                            height: '55%'
+                            height: '60%'
                         }}
                     >
                         <View
@@ -691,7 +692,8 @@ const routes = props => {
                                     padding: 10,
                                     alignItems: 'center',
                                     justifyContent: 'center',
-                                    margin: 20,
+                                    marginTop: 20,
+                                    top: -5,
                                     minHeight: 40,
                                 }}
                                 colors={['#FF9828', '#FF6600']}
@@ -1262,7 +1264,7 @@ const routes = props => {
                 >
                     <Dialog
                         visible={updateModalFlag}
-                        style={{ ...styles.dialogWrapper, height: '48%' }}
+                        style={{ ...styles.dialogWrapper, height: responsiveHeight(47) }}
                     >
                         <Dialog.Actions
                             style={{
@@ -1328,7 +1330,7 @@ const routes = props => {
                             <Button
                                 style={[styles.modalButton, styles.greenButton, {
                                     width: '80%',
-                                    top: -30,
+                                    top: -35,
                                     marginBottom: 30,
                                     borderRadius: 8,
                                     elevation: 0,
