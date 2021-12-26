@@ -1262,7 +1262,7 @@ const routes = props => {
                 >
                     <Dialog
                         visible={updateModalFlag}
-                        style={styles.dialogWrapper}
+                        style={{ ...styles.dialogWrapper, height: '48%' }}
                     >
                         <Dialog.Actions
                             style={{
@@ -1286,7 +1286,8 @@ const routes = props => {
                         <Image
                             source={require('../../assets/icons/Component.png')}
                             style={{
-                                alignSelf: 'center'
+                                alignSelf: 'center',
+                                top: -30
                             }}
                         />
                         <Dialog.Actions style={styles.mainWrapperTextDialogModal}>
@@ -1294,7 +1295,8 @@ const routes = props => {
                             <Text style={[styles.mainTextDialogModal, {
                                 fontSize: 18,
                                 color: '#15313C',
-                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                top: -30
                             }]}>
                                 {locales('titles.newVersionUpdate')}
                             </Text>
@@ -1304,10 +1306,11 @@ const routes = props => {
                             <Text style={{
                                 fontFamily: 'IRANSansWeb(FaNum)',
                                 textAlign: 'center',
-                                fontSize: 14,
+                                fontSize: 15,
                                 color: '#15313C',
                                 paddingHorizontal: 15,
-                                width: '100%'
+                                width: '100%',
+                                top: -30
                             }}>
                                 {locales('titles.clickOnButtonToUpdateApp')}
                             </Text>
@@ -1324,7 +1327,11 @@ const routes = props => {
                         }}>
                             <Button
                                 style={[styles.modalButton, styles.greenButton, {
-                                    width: '70%',
+                                    width: '80%',
+                                    top: -30,
+                                    marginBottom: 30,
+                                    borderRadius: 8,
+                                    elevation: 0,
                                     flexDirection: 'row-reverse',
                                     justifyContent: 'center',
                                     alignItems: 'center'
