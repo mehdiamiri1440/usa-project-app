@@ -1553,7 +1553,7 @@ class Requests extends PureComponent {
                     <Dialog
                         visible={showGoldenModal}
                         onDismiss={() => { this.setState({ showGoldenModal: false }) }}
-                        style={styles.dialogWrapper}
+                        style={{ ...styles.dialogWrapper, height: "47%" }}
                     >
                         <Dialog.Actions
                             style={{
@@ -1575,15 +1575,17 @@ class Requests extends PureComponent {
                         <Image
                             source={require('../../../assets/icons/Connectivity.png')}
                             style={{
-                                alignSelf: 'center'
+                                alignSelf: 'center',
+                                top: -30
                             }}
                         />
                         <Dialog.Actions style={styles.mainWrapperTextDialogModal}>
 
                             <Text style={[styles.mainTextDialogModal, {
-                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                fontSize: 18,
+                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                fontSize: 17,
                                 color: '#15313C',
+                                top: -30
 
                             }]}>
                                 {locales('titles.youDoNotHaveAccessToSpecialBuyersInBuskool')}
@@ -1598,7 +1600,8 @@ class Requests extends PureComponent {
                                 fontSize: 14,
                                 color: '#15313C',
                                 paddingHorizontal: 15,
-                                width: '100%'
+                                width: '100%',
+                                top: -35
                             }}>
                                 {locales('titles.toAccessGoldenRequestsPleasePromoteYourAccount')}
                             </Text>
@@ -1610,7 +1613,13 @@ class Requests extends PureComponent {
                             alignItems: 'center'
                         }}>
                             <Button
-                                style={[styles.modalButton, styles.greenButton, { borderRadius: 8, elevation: 0, width: '60%', marginBottom: 30 }]}
+                                style={[styles.modalButton, styles.greenButton, {
+                                    width: '80%',
+                                    top: -30,
+                                    marginBottom: 30,
+                                    borderRadius: 8,
+                                    elevation: 0
+                                }]}
                                 onPress={() => {
                                     this.setState({ showGoldenModal: false })
                                     this.props.navigation.navigate('PromoteRegistration');
