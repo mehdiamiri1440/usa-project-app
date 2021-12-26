@@ -133,7 +133,7 @@ class GuidToRegisterProduct extends React.Component {
                     <Dialog
                         visible={showModal}
                         onDismiss={this.hideDialog}
-                        style={styles.dialogWrapper}
+                        style={{ ...styles.dialogWrapper, height: '49%' }}
                     >
                         <Dialog.Actions
                             style={{
@@ -155,15 +155,17 @@ class GuidToRegisterProduct extends React.Component {
                         <Image
                             source={require('../../../../assets/icons/E-Commerce.png')}
                             style={{
-                                alignSelf: 'center'
+                                alignSelf: 'center',
+                                top: -30
                             }}
                         />
                         <Dialog.Actions style={styles.mainWrapperTextDialogModal}>
 
                             <Text style={[styles.mainTextDialogModal, {
-                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                fontSize: 18,
+                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                fontSize: 19,
                                 color: '#15313C',
+                                top: -25
 
                             }]}>
                                 {locales('titles.maximumProductRegisteration')}
@@ -175,10 +177,11 @@ class GuidToRegisterProduct extends React.Component {
                             <Text style={{
                                 fontFamily: 'IRANSansWeb(FaNum)',
                                 textAlign: 'center',
-                                fontSize: 14,
+                                fontSize: 15,
                                 color: '#15313C',
                                 paddingHorizontal: 15,
-                                width: '100%'
+                                width: '100%',
+                                top: -30
                             }}>
                                 {locales('titles.clickExtraCapacityButton')}
                             </Text>
@@ -186,8 +189,11 @@ class GuidToRegisterProduct extends React.Component {
 
                         <Button
                             style={[styles.modalButton, styles.greenButton, {
-                                width: '55%',
-                                marginBottom: 35
+                                width: '80%',
+                                top: -30,
+                                marginBottom: 30,
+                                borderRadius: 8,
+                                elevation: 0
                             }]}
                             onPress={() => {
                                 this.hideDialog();
