@@ -26,6 +26,7 @@ import BuyAdList from './BuyAdList';
 import Filters from './Filters';
 import Header from '../../components/header';
 import ENUMS from '../../enums';
+import { responsiveHeight } from 'react-native-responsive-dimensions';
 
 Jmoment.locale('fa')
 Jmoment.loadPersian({ dialect: 'persian-modern' });
@@ -1570,7 +1571,7 @@ class Requests extends PureComponent {
                     <Dialog
                         visible={showMobileNumberWarnModal}
                         onDismiss={_ => this.openMobileNumberWarnModal(false)}
-                        style={{ ...styles.dialogWrapper, height: '52%' }}
+                        style={{ ...styles.dialogWrapper, height: responsiveHeight(deviceHeight < 650 ? 42 : 39) }}
                     >
                         <Dialog.Actions
                             style={{
@@ -1587,15 +1588,38 @@ class Requests extends PureComponent {
                                 size={22}
                             />
                         </Dialog.Actions>
-
-
-                        <Image
-                            source={require('../../../assets/icons/Connectivity.png')}
+                        <Svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="74"
+                            height="87"
+                            fill="none"
+                            viewBox="0 0 69 77"
                             style={{
                                 alignSelf: 'center',
-                                top: -30
+                                top: -25
                             }}
-                        />
+                        >
+                            <Path
+                                fill="#DEE9FF"
+                                d="M64.721 25.892s-10.332 8.708.669 28.163C75.16 71.333 51.814 78.15 41.91 75.93c-12.829-2.875-19.737-19.598-29.766-14.597-10.03 5-19.086-18.99-4.463-27.38C25.87 23.519 14.6 16.92 16.447 8.989c1.325-5.694 17.977-14.14 26.504-3.834 7.175 8.672 10.913 5.723 14.345 4.672 4.95-1.515 15.387 7.25 7.425 16.066z"
+                            ></Path>
+                            <Path
+                                fill="#0E84E5"
+                                d="M54.27 13.12L31.979 9.467a3 3 0 00-3.446 2.475l-7.71 47.056a3 3 0 002.475 3.446l22.293 3.653a3 3 0 003.445-2.475l7.711-47.057a3 3 0 00-2.475-3.445z"
+                            ></Path>
+                            <Path
+                                fill="#699CFF"
+                                d="M53.538 14.446l-21.289-3.489a2 2 0 00-2.297 1.65L22.379 58.82a2 2 0 001.65 2.297l21.289 3.489a2 2 0 002.297-1.65l7.573-46.213a2 2 0 00-1.65-2.297z"
+                            ></Path>
+                            <Path
+                                fill="#0E84E5"
+                                d="M66.224 9.447c-1.619-.677-2.764-.028-3.034.62-.196.468.11.85.434.985.647.27.77-.764 1.993-.252.6.25.97.715.739 1.266-.271.648-1.098.74-1.634.91-.473.155-1.135.456-1.566 1.488-.26.624-.168.874.324 1.08.588.245.818.03.913-.197.26-.624.423-.979 1.299-1.219.429-.117 1.789-.506 2.26-1.634.471-1.128-.192-2.405-1.728-3.047zM63.146 16.376a1.001 1.001 0 00-.772 1.847 1 1 0 00.772-1.847z"
+                            ></Path>
+                            <Path
+                                fill="#fff"
+                                d="M35.766 30.955c.146-.9-.114-1.69-.58-1.766-.467-.076-.963.592-1.11 1.492-.145.9.114 1.69.58 1.766.467.076.964-.592 1.11-1.492zM45.493 32.552c.147-.908-.111-1.706-.578-1.782-.466-.076-.964.6-1.112 1.508-.147.908.111 1.706.578 1.782.466.076.964-.6 1.112-1.508zM41.522 40.384a.252.252 0 01-.181-.078l-.352-.37a3.733 3.733 0 00-4.472-.713l-.45.243a.25.25 0 01-.367-.195.249.249 0 01.13-.245l.449-.243a4.235 4.235 0 015.073.808l.352.37a.25.25 0 01-.182.423z"
+                            ></Path>
+                        </Svg>
                         <Dialog.Actions style={styles.mainWrapperTextDialogModal}>
 
                             <Text style={[styles.mainTextDialogModal, {
@@ -1658,7 +1682,7 @@ class Requests extends PureComponent {
                     <Dialog
                         visible={showDialog}
                         onDismiss={this.hideDialog}
-                        style={{ ...styles.dialogWrapper, height: '52%' }}
+                        style={{ ...styles.dialogWrapper, height: responsiveHeight(deviceHeight < 650 ? 42 : 39) }}
                     >
                         <Dialog.Actions
                             style={{
@@ -1675,21 +1699,48 @@ class Requests extends PureComponent {
                                 size={22}
                             />
                         </Dialog.Actions>
-
-
-                        <Image
-                            source={require('../../../assets/icons/Connectivity.png')}
+                        <Svg
+                            xmlns="http://www.w3.org/2000/svg"
                             style={{
                                 alignSelf: 'center',
-                                top: -30
+                                top: -35
                             }}
-                        />
+                            width="94"
+                            height="87"
+                            fill="none"
+                            viewBox="0 0 70 67"
+                        >
+                            <Path
+                                fill="#DEE9FF"
+                                d="M36.911 6.601s1.798 11.562 21.178 11.88c17.21.284 11.74 20.755 5.632 27.192-7.914 8.338-23.424 6.157-24.238 15.862-.815 9.706-22.68 5.938-22.307-8.695.463-18.204-9.508-12.669-14.556-17.538-3.623-3.494-2.377-19.671 9.106-21.523 9.662-1.559 9.161-5.652 9.93-8.683C22.764.725 33.966-3.234 36.91 6.6z"
+                            ></Path>
+                            <Path
+                                fill="#208AF2"
+                                d="M55.143 47.756a2.232 2.232 0 01-2.232 2.24l-35.795.072a2.235 2.235 0 01-2.24-2.231l-.05-25.168 19.813-12.44a.56.56 0 01.593-.002L54.628 22.3l.464.288v.403l.05 24.766z"
+                            ></Path>
+                            <Path
+                                fill="#699CFF"
+                                d="M52.222 12.396H17.483a.15.15 0 00-.15.15V49.72c0 .083.068.15.15.15h34.74a.15.15 0 00.15-.15V12.547a.15.15 0 00-.15-.15z"
+                            ></Path>
+                            <Path
+                                fill="#A2BDFF"
+                                d="M52.875 49.96L35.11 36.414a.114.114 0 01.005-.185l19.8-13.532a.113.113 0 01.177.093l.05 24.953a2.237 2.237 0 01-2.191 2.242.12.12 0 01-.075-.025zM17.147 50.031l17.712-13.617a.114.114 0 00-.006-.184L15 22.776a.113.113 0 00-.178.095l.05 24.953a2.237 2.237 0 002.2 2.232.12.12 0 00.075-.025z"
+                            ></Path>
+                            <Path
+                                fill="#418DF9"
+                                d="M52.909 49.985l-35.795.071a2.242 2.242 0 01-2.22-1.937.56.56 0 01.186-.495l19.522-17.272a.56.56 0 01.74-.001l19.59 17.193a.56.56 0 01.189.495 2.242 2.242 0 01-2.212 1.946z"
+                            ></Path>
+                            <Path
+                                fill="#fff"
+                                d="M26.225 21.624c.695 0 1.259-.75 1.259-1.678 0-.926-.564-1.677-1.259-1.677s-1.258.75-1.258 1.677.563 1.678 1.258 1.678zM43.843 21.624c.695 0 1.259-.75 1.259-1.678 0-.926-.564-1.677-1.259-1.677s-1.258.75-1.258 1.677.563 1.678 1.258 1.678zM39.788 27.188a.25.25 0 01-.212-.117c-.013-.021-1.382-2.135-4.563-2.4-1.323-.11-2.58.258-3.732 1.096-.515.369-.971.812-1.355 1.315a.25.25 0 01-.41-.287c.021-.03.524-.741 1.456-1.422 1.238-.905 2.65-1.32 4.083-1.2 3.44.286 4.885 2.537 4.945 2.633a.25.25 0 01-.212.382z"
+                            ></Path>
+                        </Svg>
                         <Dialog.Actions style={styles.mainWrapperTextDialogModal}>
 
                             <Text style={[styles.mainTextDialogModal, {
                                 fontFamily: 'IRANSansWeb(FaNum)_Medium',
                                 fontSize: 16,
-                                top: -30,
+                                top: -35,
                                 color: '#15313C',
 
                             }]}>
@@ -1706,7 +1757,7 @@ class Requests extends PureComponent {
                                 color: '#15313C',
                                 paddingHorizontal: 15,
                                 width: '100%',
-                                top: -35
+                                top: -40
                             }}>
                                 {locales('titles.IncreaseYourCapacityToSendMoreMessagesToBuyers')}
                             </Text>
@@ -1718,7 +1769,7 @@ class Requests extends PureComponent {
                             alignItems: 'center'
                         }}>
                             <Button
-                                style={[styles.modalButton, styles.greenButton, { width: '80%', top: -30, marginBottom: 30 }]}
+                                style={[styles.modalButton, styles.greenButton, { width: '80%', top: -40, marginBottom: 30 }]}
                                 onPress={() => {
                                     this.hideDialog();
                                     this.props.navigation.navigate('ExtraBuyAdCapacity');
@@ -1741,7 +1792,7 @@ class Requests extends PureComponent {
                     <Dialog
                         visible={showGoldenModal}
                         onDismiss={() => { this.setState({ showGoldenModal: false }) }}
-                        style={{ ...styles.dialogWrapper, height: "52%" }}
+                        style={{ ...styles.dialogWrapper, height: responsiveHeight(deviceHeight < 650 ? 43 : 40) }}
                     >
                         <Dialog.Actions
                             style={{
@@ -1758,15 +1809,38 @@ class Requests extends PureComponent {
                                 size={22}
                             />
                         </Dialog.Actions>
-
-
-                        <Image
-                            source={require('../../../assets/icons/Connectivity.png')}
+                        <Svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="74"
+                            height="87"
+                            fill="none"
+                            viewBox="0 0 69 77"
                             style={{
                                 alignSelf: 'center',
-                                top: -30
+                                top: -25
                             }}
-                        />
+                        >
+                            <Path
+                                fill="#DEE9FF"
+                                d="M64.721 25.892s-10.332 8.708.669 28.163C75.16 71.333 51.814 78.15 41.91 75.93c-12.829-2.875-19.737-19.598-29.766-14.597-10.03 5-19.086-18.99-4.463-27.38C25.87 23.519 14.6 16.92 16.447 8.989c1.325-5.694 17.977-14.14 26.504-3.834 7.175 8.672 10.913 5.723 14.345 4.672 4.95-1.515 15.387 7.25 7.425 16.066z"
+                            ></Path>
+                            <Path
+                                fill="#0E84E5"
+                                d="M54.27 13.12L31.979 9.467a3 3 0 00-3.446 2.475l-7.71 47.056a3 3 0 002.475 3.446l22.293 3.653a3 3 0 003.445-2.475l7.711-47.057a3 3 0 00-2.475-3.445z"
+                            ></Path>
+                            <Path
+                                fill="#699CFF"
+                                d="M53.538 14.446l-21.289-3.489a2 2 0 00-2.297 1.65L22.379 58.82a2 2 0 001.65 2.297l21.289 3.489a2 2 0 002.297-1.65l7.573-46.213a2 2 0 00-1.65-2.297z"
+                            ></Path>
+                            <Path
+                                fill="#0E84E5"
+                                d="M66.224 9.447c-1.619-.677-2.764-.028-3.034.62-.196.468.11.85.434.985.647.27.77-.764 1.993-.252.6.25.97.715.739 1.266-.271.648-1.098.74-1.634.91-.473.155-1.135.456-1.566 1.488-.26.624-.168.874.324 1.08.588.245.818.03.913-.197.26-.624.423-.979 1.299-1.219.429-.117 1.789-.506 2.26-1.634.471-1.128-.192-2.405-1.728-3.047zM63.146 16.376a1.001 1.001 0 00-.772 1.847 1 1 0 00.772-1.847z"
+                            ></Path>
+                            <Path
+                                fill="#fff"
+                                d="M35.766 30.955c.146-.9-.114-1.69-.58-1.766-.467-.076-.963.592-1.11 1.492-.145.9.114 1.69.58 1.766.467.076.964-.592 1.11-1.492zM45.493 32.552c.147-.908-.111-1.706-.578-1.782-.466-.076-.964.6-1.112 1.508-.147.908.111 1.706.578 1.782.466.076.964-.6 1.112-1.508zM41.522 40.384a.252.252 0 01-.181-.078l-.352-.37a3.733 3.733 0 00-4.472-.713l-.45.243a.25.25 0 01-.367-.195.249.249 0 01.13-.245l.449-.243a4.235 4.235 0 015.073.808l.352.37a.25.25 0 01-.182.423z"
+                            ></Path>
+                        </Svg>
                         <Dialog.Actions style={styles.mainWrapperTextDialogModal}>
 
                             <Text style={[styles.mainTextDialogModal, {

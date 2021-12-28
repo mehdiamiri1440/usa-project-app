@@ -5,6 +5,9 @@ import { Navigation } from 'react-native-navigation';
 import LinearGradient from 'react-native-linear-gradient';
 import { connect } from 'react-redux';
 import { Dialog, Portal } from 'react-native-paper';
+import Svg, {
+    Path
+} from 'react-native-svg';
 
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
@@ -15,6 +18,7 @@ import * as registerProductActions from '../../../redux/registerProduct/actions'
 import * as homeActions from '../../../redux/home/actions';
 import * as profileActions from '../../../redux/profile/actions';
 import { deviceWidth, deviceHeight } from '../../../utils/deviceDimenssions';
+import { responsiveHeight } from 'react-native-responsive-dimensions';
 
 class GuidToRegisterProduct extends React.Component {
     constructor(props) {
@@ -133,7 +137,7 @@ class GuidToRegisterProduct extends React.Component {
                     <Dialog
                         visible={showModal}
                         onDismiss={this.hideDialog}
-                        style={{ ...styles.dialogWrapper, height: '52%' }}
+                        style={{ ...styles.dialogWrapper, height: responsiveHeight(deviceHeight < 650 ? 42 : 39) }}
                     >
                         <Dialog.Actions
                             style={{
@@ -150,22 +154,49 @@ class GuidToRegisterProduct extends React.Component {
                                 size={22}
                             />
                         </Dialog.Actions>
-
-
-                        <Image
-                            source={require('../../../../assets/icons/E-Commerce.png')}
+                        <Svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="94"
+                            height="87"
+                            fill="none"
                             style={{
                                 alignSelf: 'center',
-                                top: -30
+                                top: -35
                             }}
-                        />
+                            viewBox="0 0 77 76"
+                        >
+                            <Path
+                                fill="#DEE9FF"
+                                d="M19.412 12.717s11.486 8.716 28.946-7.58c15.507-14.474 28.169 8.361 28.257 19.297.115 14.165-15.506 25.5-7.925 34.804 7.58 9.304-15.035 24.668-27.224 11.372-15.162-16.541-19.27-3.102-27.912-3.102-6.203 0-18.938-15.412-10.338-26.878 7.237-9.649 3.29-12.851 1.379-16.196-2.757-4.825 3.79-17.92 14.817-11.717z"
+                            ></Path>
+                            <Path
+                                fill="#418DF9"
+                                d="M37.995 32.534v32.343L12.883 54.031l.12-32.226 24.992 10.73z"
+                            ></Path>
+                            <Path
+                                fill="#A2BDFF"
+                                d="M37.995 32.554v32.343l24.99-10.472V21.908l-24.99 10.646z"
+                            ></Path>
+                            <Path
+                                fill="#699CFF"
+                                d="M37.995 32.535l25.111-10.518-24.914-11.044-25.309 10.78 25.112 10.782z"
+                            ></Path>
+                            <Path
+                                fill="#418DF9"
+                                d="M22.35 17.722L47.365 28.61l.228 7.935 6.999-2.888-.212-7.985-25.756-10.623-6.274 2.673z"
+                            ></Path>
+                            <Path
+                                fill="#fff"
+                                d="M45.94 44.158c.397 0 .718-.587.718-1.31 0-.724-.321-1.31-.717-1.31-.397 0-.718.586-.718 1.31 0 .723.321 1.31.718 1.31zM57.506 39.446c.397 0 .718-.587.718-1.31 0-.724-.321-1.31-.718-1.31-.397 0-.718.586-.718 1.31 0 .723.322 1.31.718 1.31zM50.1 51.076l-.466-.181c1.033-2.66 2.328-4.124 3.85-4.354 1.456-.22 2.682.783 3.127 1.344l-.392.31c-.308-.388-1.385-1.352-2.66-1.16-1.313.199-2.509 1.596-3.459 4.04z"
+                            ></Path>
+                        </Svg>
                         <Dialog.Actions style={styles.mainWrapperTextDialogModal}>
 
                             <Text style={[styles.mainTextDialogModal, {
                                 fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                 fontSize: 19,
                                 color: '#15313C',
-                                top: -25
+                                top: -35
 
                             }]}>
                                 {locales('titles.maximumProductRegisteration')}
@@ -181,7 +212,7 @@ class GuidToRegisterProduct extends React.Component {
                                 color: '#15313C',
                                 paddingHorizontal: 15,
                                 width: '100%',
-                                top: -30
+                                top: -40
                             }}>
                                 {locales('titles.clickExtraCapacityButton')}
                             </Text>
@@ -190,7 +221,7 @@ class GuidToRegisterProduct extends React.Component {
                         <Button
                             style={[styles.modalButton, styles.greenButton, {
                                 width: '80%',
-                                top: -30,
+                                top: -45,
                                 marginBottom: 30,
                                 borderRadius: 8,
                                 elevation: 0
