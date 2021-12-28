@@ -1580,7 +1580,8 @@ const routes = props => {
                                     color='white'
                                     size={22}
                                     style={{
-                                        marginHorizontal: 10
+                                        left: -5,
+                                        top: 1
                                     }}
                                 />
                                 <Text style={styles.buttonText}>{locales('titles.updateBuskool')}

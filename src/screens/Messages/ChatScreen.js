@@ -1005,12 +1005,11 @@ class ChatScreen extends Component {
                                         alignSelf: 'center',
                                     }}
                                 >
-                                    <FontAwesome5
+                                    <AntDesign
                                         onPress={_ => this.handlePromotionModalVisiblity(false)}
+                                        name="close"
+                                        color="#264653"
                                         solid
-                                        size={20}
-                                        color='#808C9B'
-                                        name='times'
                                         style={{
                                             position: 'absolute',
                                             right: 0,
@@ -1018,6 +1017,7 @@ class ChatScreen extends Component {
                                             paddingVertical: 10,
                                             paddingHorizontal: 15
                                         }}
+                                        size={22}
                                     />
 
                                     <Svg
@@ -1287,7 +1287,7 @@ class ChatScreen extends Component {
                                 >
                                     <Text
                                         style={{
-                                            color: '#555555',
+                                            color: '#374761',
                                             textAlign: 'right',
                                             fontSize: 15,
                                             paddingHorizontal: 10,
@@ -1309,7 +1309,7 @@ class ChatScreen extends Component {
                                     >
                                         {locales('titles.imDelsa')} <Text
                                             style={{
-                                                color: '#38485F',
+                                                color: '#374761',
                                                 fontSize: 15,
                                                 fontFamily: 'IRANSansWeb(FaNum)_Medium',
                                                 marginVertical: 15,
@@ -1322,7 +1322,7 @@ class ChatScreen extends Component {
 
                                     <Text
                                         style={{
-                                            color: '#555555',
+                                            color: '#374761',
                                             fontSize: 14,
                                             paddingHorizontal: 10,
                                             fontFamily: 'IRANSansWeb(FaNum)_Medium',
@@ -1343,7 +1343,7 @@ class ChatScreen extends Component {
                                             alignItems: 'center',
                                             justifyContent: 'center',
                                             margin: 20,
-                                            minHeight: 60,
+                                            height: 50,
                                         }}
                                         colors={['#FF9727', '#FF6701']}
                                     >

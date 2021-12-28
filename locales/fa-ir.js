@@ -474,7 +474,7 @@ module.exports = {
     'titles.fastAndEasySale': 'فروش سریع و آسان تر',
     'titles.promoteYourUserAccount': 'حساب کاربری خود را ارتقا دهید.',
     'titles.messanger': 'پیام ‌رسان',
-    'titles.toAccessAllBuskoolSpecialFeaturesPromoteIt': 'برای دسترسی به تمام امکانات ویژه باسکول، حساب کاربری خود را ارتقا دهد.',
+    'titles.toAccessAllBuskoolSpecialFeaturesPromoteIt': 'برای دسترسی به تمام امکانات ویژه باسکول، حساب کاربری خود را ارتقا دهید.',
     'titles.messageToSupport': 'چت با پشتیبانی',
     'titles.requirementQuantity': 'میزان نیازمندی',
     'titles.close': 'بستن',
