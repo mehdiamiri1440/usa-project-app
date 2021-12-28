@@ -1566,7 +1566,7 @@ class Requests extends PureComponent {
                     <Dialog
                         visible={showMobileNumberWarnModal}
                         onDismiss={_ => this.openMobileNumberWarnModal(false)}
-                        style={{ ...styles.dialogWrapper, height: responsiveHeight(deviceHeight < 650 ? 42 : 39) }}
+                        style={{ ...styles.dialogWrapper, height: responsiveHeight(deviceHeight < 650 ? 43 : 39) }}
                     >
                         <Dialog.Actions
                             style={{
@@ -1639,7 +1639,7 @@ class Requests extends PureComponent {
                                 width: '100%',
                                 top: -25
                             }}>
-                                {locales('titles.toAccessGoldenRequestsPleasePromoteYourAccount')}
+                                {accessToContactInfoErrorMessage}
                             </Text>
 
                         </Dialog.Actions>
@@ -1653,7 +1653,7 @@ class Requests extends PureComponent {
                             alignItems: 'center'
                         }}>
                             <Button
-                                style={[styles.modalButton, styles.greenButton, { width: '80%', top: -35, marginBottom: 30 }]}
+                                style={[styles.modalButton, styles.greenButton, { width: '80%', top: -30, marginBottom: 30 }]}
                                 onPress={() => {
                                     this.openMobileNumberWarnModal(false);
                                     this.props.navigation.navigate('PromoteRegistration');
