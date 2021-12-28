@@ -604,7 +604,7 @@ const routes = props => {
                         style={{
                             alignSelf: 'center',
                             position: 'absolute',
-                            top: '21%',
+                            top: '24%',
                             zIndex: 1,
                         }}
                         xmlns="http://www.w3.org/2000/svg"
@@ -693,7 +693,7 @@ const routes = props => {
                         style={{
                             ...styles.dialogWrapper,
                             backgroundColor: '#F0F3F5',
-                            height: responsiveHeight(46)
+                            height: responsiveHeight(deviceHeight < 650 ? 49 : 47)
                         }}
                     >
                         <View
@@ -719,7 +719,7 @@ const routes = props => {
                                 xmlns="http://www.w3.org/2000/svg"
                                 style={{
                                     width: '100%',
-                                    height: 190
+                                    height: 190,
                                 }}
                                 fill="none"
                                 viewBox="0 0 285 113"
@@ -751,7 +751,7 @@ const routes = props => {
                         <View
                             style={{
                                 paddingHorizontal: 10,
-                                top: -50,
+                                top: -40,
                                 backgroundColor: '#F0F3F5'
                             }}
                         >
@@ -1369,7 +1369,7 @@ const routes = props => {
                 >
                     <Dialog
                         visible={updateModalFlag}
-                        style={{ ...styles.dialogWrapper, height: responsiveHeight(deviceHeight < 650 ? 42 : 39) }}
+                        style={{ ...styles.dialogWrapper, height: responsiveHeight(deviceHeight < 650 ? 44 : 40) }}
                     >
                         <Dialog.Actions
                             style={{
@@ -1515,7 +1515,7 @@ const routes = props => {
                                 fontSize: 18,
                                 color: '#15313C',
                                 fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                top: -35
+                                top: -25
                             }]}>
                                 {locales('titles.newVersionUpdate')}
                             </Text>
@@ -1529,7 +1529,7 @@ const routes = props => {
                                 color: '#15313C',
                                 paddingHorizontal: 15,
                                 width: '100%',
-                                top: -40
+                                top: -30
                             }}>
                                 {locales('titles.clickOnButtonToUpdateApp')}
                             </Text>
@@ -1547,7 +1547,7 @@ const routes = props => {
                             <Button
                                 style={[styles.modalButton, styles.greenButton, {
                                     width: '80%',
-                                    top: -45,
+                                    top: -35,
                                     marginBottom: 30,
                                     borderRadius: 8,
                                     elevation: 0,

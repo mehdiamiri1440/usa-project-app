@@ -137,7 +137,7 @@ class GuidToRegisterProduct extends React.Component {
                     <Dialog
                         visible={showModal}
                         onDismiss={this.hideDialog}
-                        style={{ ...styles.dialogWrapper, height: responsiveHeight(deviceHeight < 650 ? 42 : 39) }}
+                        style={{ ...styles.dialogWrapper, height: responsiveHeight(deviceHeight < 650 ? 44 : 40) }}
                     >
                         <Dialog.Actions
                             style={{
@@ -196,7 +196,7 @@ class GuidToRegisterProduct extends React.Component {
                                 fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                 fontSize: 19,
                                 color: '#15313C',
-                                top: -35
+                                top: -25
 
                             }]}>
                                 {locales('titles.maximumProductRegisteration')}
@@ -212,7 +212,7 @@ class GuidToRegisterProduct extends React.Component {
                                 color: '#15313C',
                                 paddingHorizontal: 15,
                                 width: '100%',
-                                top: -40
+                                top: -30
                             }}>
                                 {locales('titles.clickExtraCapacityButton')}
                             </Text>
@@ -221,7 +221,7 @@ class GuidToRegisterProduct extends React.Component {
                         <Button
                             style={[styles.modalButton, styles.greenButton, {
                                 width: '80%',
-                                top: -45,
+                                top: -35,
                                 marginBottom: 30,
                                 borderRadius: 8,
                                 elevation: 0
