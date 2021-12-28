@@ -692,7 +692,7 @@ const routes = props => {
                         style={{
                             ...styles.dialogWrapper,
                             backgroundColor: '#F0F3F5',
-                            height: '47%'
+                            height: responsiveHeight(49)
                         }}
                     >
                         <View

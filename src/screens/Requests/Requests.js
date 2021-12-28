@@ -537,7 +537,7 @@ class Requests extends PureComponent {
                         style={{
                             width: '95%',
                             backgroundColor: '#FFC985',
-                            borderRadius: 4,
+                            borderRadius: 6,
                             overflow: 'hidden',
                             padding: 10,
                             borderWidth: 1,
