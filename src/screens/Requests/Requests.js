@@ -1566,7 +1566,7 @@ class Requests extends PureComponent {
                     <Dialog
                         visible={showMobileNumberWarnModal}
                         onDismiss={_ => this.openMobileNumberWarnModal(false)}
-                        style={{ ...styles.dialogWrapper, height: responsiveHeight(deviceHeight < 650 ? 43 : 39) }}
+                        style={{ ...styles.dialogWrapper, height: responsiveHeight(deviceHeight < 650 ? 44 : 39) }}
                     >
                         <Dialog.Actions
                             style={{
@@ -1653,7 +1653,7 @@ class Requests extends PureComponent {
                             alignItems: 'center'
                         }}>
                             <Button
-                                style={[styles.modalButton, styles.greenButton, { width: '80%', top: -30, marginBottom: 30 }]}
+                                style={[styles.modalButton, styles.greenButton, { width: '65%', top: -25, marginBottom: 30 }]}
                                 onPress={() => {
                                     this.openMobileNumberWarnModal(false);
                                     this.props.navigation.navigate('PromoteRegistration');
@@ -1677,7 +1677,7 @@ class Requests extends PureComponent {
                     <Dialog
                         visible={showDialog}
                         onDismiss={this.hideDialog}
-                        style={{ ...styles.dialogWrapper, height: responsiveHeight(deviceHeight < 650 ? 43 : 40) }}
+                        style={{ ...styles.dialogWrapper, height: responsiveHeight(deviceHeight < 650 ? 44 : 40) }}
                     >
                         <Dialog.Actions
                             style={{
@@ -1764,7 +1764,7 @@ class Requests extends PureComponent {
                             alignItems: 'center'
                         }}>
                             <Button
-                                style={[styles.modalButton, styles.greenButton, { width: '80%', top: -30, marginBottom: 30 }]}
+                                style={[styles.modalButton, styles.greenButton, { width: '65%', top: -25, marginBottom: 30 }]}
                                 onPress={() => {
                                     this.hideDialog();
                                     this.props.navigation.navigate('ExtraBuyAdCapacity');
@@ -1871,8 +1871,8 @@ class Requests extends PureComponent {
                         }}>
                             <Button
                                 style={[styles.modalButton, styles.greenButton, {
-                                    width: '80%',
-                                    top: -20,
+                                    width: '65%',
+                                    top: -15,
                                     marginBottom: 30,
                                     borderRadius: 8,
                                     elevation: 0

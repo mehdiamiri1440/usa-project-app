@@ -220,8 +220,8 @@ class GuidToRegisterProduct extends React.Component {
 
                         <Button
                             style={[styles.modalButton, styles.greenButton, {
-                                width: '80%',
-                                top: -35,
+                                width: '65%',
+                                top: -30,
                                 marginBottom: 30,
                                 borderRadius: 8,
                                 elevation: 0

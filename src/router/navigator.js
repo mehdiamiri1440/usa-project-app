@@ -792,13 +792,13 @@ const routes = props => {
                                 start={{ x: 0, y: 1 }}
                                 end={{ x: 0.8, y: 0.2 }}
                                 style={{
-                                    width: '80%',
+                                    width: '65%',
                                     borderRadius: 8,
                                     alignSelf: 'center',
                                     padding: 10,
                                     alignItems: 'center',
                                     justifyContent: 'center',
-                                    marginTop: deviceHeight < 660 ? 5 : 20,
+                                    marginTop: deviceHeight < 660 ? 5 : 25,
                                     height: 50,
                                 }}
                                 colors={['#FF9828', '#FF6600']}
@@ -1547,7 +1547,7 @@ const routes = props => {
                             <Button
                                 style={[styles.modalButton, styles.greenButton, {
                                     width: '80%',
-                                    top: -35,
+                                    top: -30,
                                     marginBottom: 30,
                                     borderRadius: 8,
                                     elevation: 0,
