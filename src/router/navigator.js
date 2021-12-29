@@ -10,7 +10,7 @@ import {
     StyleSheet,
     Modal
 } from 'react-native';
-import { Dialog, Paragraph } from 'react-native-paper';
+import { Dialog, Paragraph, Portal } from 'react-native-paper';
 import { connect } from 'react-redux';
 import LinearGradient from 'react-native-linear-gradient';
 import { Button } from 'native-base';
@@ -1125,156 +1125,121 @@ const routes = props => {
                 :
                 null
             }
+
             {showPromoteRegistrationModal ?
-                <Modal
-                    onRequestClose={closePromoteRegistrationModal}
-                    visible={showPromoteRegistrationModal}
-                    animationType="fade"
-                    transparent={true}
-                    onDismiss={closePromoteRegistrationModal}
-                >
+                <Portal
+                    style={{
+                        padding: 0,
+                        margin: 0
+
+                    }}>
                     <Dialog
-                        onDismiss={closePromoteRegistrationModal}
                         visible={showPromoteRegistrationModal}
-                        style={{
-                            ...styles.dialogWrapper,
-                            width: deviceWidth * 0.95,
-                            alignSelf: 'center',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            height: deviceHeight > 790 ? deviceHeight * 0.59 : deviceHeight * 0.7,
-                            paddingTop: 17
-                        }}
+                        onDismiss={closePromoteRegistrationModal}
+                        style={{ ...styles.dialogWrapper, height: responsiveHeight(deviceHeight < 650 ? 45 : 41) }}
                     >
-                        <View
+                        <Dialog.Actions
                             style={{
-                                backgroundColor: '#E7F9FF',
-                                width: '100%',
-                                alignItems: 'center',
-                                height: '10%',
-                                justifyContent: 'center',
-                                alignSelf: 'center',
+                                alignSelf: 'flex-end',
+                                paddingRight: 15,
+                                paddingTop: 15
                             }}
                         >
-                            <FontAwesome5
+                            <AntDesign
                                 onPress={closePromoteRegistrationModal}
+                                name="close"
+                                color="#264653"
                                 solid
-                                size={20}
-                                color='#808C9B'
-                                name='times'
-                                style={{
-                                    position: 'absolute',
-                                    right: 0,
-                                    top: 0,
-                                    paddingVertical: 10,
-                                    paddingHorizontal: 15
-                                }}
+                                size={22}
                             />
-
-                            <Paragraph style={styles.headerTextDialogModal}>
-                                {locales('labels.goldenRequests')}
-                            </Paragraph>
-                        </View>
-                        <View
+                        </Dialog.Actions>
+                        <Svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="74"
+                            height="87"
+                            fill="none"
+                            viewBox="0 0 69 77"
                             style={{
-                                width: '100%',
-                                height: '100%',
-                                alignItems: 'center',
-                                justifyContent: 'center',
+                                alignSelf: 'center',
+                                top: -25
                             }}
                         >
-                            <View
-                                style={{
-                                    width: '100%',
-                                    height: '60%',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
+                            <Path
+                                fill="#DEE9FF"
+                                d="M64.721 25.892s-10.332 8.708.669 28.163C75.16 71.333 51.814 78.15 41.91 75.93c-12.829-2.875-19.737-19.598-29.766-14.597-10.03 5-19.086-18.99-4.463-27.38C25.87 23.519 14.6 16.92 16.447 8.989c1.325-5.694 17.977-14.14 26.504-3.834 7.175 8.672 10.913 5.723 14.345 4.672 4.95-1.515 15.387 7.25 7.425 16.066z"
+                            ></Path>
+                            <Path
+                                fill="#0E84E5"
+                                d="M54.27 13.12L31.979 9.467a3 3 0 00-3.446 2.475l-7.71 47.056a3 3 0 002.475 3.446l22.293 3.653a3 3 0 003.445-2.475l7.711-47.057a3 3 0 00-2.475-3.445z"
+                            ></Path>
+                            <Path
+                                fill="#699CFF"
+                                d="M53.538 14.446l-21.289-3.489a2 2 0 00-2.297 1.65L22.379 58.82a2 2 0 001.65 2.297l21.289 3.489a2 2 0 002.297-1.65l7.573-46.213a2 2 0 00-1.65-2.297z"
+                            ></Path>
+                            <Path
+                                fill="#0E84E5"
+                                d="M66.224 9.447c-1.619-.677-2.764-.028-3.034.62-.196.468.11.85.434.985.647.27.77-.764 1.993-.252.6.25.97.715.739 1.266-.271.648-1.098.74-1.634.91-.473.155-1.135.456-1.566 1.488-.26.624-.168.874.324 1.08.588.245.818.03.913-.197.26-.624.423-.979 1.299-1.219.429-.117 1.789-.506 2.26-1.634.471-1.128-.192-2.405-1.728-3.047zM63.146 16.376a1.001 1.001 0 00-.772 1.847 1 1 0 00.772-1.847z"
+                            ></Path>
+                            <Path
+                                fill="#fff"
+                                d="M35.766 30.955c.146-.9-.114-1.69-.58-1.766-.467-.076-.963.592-1.11 1.492-.145.9.114 1.69.58 1.766.467.076.964-.592 1.11-1.492zM45.493 32.552c.147-.908-.111-1.706-.578-1.782-.466-.076-.964.6-1.112 1.508-.147.908.111 1.706.578 1.782.466.076.964-.6 1.112-1.508zM41.522 40.384a.252.252 0 01-.181-.078l-.352-.37a3.733 3.733 0 00-4.472-.713l-.45.243a.25.25 0 01-.367-.195.249.249 0 01.13-.245l.449-.243a4.235 4.235 0 015.073.808l.352.37a.25.25 0 01-.182.423z"
+                            ></Path>
+                        </Svg>
+                        <Dialog.Actions style={styles.mainWrapperTextDialogModal}>
+
+                            <Text style={[styles.mainTextDialogModal, {
+                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                fontSize: 17,
+                                color: '#15313C',
+                                top: -20
+
+                            }]}>
+                                {locales('titles.youDoNotHaveAccessToSpecialBuyersInBuskool')}
+                            </Text>
+
+                        </Dialog.Actions>
+                        <Dialog.Actions style={styles.mainWrapperTextDialogModal}>
+
+                            <Text style={{
+                                fontFamily: 'IRANSansWeb(FaNum)',
+                                textAlign: 'center',
+                                fontSize: 14,
+                                color: '#15313C',
+                                paddingHorizontal: 15,
+                                width: '100%',
+                                top: -25
+                            }}>
+                                {locales('titles.toAccessGoldenRequestsPleasePromoteYourAccount')}
+                            </Text>
+
+                        </Dialog.Actions>
+                        <View style={{
+                            width: '100%',
+                            textAlign: 'center',
+                            alignItems: 'center'
+                        }}>
+                            <Button
+                                style={[styles.modalButton, styles.greenButton, {
+                                    width: '65%',
+                                    top: -15,
+                                    marginBottom: 30,
+                                    borderRadius: 8,
+                                    elevation: 0
+                                }]}
+                                onPress={() => {
+                                    closePromoteRegistrationModal();
+                                    closeSuggestedBuyerModal();
+                                    navigationRef?.current?.navigate('PromoteRegistration');
                                 }}
                             >
-                                <View
-                                    style={{
-                                        width: '100%',
-                                        justifyContent: 'center',
-                                        alignItems: 'center'
-                                    }}>
-
-                                    <AntDesign name="exclamation"
-                                        color="#f8bb86"
-                                        size={70}
-                                        style={[styles.dialogIcon, {
-                                            borderColor: '#facea8',
-                                        }]} />
-
-                                </View>
-                                <Dialog.Actions style={styles.mainWrapperTextDialogModal}>
-
-                                    <Text style={styles.mainTextDialogModal}>
-                                        {locales('labels.accessToGoldensDeined')}
-                                    </Text>
-
-                                </Dialog.Actions>
-                                <Paragraph
-                                    style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#e41c38', paddingHorizontal: 15, textAlign: 'center' }}>
-                                    {locales('labels.icreaseToSeeGoldens')}
-                                </Paragraph>
-                            </View>
-                            <View
-                                style={{
-                                    alignSelf: 'flex-end',
-                                    alignItems: 'center',
-                                    bottom: 0,
-                                    justifyContent: 'flex-end',
-                                }}
-                            >
-
-                                <View style={{
-                                    width: '100%',
-                                    textAlign: 'center',
-                                    alignItems: 'center',
-                                    marginBottom: 20
-                                }}>
-                                    <Button
-                                        style={[styles.modalButton,
-                                        styles.greenButton, {
-                                            borderRadius: 8,
-                                            elevation: 0,
-                                            maxWidth: deviceWidth * 0.6
-                                        }]}
-                                        onPress={() => {
-                                            closePromoteRegistrationModal();
-                                            closeSuggestedBuyerModal();
-                                            navigationRef?.current?.navigate('PromoteRegistration');
-                                        }}
-                                    >
-
-                                        <Text style={styles.buttonText}>{locales('titles.promoteRegistration')}
-                                        </Text>
-                                    </Button>
-                                </View>
-                                <Dialog.Actions style={{
-                                    justifyContent: 'center',
-                                    width: '100%',
-                                    padding: 0,
-                                    marginTop: 24
-                                }}>
-                                    <Button
-                                        style={styles.modalCloseButton}
-                                        onPress={_ => {
-                                            closePromoteRegistrationModal();
-                                            closeSuggestedBuyerModal();
-                                        }
-                                        }
-                                    >
-
-                                        <Text style={styles.closeButtonText}>{locales('titles.close')}
-                                        </Text>
-                                    </Button>
-                                </Dialog.Actions>
-                            </View>
+                                <Text style={styles.buttonText}>{locales('titles.promoteRegistration')}
+                                </Text>
+                            </Button>
                         </View>
                     </Dialog>
-                </Modal>
-                : null}
+                </Portal>
+                : null
+            }
 
             {contactInfoGuidModal ?
                 <Modal
