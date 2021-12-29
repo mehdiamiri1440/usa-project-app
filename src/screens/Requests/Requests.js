@@ -408,109 +408,113 @@ class Requests extends PureComponent {
             return null;
 
         return (
-            <LinearGradient
-                start={{ x: 0, y: 1 }}
-                end={{ x: 0.8, y: 0.2 }}
-                style={{
-                    width: '95%',
-                    borderRadius: 6,
-                    alignSelf: 'center',
-                    justifyContent: 'space-between',
-                    padding: 15,
-                    overflow: 'hidden',
-                    height: 190
-                }}
-                colors={['#44A08D', '#093637']}
+            <Pressable
+                onPress={_ => this.props.navigation.navigate('RegisterProductStack')}
             >
-                <View
+                <LinearGradient
+                    start={{ x: 0, y: 1 }}
+                    end={{ x: 0.8, y: 0.2 }}
                     style={{
-                        backgroundColor: 'transparent',
-                        width: 130,
-                        height: 110,
-                        borderWidth: 9,
-                        borderBottomLeftRadius: 100,
-                        borderBottomRightRadius: 100,
-                        borderColor: 'rgba(196, 196, 196, 0.5)',
-                        position: 'absolute',
-                        right: -10,
-                        top: -80,
-                        overflow: 'hidden'
-                    }}
-                >
-                </View>
-                <Text
-                    style={{
-                        fontSize: 18,
-                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                        color: 'white',
-                    }}
-                >
-                    {locales('labels.CouldNotFindSellerYet')}
-                </Text>
-                <Text
-                    style={{
-                        fontSize: 16,
-                        top: -10,
-                        fontFamily: 'IRANSansWeb(FaNum)',
-                        color: 'white',
-                    }}
-                >
-                    {locales('labels.registerProductToAccessBuyerListMadeForYou')}
-                </Text>
-                <Button
-                    onPress={_ => this.props.navigation.navigate('RegisterProductStack')}
-                    style={{
-                        backgroundColor: 'white',
-                        elevation: 0,
+                        width: '95%',
                         borderRadius: 6,
-                        width: '70%',
-                        marginRight: 5,
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        alignSelf: 'flex-end'
+                        alignSelf: 'center',
+                        justifyContent: 'space-between',
+                        padding: 15,
+                        overflow: 'hidden',
+                        height: 190
                     }}
-                >
-                    <Text
-                        style={{
-                            fontSize: 18,
-                            fontFamily: 'IRANSansWeb(FaNum)',
-                            color: '#FF6600',
-                        }}
-                    >
-                        {locales('labels.registerProductAndFindBuyer')}
-                    </Text>
-                </Button>
-                <View
-                    style={{
-                        backgroundColor: 'transparent',
-                        width: 140,
-                        height: 150,
-                        borderWidth: 9,
-                        borderTopRightRadius: 100,
-                        borderBottomRightRadius: 30,
-                        borderColor: 'rgba(196, 196, 196, 0.5)',
-                        position: 'absolute',
-                        left: -40,
-                        bottom: -60,
-                        overflow: 'hidden'
-                    }}
+                    colors={['#44A08D', '#093637']}
                 >
                     <View
                         style={{
                             backgroundColor: 'transparent',
-                            width: 100,
-                            height: 90,
-                            top: 6,
-                            borderWidth: 6,
-                            borderTopRightRadius: 100,
-                            borderBottomRightRadius: 10,
+                            width: 130,
+                            height: 110,
+                            borderWidth: 9,
+                            borderBottomLeftRadius: 100,
+                            borderBottomRightRadius: 100,
                             borderColor: 'rgba(196, 196, 196, 0.5)',
+                            position: 'absolute',
+                            right: -10,
+                            top: -80,
                             overflow: 'hidden'
                         }}
                     >
                     </View>
-                </View>
-            </LinearGradient>
+                    <Text
+                        style={{
+                            fontSize: 18,
+                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                            color: 'white',
+                        }}
+                    >
+                        {locales('labels.CouldNotFindSellerYet')}
+                    </Text>
+                    <Text
+                        style={{
+                            fontSize: 16,
+                            top: -10,
+                            fontFamily: 'IRANSansWeb(FaNum)',
+                            color: 'white',
+                        }}
+                    >
+                        {locales('labels.registerProductToAccessBuyerListMadeForYou')}
+                    </Text>
+                    <Button
+                        onPress={_ => this.props.navigation.navigate('RegisterProductStack')}
+                        style={{
+                            backgroundColor: 'white',
+                            elevation: 0,
+                            borderRadius: 6,
+                            width: '70%',
+                            marginRight: 5,
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            alignSelf: 'flex-end'
+                        }}
+                    >
+                        <Text
+                            style={{
+                                fontSize: 18,
+                                fontFamily: 'IRANSansWeb(FaNum)',
+                                color: '#FF6600',
+                            }}
+                        >
+                            {locales('labels.registerProductAndFindBuyer')}
+                        </Text>
+                    </Button>
+                    <View
+                        style={{
+                            backgroundColor: 'transparent',
+                            width: 140,
+                            height: 150,
+                            borderWidth: 9,
+                            borderTopRightRadius: 100,
+                            borderBottomRightRadius: 30,
+                            borderColor: 'rgba(196, 196, 196, 0.5)',
+                            position: 'absolute',
+                            left: -40,
+                            bottom: -60,
+                            overflow: 'hidden'
+                        }}
+                    >
+                        <View
+                            style={{
+                                backgroundColor: 'transparent',
+                                width: 100,
+                                height: 90,
+                                top: 6,
+                                borderWidth: 6,
+                                borderTopRightRadius: 100,
+                                borderBottomRightRadius: 10,
+                                borderColor: 'rgba(196, 196, 196, 0.5)',
+                                overflow: 'hidden'
+                            }}
+                        >
+                        </View>
+                    </View>
+                </LinearGradient>
+            </Pressable>
         )
     };
 
@@ -537,7 +541,8 @@ class Requests extends PureComponent {
         return (
             <>
                 {index == 3 && is_seller && active_pakage_type == 0 ?
-                    <View
+                    <Pressable
+                        onPress={_ => this.props.navigation.navigate('PromoteRegistration')}
                         style={{
                             width: '95%',
                             backgroundColor: '#FFC985',
@@ -713,7 +718,7 @@ class Requests extends PureComponent {
                                 {locales('titles.promoteRegistration')}
                             </Text>
                         </Button>
-                    </View>
+                    </Pressable>
                     :
                     null
                 }
