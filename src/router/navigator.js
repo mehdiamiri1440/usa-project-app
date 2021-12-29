@@ -10,7 +10,7 @@ import {
     StyleSheet,
     Modal
 } from 'react-native';
-import { Dialog, Paragraph, Portal } from 'react-native-paper';
+import { Dialog, Paragraph } from 'react-native-paper';
 import { connect } from 'react-redux';
 import LinearGradient from 'react-native-linear-gradient';
 import { Button } from 'native-base';
@@ -22,7 +22,12 @@ import Axios from 'axios';
 import moment from 'moment';
 import analytics from '@react-native-firebase/analytics';
 import Svg, {
-    LinearGradient as SvgLinearGradient, G, Defs, Path, ClipPath, Stop, Pattern, Image as SvgImage, Use
+    LinearGradient as SvgLinearGradient,
+    G,
+    Defs,
+    Path,
+    ClipPath,
+    Stop
 } from 'react-native-svg';
 
 import SplashScreen from 'react-native-splash-screen'
@@ -1127,12 +1132,14 @@ const routes = props => {
             }
 
             {showPromoteRegistrationModal ?
-                <Portal
-                    style={{
-                        padding: 0,
-                        margin: 0
+                <Modal
+                    onRequestClose={closePromoteRegistrationModal}
+                    visible={showPromoteRegistrationModal}
+                    transparent={true}
+                    animationType="fade"
+                    onDismiss={closePromoteRegistrationModal}
 
-                    }}>
+                >
                     <Dialog
                         visible={showPromoteRegistrationModal}
                         onDismiss={closePromoteRegistrationModal}
@@ -1237,7 +1244,7 @@ const routes = props => {
                             </Button>
                         </View>
                     </Dialog>
-                </Portal>
+                </Modal>
                 : null
             }
 
