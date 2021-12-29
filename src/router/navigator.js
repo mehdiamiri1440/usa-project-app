@@ -57,7 +57,6 @@ import { navigationRef, isReadyRef } from './rootNavigation';
 import linking from './linking';
 import Entypo from 'react-native-vector-icons/dist/Entypo';
 import { responsiveHeight } from 'react-native-responsive-dimensions';
-import { screenHeight } from '../utils/deviceDimenssions';
 
 let currentRoute = '',
     promotionModalTimeout,
