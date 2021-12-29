@@ -40,6 +40,7 @@ global.meInfo = {
 };
 global.refreshProductList = false;
 global.isAppStateChangedCauseOfPayment = false;
+global.isBuyAdRequestsFocuesd = false;
 class App extends React.Component {
 
   render() {

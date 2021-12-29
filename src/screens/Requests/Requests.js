@@ -142,10 +142,11 @@ class Requests extends PureComponent {
     };
 
     handleScreenFocused = _ => {
-        AsyncStorage.getItem('@isBuyAdRequestsFocuesd').then(result => {
+        AsyncStorage.getItem('@isBuyAdRequestsFocused').then(result => {
             result = JSON.parse(result);
-            if (result == true) {
-                AsyncStorage.removeItem('@isBuyAdRequestsFocuesd');
+            if (result == true || global.isBuyAdRequestsFocused == true) {
+                global.isBuyAdRequestsFocused = false;
+                AsyncStorage.removeItem('@isBuyAdRequestsFocused');
                 this.setState({
                     buyAdRequestsList: [],
                     selectedFilterId: null,
@@ -155,6 +156,8 @@ class Requests extends PureComponent {
                 });
                 this.onRefresh();
             }
+            if (!!!this.props.loggedInUserId)
+                global.isBuyAdRequestsFocused = true;
         })
     };
 
