@@ -1586,7 +1586,7 @@ class RequestsTab extends Component {
                                 textAlign: 'center',
                                 alignItems: 'center'
                             }}>
-                                <Button
+                                {active_pakage_type == 0 ? <Button
                                     style={[styles.modalButton, styles.greenButton, { width: '65%', top: -25, marginBottom: 30 }]}
                                     onPress={() => {
                                         this.setState({ showMobileNumberWarnModal: false })
@@ -1598,6 +1598,8 @@ class RequestsTab extends Component {
                                     styles.buttonText]}>{locales('titles.promoteRegistration')}
                                     </Text>
                                 </Button>
+                                    : null
+                                }
                             </View>
                         </Dialog>
                     </Portal>
