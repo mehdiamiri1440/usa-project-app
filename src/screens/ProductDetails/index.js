@@ -169,8 +169,6 @@ class ProductDetails extends PureComponent {
     refRBSheet = React.createRef();
     priceRBSheet = React.createRef();
     flatListRef = React.createRef();
-
-
     wrapper = React.createRef();
 
     componentDidMount() {
@@ -186,7 +184,6 @@ class ProductDetails extends PureComponent {
             screen_name: "product_view",
             screen_class: "product_view",
         });
-
         this.initialCall();
 
     }
@@ -294,6 +291,7 @@ class ProductDetails extends PureComponent {
         if (prevPropsProductId != productId) {
             this.setState({ loaded: false });
             this.initialCall();
+            setTimeout(() => this.wrapper?.current?.scrollTo({ x: 0, y: 0, animated: true }), 100);
         }
         if ((this.state.loaded == false || prevState.loaded == false) &&
             this.props.productDetailsInfo && Array.isArray(this.props.productDetailsInfo) && this.props.productDetailsInfo.length) {
