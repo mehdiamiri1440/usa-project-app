@@ -883,7 +883,7 @@ class SpecialProducts extends PureComponent {
                                     marginRight: 5
                                 }}
                             >
-                                {locales('labels.registerRequest')}
+                                {locales('titles.registerBuyAdRequest')}
                             </Text>
                         </View>
                     </Button>
