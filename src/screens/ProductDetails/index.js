@@ -157,7 +157,7 @@ class ProductDetails extends PureComponent {
             url: '',
             photosWithCompletePath: [],
             descriptionWithoutHtml: '',
-            splittedDescription: ''
+            splittedDescription: '',
         }
     }
 
@@ -170,6 +170,7 @@ class ProductDetails extends PureComponent {
     priceRBSheet = React.createRef();
     flatListRef = React.createRef();
     wrapper = React.createRef();
+    scaleValue = React.createRef(1);
 
     componentDidMount() {
         Navigation.events().registerComponentDidAppearListener(({ componentName, componentType }) => {
@@ -1085,18 +1086,31 @@ class ProductDetails extends PureComponent {
                     cropWidth={deviceWidth}
                     imageHeight={deviceHeight}
                     imageWidth={deviceWidth}
+                    onStartShouldSetPanResponder={event => event.nativeEvent.touches.length === 2 || this.scaleValue.current > 1}
+                    onMove={({ scale }) => {
+                        this.scaleValue.current = scale;
+                        this.onMove && this.onMove({ scale });
+                    }}
                 >
-                    <Image
+                    <View
                         style={{
-                            width: deviceWidth,
-                            height: deviceHeight,
-                            alignItems: 'center',
-                            alignSelf: 'center',
-                            justifyContent: 'center',
-                            resizeMode: 'contain'
+                            width: '100%',
+                            height: '100%'
                         }}
-                        source={{ uri: item }}
-                    />
+                        onStartShouldSetResponder={event => event.nativeEvent.touches.length < 2 && this.scaleValue.current <= 1}
+                    >
+                        <Image
+                            style={{
+                                width: deviceWidth,
+                                height: deviceHeight,
+                                alignItems: 'center',
+                                alignSelf: 'center',
+                                justifyContent: 'center',
+                                resizeMode: 'contain'
+                            }}
+                            source={{ uri: item }}
+                        />
+                    </View>
                 </ImageZoom>
 
             </View>
