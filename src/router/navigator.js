@@ -114,11 +114,15 @@ const routes = props => {
 
     const [ratingModalSuccessPage, setRatingModalSuccessPage] = useState(false);
 
+    const [randomIndex, setRandomIndex] = useState(0);
+
     useEffect(() => {
 
         handleInitialRoute();
 
         checkForShowingRatingModal();
+
+        createRandomIndex();
 
         AppState.addEventListener('change', handleAppStateChange);
 
@@ -152,6 +156,14 @@ const routes = props => {
 
 
     const Tab = createMaterialBottomTabNavigator();
+
+    const createRandomIndex = _ => {
+        let randomIndex = 0;
+
+        if (goldenBuyAdsList && goldenBuyAdsList.length && goldenBuyAdsList.length >= 2)
+            randomIndex = Math.floor(Math.random() * (goldenBuyAdsList.length - 2));
+        setRandomIndex(randomIndex);
+    };
 
     const handleAppStateChange = (nextAppState) => {
         // checkForShowingContactInfoGuid();
@@ -466,10 +478,7 @@ const routes = props => {
     const closePromoteRegistrationModal = _ => {
         setShowPromoteRegistrationModal(false);
     };
-    let randomIndex = 0;
 
-    if (goldenBuyAdsList && goldenBuyAdsList.length && goldenBuyAdsList.length >= 2)
-        randomIndex = Math.floor(Math.random() * (goldenBuyAdsList.length - 2));
 
     return (
         <>
