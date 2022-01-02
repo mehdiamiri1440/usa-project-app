@@ -783,6 +783,7 @@ class ChatScreen extends Component {
                     !isSenderVerified && showUnAuthorizedUserPopUp) ?
                     <ChatWithUnAuthorizedUserPopUp
                         hideUnAuthorizedUserChatPopUp={this.hideUnAuthorizedUserChatPopUp}
+                        {...this.props}
                     />
                     : null}
             </View>
