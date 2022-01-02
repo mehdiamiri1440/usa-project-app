@@ -143,8 +143,15 @@ class Requests extends PureComponent {
 
     handleScreenFocused = _ => {
         AsyncStorage.getItem('@isBuyAdRequestsFocused').then(result => {
+
+            const {
+                loggedInUserId
+            } = this.props;
+
             result = JSON.parse(result);
-            if (result == true || global.isBuyAdRequestsFocused == true) {
+            console.log('there', result, loggedInUserId, global.isBuyAdRequestsFocused)
+            if (result == true || (global.isBuyAdRequestsFocused == true && !!loggedInUserId)) {
+                console.log('here')
                 global.isBuyAdRequestsFocused = false;
                 AsyncStorage.removeItem('@isBuyAdRequestsFocused');
                 this.setState({
@@ -156,7 +163,7 @@ class Requests extends PureComponent {
                 });
                 this.onRefresh();
             }
-            if (!!!this.props.loggedInUserId)
+            if (!!!loggedInUserId)
                 global.isBuyAdRequestsFocused = true;
         })
     };
@@ -1193,7 +1200,7 @@ class Requests extends PureComponent {
             >
                 {this.renderSortIcons()}
 
-                {isFilterApplied ?
+                {isFilterApplied && searchText ?
                     <Pressable
                         android_ripple={{
                             color: '#ededed',
