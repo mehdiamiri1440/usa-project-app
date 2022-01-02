@@ -1491,12 +1491,13 @@ class RequestsTab extends Component {
 
 
                 {showMobileNumberWarnModal ?
-                    <Portal
-                        style={{
-                            padding: 0,
-                            margin: 0
-
-                        }}>
+                    <Modal
+                        onRequestClose={_ => this.setState({ showMobileNumberWarnModal: false })}
+                        visible={showMobileNumberWarnModal}
+                        transparent={true}
+                        animationType="fade"
+                        onDismiss={_ => this.setState({ showMobileNumberWarnModal: false })}
+                    >
                         <Dialog
                             visible={showMobileNumberWarnModal}
                             onDismiss={_ => this.setState({ showMobileNumberWarnModal: false })}
@@ -1602,18 +1603,19 @@ class RequestsTab extends Component {
                                 }
                             </View>
                         </Dialog>
-                    </Portal>
+                    </Modal>
                     :
                     null
                 }
 
                 {showGoldenModal ?
-                    <Portal
-                        style={{
-                            padding: 0,
-                            margin: 0
-
-                        }}>
+                    <Modal
+                        onRequestClose={_ => this.setState({ showGoldenModal: false })}
+                        visible={showGoldenModal}
+                        transparent={true}
+                        animationType="fade"
+                        onDismiss={_ => this.setState({ showGoldenModal: false })}
+                    >
                         <Dialog
                             visible={showGoldenModal}
                             onDismiss={() => { this.setState({ showGoldenModal: false }) }}
@@ -1717,17 +1719,18 @@ class RequestsTab extends Component {
                                 </Button>
                             </View>
                         </Dialog>
-                    </Portal>
+                    </Modal>
                     :
                     null}
 
                 {showDialog ?
-                    <Portal
-                        style={{
-                            padding: 0,
-                            margin: 0
-
-                        }}>
+                    <Modal
+                        onRequestClose={this.hideDialog}
+                        visible={showDialog}
+                        transparent={true}
+                        animationType="fade"
+                        onDismiss={this.hideDialog}
+                    >
                         <Dialog
                             visible={showDialog}
                             onDismiss={this.hideDialog}
@@ -1830,7 +1833,7 @@ class RequestsTab extends Component {
                                 </Button>
                             </View>
                         </Dialog>
-                    </Portal>
+                    </Modal>
                     : null
                 }
 

@@ -10,7 +10,8 @@ import {
     ScrollView,
     Pressable,
     Linking, BackHandler,
-    LayoutAnimation, UIManager, Platform
+    LayoutAnimation, UIManager, Platform,
+    Modal
 } from 'react-native';
 import { Button } from 'native-base';
 import LinearGradient from 'react-native-linear-gradient';
@@ -969,12 +970,13 @@ class RegisterProductSuccessfully extends Component {
         return (
             <>
                 {showMobileNumberWarnModal ?
-                    <Portal
-                        style={{
-                            padding: 0,
-                            margin: 0
-
-                        }}>
+                    <Modal
+                        onRequestClose={_ => this.setState({ showMobileNumberWarnModal: false })}
+                        visible={showMobileNumberWarnModal}
+                        transparent={true}
+                        animationType="fade"
+                        onDismiss={_ => this.setState({ showMobileNumberWarnModal: false })}
+                    >
                         <Dialog
                             visible={showMobileNumberWarnModal}
                             onDismiss={_ => this.setState({ showMobileNumberWarnModal: false })}
@@ -1081,18 +1083,19 @@ class RegisterProductSuccessfully extends Component {
                                 }
                             </View>
                         </Dialog>
-                    </Portal>
+                    </Modal>
                     :
                     null
                 }
 
                 {showGoldenModal ?
-                    <Portal
-                        style={{
-                            padding: 0,
-                            margin: 0
-
-                        }}>
+                    <Modal
+                        onRequestClose={_ => this.setState({ showGoldenModal: false })}
+                        visible={showGoldenModal}
+                        transparent={true}
+                        animationType="fade"
+                        onDismiss={_ => this.setState({ showGoldenModal: false })}
+                    >
                         <Dialog
                             visible={showGoldenModal}
                             onDismiss={() => { this.setState({ showGoldenModal: false }) }}
@@ -1196,7 +1199,7 @@ class RegisterProductSuccessfully extends Component {
                                 </Button>
                             </View>
                         </Dialog>
-                    </Portal>
+                    </Modal>
                     :
                     null}
 
