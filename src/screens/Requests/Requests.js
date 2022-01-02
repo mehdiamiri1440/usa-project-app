@@ -149,9 +149,7 @@ class Requests extends PureComponent {
             } = this.props;
 
             result = JSON.parse(result);
-            console.log('there', result, loggedInUserId, global.isBuyAdRequestsFocused)
             if (result == true || (global.isBuyAdRequestsFocused == true && !!loggedInUserId)) {
-                console.log('here')
                 global.isBuyAdRequestsFocused = false;
                 AsyncStorage.removeItem('@isBuyAdRequestsFocused');
                 this.setState({
