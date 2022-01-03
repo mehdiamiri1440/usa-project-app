@@ -183,7 +183,7 @@ const FooterButtons = props => {
                                     styles.textSize18,
                                     {
                                         color: (!is_seller && has_phone) ?
-                                            '#FF9828' : "white"
+                                            '#Ff6600' : "white"
                                     }
                                 ]}
                             >
