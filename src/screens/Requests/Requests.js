@@ -1974,7 +1974,7 @@ class Requests extends PureComponent {
                     }}
                 >
 
-                    {!isFilterApplied ? this.renderAllCategoriesIcon() : null}
+                    {this.renderAllCategoriesIcon()}
                     {showFilters ?
                         <Filters
                             selectedFilter={this.selectedFilter}
