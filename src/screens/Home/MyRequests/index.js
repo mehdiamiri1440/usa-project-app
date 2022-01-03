@@ -481,17 +481,21 @@ const MyRequests = props => {
                             size={14}
                             solid
                             color='white'
+                            style={{
+                                position: 'absolute',
+                                left: '11%'
+                            }}
                         />
                         <Text
                             style={{
                                 color: 'white',
                                 fontFamily: 'IRANSansWeb(FaNum)',
+                                left: 8,
                                 fontSize: 16,
                                 textAlign: 'center',
-                                marginHorizontal: 8
                             }}
                         >
-                            {locales('labels.registerRequest')}
+                            {locales('titles.registerBuyAdRequest')}
                         </Text>
                     </Button>
                 </View>
