@@ -147,7 +147,7 @@ def enableHermes = project.ext.react.get("enableHermes", false);
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
-    ndkVersion "22.0.6917172"
+    ndkVersion "23.1.7779620"
     compileOptions {
     sourceCompatibility = '1.8'
     targetCompatibility = '1.8'
@@ -159,7 +159,9 @@ android {
       pickFirst '**/arm64-v8a/libc++_shared.so'
       pickFirst '**/libjsc.so'
    }
-
+  dexOptions {
+      javaMaxHeapSize "4g"
+   }
     defaultConfig {
         applicationId "com.buskool"
         minSdkVersion rootProject.ext.minSdkVersion

@@ -875,7 +875,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         elevation: 0,
         borderRadius: 5,
-        backgroundColor: '#00C569',
+        backgroundColor: '#FF9828',
         width: '37%',
         color: 'white',
         alignItems: 'center',

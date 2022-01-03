@@ -301,7 +301,7 @@ const styles = StyleSheet.create({
     },
     loginButton: {
         textAlign: 'center',
-        backgroundColor: '#00C569',
+        backgroundColor: '#FF9828',
         elevation: 0,
         borderRadius: 5,
         width: deviceWidth * 0.4,

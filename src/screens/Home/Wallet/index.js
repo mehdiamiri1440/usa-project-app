@@ -275,16 +275,7 @@ const Wallet = props => {
                 >
                     {locales('titles.increaseInventory')}
                 </Text>
-                <View
-                    style={{
-                        backgroundColor: '#00C569',
-                        width: 100,
-                        height: 4,
-                        alignSelf: 'flex-end',
-                        marginHorizontal: 10,
-                        marginTop: 15
-                    }}
-                ></View>
+
                 <View
                     style={{
                         flexDirection: 'row-reverse',
@@ -306,7 +297,7 @@ const Wallet = props => {
                             flexDirection: 'row-reverse',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            backgroundColor: inventory == 150000 ? '#00C569' : '#F9FAF5',
+                            backgroundColor: inventory == 150000 ? '#FF9828' : '#F9FAF5',
                             borderRadius: 25,
                             padding: 11,
                         }}
@@ -339,7 +330,7 @@ const Wallet = props => {
                             flexDirection: 'row-reverse',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            backgroundColor: inventory == 100000 ? '#00C569' : '#F9FAF5',
+                            backgroundColor: inventory == 100000 ? '#FF9828' : '#F9FAF5',
                             borderRadius: 25,
                             marginHorizontal: 5,
                             padding: 11
@@ -373,7 +364,7 @@ const Wallet = props => {
                             flexDirection: 'row-reverse',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            backgroundColor: inventory == 50000 ? '#00C569' : '#F9FAF5',
+                            backgroundColor: inventory == 50000 ? '#FF9828' : '#F9FAF5',
                             borderRadius: 25,
                             padding: 11
                         }}
@@ -472,7 +463,7 @@ const Wallet = props => {
                     start={{ x: 0, y: 1 }}
                     end={{ x: 0.8, y: 0.2 }}
                     style={{ width: '70%', borderRadius: 5, alignSelf: 'center', padding: 10, margin: 20 }}
-                    colors={['#21AD93', '#00C569']}
+                    colors={['#FF9727', '#FF6701']}
                 >
                     <TouchableOpacity
                         onPress={_ => !userProfileLoading && onSubmit()}

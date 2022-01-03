@@ -18,6 +18,7 @@ import { deviceHeight, deviceWidth } from '../../utils/deviceDimenssions';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import LinearGradient from 'react-native-linear-gradient';
 import Svg, { Path } from "react-native-svg";
+import { responsiveHeight } from 'react-native-responsive-dimensions';
 
 if (
     Platform.OS === "android" &&
@@ -65,6 +66,24 @@ class Intro extends Component {
         }
         this.setState({ currentSlide: this.state.currentSlide + 1 });
         LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    };
+
+    selectCurrentSlideText = _ => {
+
+        const {
+            currentSlide
+        } = this.state;
+
+        switch (currentSlide) {
+            case 0:
+                return locales('labels.welcomeToBiggestSellersAndBuyersSociety');
+            case 1:
+                return locales('labels.findBestSellersAndBuyers');
+            case 2:
+                return locales('labels.findBestPricesAllAroundTheCountry');
+            default:
+                break;
+        }
     };
 
     renderItem = ({ item }) => {
@@ -140,7 +159,17 @@ class Intro extends Component {
                         ></View>
                     ))}
                 </View>
-
+                <Text
+                    style={{
+                        textAlign: 'center',
+                        color: 'white',
+                        fontSize: 16,
+                        marginBottom: 40,
+                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                    }}
+                >
+                    {this.selectCurrentSlideText()}
+                </Text>
                 {currentSlide >= 2 ?
                     <Pressable
                         onPress={() => this.props.navigation.navigate('Home', { screen: 'ProductsList' })}
@@ -502,17 +531,6 @@ const StepOne = _ => {
                     }}
                 ></View>
             </View>
-            <Text
-                style={{
-                    bottom: '10%',
-                    textAlign: 'center',
-                    color: 'white',
-                    fontSize: 16,
-                    fontFamily: 'IRANSansWeb(FaNum)_Medium'
-                }}
-            >
-                {locales('labels.welcomeToBiggestSellersAndBuyersSociety')}
-            </Text>
         </View>
     )
 };
@@ -525,27 +543,16 @@ const StepTwo = _ => {
                 alignSelf: 'center',
                 justifyContent: 'space-around',
                 alignItems: 'center',
-                flex: 1
+                flex: 1,
             }}
         >
             <Image
                 style={{
                     width: deviceWidth,
-                    height: deviceHeight * 0.35,
+                    height: responsiveHeight(25),
                 }}
                 source={require('../../../assets/images/hands.png')}
             />
-            <Text
-                style={{
-                    textAlign: 'center',
-                    color: 'white',
-                    fontSize: 16,
-                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                    top: deviceWidth * 0.057
-                }}
-            >
-                {locales('labels.findBestSellersAndBuyers')}
-            </Text>
         </View>
     )
 };
@@ -569,17 +576,6 @@ const StepThree = _ => {
                 }}
                 source={require('../../../assets/images/investment.png')}
             />
-            <Text
-                style={{
-                    textAlign: 'center',
-                    color: 'white',
-                    fontSize: 16,
-                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                    top: -(deviceWidth * 0.034)
-                }}
-            >
-                {locales('labels.findBestPricesAllAroundTheCountry')}
-            </Text>
         </View>
     )
 };

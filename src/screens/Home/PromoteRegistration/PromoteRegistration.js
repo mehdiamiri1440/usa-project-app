@@ -442,7 +442,7 @@ class PromoteRegistration extends React.Component {
                             borderRadius: 6,
                             height: 55,
                             marginTop: 10,
-                            backgroundColor: '#FF6600',
+                            backgroundColor: '#FF9828',
                             alignSelf: 'center',
                             justifyContent: 'center',
                             alignItems: 'center',
@@ -1032,7 +1032,7 @@ class PromoteRegistration extends React.Component {
                             borderRadius: 6,
                             height: 45,
                             marginTop: 30,
-                            backgroundColor: '#FF6600',
+                            backgroundColor: '#FF9828',
                             alignSelf: 'center',
                             justifyContent: 'center',
                             alignItems: 'center',
@@ -1498,7 +1498,7 @@ class PromoteRegistration extends React.Component {
                                     style={{
                                         borderBottomWidth: 2,
                                         borderBottomColor: activeTab == 0 ?
-                                            '#FF6600' :
+                                            '#FF9828' :
                                             '#EAEAEA',
                                         padding: 10,
                                     }}
@@ -1535,7 +1535,7 @@ class PromoteRegistration extends React.Component {
                                     style={{
                                         borderBottomWidth: 2,
                                         borderBottomColor: activeTab == 1 ?
-                                            '#FF6600' :
+                                            '#FF9828' :
                                             '#EAEAEA',
                                         padding: 10,
                                     }}
@@ -3197,7 +3197,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         margin: 10,
         borderRadius: 4,
-        backgroundColor: '#00C569',
+        backgroundColor: '#FF9828',
         width: '92%',
         color: 'white',
     },

@@ -185,7 +185,7 @@ class Login extends React.Component {
                     style={{
                         width: '93%',
                         borderRadius: 8,
-                        backgroundColor: validator.isMobileNumber(mobileNumber) ? '#00c569' : 'rgba(0, 0, 0, 0.15)',
+                        backgroundColor: validator.isMobileNumber(mobileNumber) ? '#FF9828' : 'rgba(0, 0, 0, 0.15)',
                         elevation: 0,
                         alignSelf: 'center',
                         justifyContent: 'center',

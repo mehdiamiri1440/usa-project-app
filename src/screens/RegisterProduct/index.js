@@ -445,7 +445,7 @@ class RegisterProduct extends React.Component {
                             <Text
                                 style={{
                                     fontFamily: "IRANSansWeb(FaNum)_Medium",
-                                    color: '#21AD93',
+                                    color: '#FF9828',
                                     textAlign: 'center'
                                 }}>
                                 {uploadPercentage}%
@@ -467,7 +467,7 @@ class RegisterProduct extends React.Component {
                                 <LinearGradient
                                     start={{ x: 0, y: 1 }}
                                     end={{ x: 0.8, y: 0.2 }}
-                                    colors={['#00C569', '#21AD93']}
+                                    colors={['#FF9727', '#FF6701']}
                                     style={{
                                         position: 'absolute',
                                         height: 7,
@@ -746,7 +746,7 @@ const styles = StyleSheet.create({
         textAlign: 'center'
     },
     greenButton: {
-        backgroundColor: '#00C569',
+        backgroundColor: '#FF9828',
     },
     redButton: {
         backgroundColor: '#E41C39',

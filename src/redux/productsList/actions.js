@@ -169,9 +169,7 @@ export const fetchAllProductInfo = id => {
             return Promise.all([
                 API.productsList.fetchProductDetails(id),
                 API.productsList.fetchAllRelatedProducts(id)
-            ]).then(res => {
-                dispatch(success(res))
-            })
+            ]).then(res => dispatch(success(res)))
                 .catch(err => {
                     dispatch(generateErrorAction(err, {
                         failure: actionTypes.FETCH_ALL_PRODUCT_DETAILS_INFO_FAILED,

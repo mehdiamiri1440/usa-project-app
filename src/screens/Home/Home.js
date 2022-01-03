@@ -282,7 +282,7 @@ class Home extends React.Component {
                         alignContent: 'center',
                         backgroundColor: 'white',
                         borderRadius: 5,
-                        borderColor: '#00C569',
+                        borderColor: '#FF6701',
                         borderBottomWidth: 1,
                         paddingVertical: 20,
                         elevation: 0,
@@ -296,7 +296,7 @@ class Home extends React.Component {
                         <BgLinearGradient
                             start={{ x: 0, y: 1 }}
                             end={{ x: 0.8, y: 0.2 }}
-                            colors={['#00C569', '#21AD93']}
+                            colors={['#FF9727', '#FF6701']}
                             style={{
                                 borderRadius: 5,
                                 padding: 5,

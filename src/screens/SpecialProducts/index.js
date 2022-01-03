@@ -57,7 +57,10 @@ class SpecialProducts extends PureComponent {
             isFilterApplied: false,
             preFetchLoading: true,
             showRefreshButton: false,
-            categoriesList: []
+            categoriesList: [],
+            tempCities: [],
+            tempProvince: null,
+            tempCity: []
         }
 
     }
@@ -447,7 +450,14 @@ class SpecialProducts extends PureComponent {
 
     searchLocation = () => {
         const { searchText, province, city, sort_by } = this.state;
-        this.setState({ selectedButton: 1, specialProductsListArray: [], locationsFlag: false });
+        this.setState({
+            selectedButton: 1,
+            specialProductsListArray: [],
+            locationsFlag: false,
+            tempProvince: province,
+            tempCity: city,
+            tempCities: cities
+        });
         let searchItem = {
             from_record_number: 0,
             sort_by,
@@ -770,7 +780,7 @@ class SpecialProducts extends PureComponent {
                         alignContent: 'center',
                         alignItems: 'center',
                         width: deviceWidth,
-                        marginTop: 80
+                        marginTop: 30
                     }}>
                     <Image
                         style={{
@@ -826,6 +836,20 @@ class SpecialProducts extends PureComponent {
                                     : locales('labels.noSellerFound')
                         }
                     </Text>
+                    {isFilterApplied || (!isFilterApplied && !searchText) ? <Text
+                        style={{
+                            color: 'black',
+                            fontFamily: 'IRANSansWeb(FaNum)',
+                            fontSize: 14,
+                            textAlign: 'center',
+                            marginTop: 20,
+                            width: '75%'
+                        }}
+                    >
+                        {locales('titles.registerBuyAdIfYouAreRealBuyer')}
+                    </Text>
+                        : null
+                    }
                     <Button
                         onPress={_ => this.props.navigation.navigate('RegisterRequestStack', { screen: 'RegisterRequest' })}
                         style={{
@@ -859,7 +883,7 @@ class SpecialProducts extends PureComponent {
                                     marginRight: 5
                                 }}
                             >
-                                {locales('labels.registerRequest')}
+                                {locales('titles.registerBuyAdRequest')}
                             </Text>
                         </View>
                     </Button>
@@ -1533,6 +1557,9 @@ class SpecialProducts extends PureComponent {
             isFilterApplied,
             showRefreshButton,
             categoriesList,
+            tempCities,
+            tempProvince,
+            tempCity
         } = this.state;
 
         let {
@@ -1624,7 +1651,12 @@ class SpecialProducts extends PureComponent {
                             <Header
                                 {...this.props}
                                 title={locales('labels.locationsFilter')}
-                                onBackButtonPressed={_ => this.setState({ locationsFlag: false })}
+                                onBackButtonPressed={_ => this.setState({
+                                    locationsFlag: false,
+                                    cities: tempCities,
+                                    province: tempProvince,
+                                    city: tempCity
+                                })}
                             />
 
                             <View style={{
@@ -1978,7 +2010,7 @@ const styles = StyleSheet.create({
     loginButton: {
         textAlign: 'center',
         margin: 10,
-        backgroundColor: '#00C569',
+        backgroundColor: '#FF9828',
         borderRadius: 5,
         width: deviceWidth * 0.4,
         color: 'white',

@@ -144,7 +144,7 @@ const EnterActivisionCode = (props) => {
                                 props.navigation.navigate('Home', { screen: 'Chat', params: { profile_photo, contact } })
                             }
                             if (isFromRequests == true) {
-                                AsyncStorage.setItem('@isBuyAdRequestsFocuesd', JSON.stringify(true));
+                                AsyncStorage.setItem('@isBuyAdRequestsFocused', JSON.stringify(true));
                                 props.navigation.dispatch(popAction);
                                 if (is_seller)
                                     return props.navigation.navigate('RequestsStack', { screen: 'Requests' });
@@ -406,7 +406,7 @@ const styles = StyleSheet.create({
     loginButton: {
         textAlign: 'center',
         margin: 10,
-        backgroundColor: '#00C569',
+        backgroundColor: '#FF9828',
         borderRadius: 5,
         elevation: 0,
         width: deviceWidth * 0.4,

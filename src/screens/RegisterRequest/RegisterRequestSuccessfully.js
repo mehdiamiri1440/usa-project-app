@@ -532,7 +532,7 @@ const RegisterRequestSuccessfully = props => {
                                     small
                                     onPress={() => fetchContactInfo(item, index)}
                                     style={{
-                                        borderColor: item.isContactInfoShown ? '#c7a84f' : '#00C569',
+                                        borderColor: item.isContactInfoShown ? '#c7a84f' : '#FF9828',
                                         width: '49%',
                                         zIndex: 1000,
                                         position: 'relative',
@@ -543,7 +543,7 @@ const RegisterRequestSuccessfully = props => {
                                     <LinearGradient
                                         start={{ x: 0, y: 0.51, z: 1 }}
                                         end={{ x: 0.8, y: 0.2, z: 1 }}
-                                        colors={!item.isContactInfoShown ? ['#00C569', '#00C569', '#00C569'] : ['#E0E0E0', '#E0E0E0']}
+                                        colors={!item.isContactInfoShown ? ['#FF9828', '#FF9828', '#FF9828'] : ['#E0E0E0', '#E0E0E0']}
                                         style={{
                                             width: '100%',
                                             paddingHorizontal: 10,
@@ -666,7 +666,7 @@ const RegisterRequestSuccessfully = props => {
                                     borderRadius: 8,
                                     elevation: 0,
                                     marginBottom: 10,
-                                    backgroundColor: '#00C569',
+                                    backgroundColor: '#FF9828',
                                     width: '68%',
                                     color: 'white',
                                     alignItems: 'center',
@@ -1070,7 +1070,7 @@ const RegisterRequestSuccessfully = props => {
                         textAlign: 'center',
                         borderRadius: 5,
                         marginVertical: 40,
-                        backgroundColor: '#00C569',
+                        backgroundColor: '#FF9828',
                         width: '70%',
                         color: 'white',
                         alignItems: 'center',
@@ -1180,7 +1180,7 @@ const styles = StyleSheet.create({
     loginButton: {
         textAlign: 'center',
         margin: 10,
-        backgroundColor: '#00C569',
+        backgroundColor: '#FF9828',
         width: deviceWidth * 0.5,
         color: 'white',
         alignItems: 'center',
@@ -1272,7 +1272,7 @@ const styles = StyleSheet.create({
 
     },
     greenButton: {
-        backgroundColor: '#00C569',
+        backgroundColor: '#FF9828',
     },
     redButton: {
         backgroundColor: '#E41C39',

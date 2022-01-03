@@ -94,9 +94,9 @@ class UpgradeApp extends Component {
                         </Text>
                         <View
                             style={{
-                                marginTop: 7,
-                                marginBottom: 15,
-                                paddingHorizontal: 15
+                                fontFamily: "IRANSansWeb(FaNum)_Medium",
+                                color: '#FF9828',
+                                textAlign: 'center'
                             }}>
                             <Text
                                 style={{
@@ -125,20 +125,20 @@ class UpgradeApp extends Component {
                                         width: '100%',
                                         position: 'absolute'
 
-                                    }}
-                                ></View>
-                                <LinearGradient
-                                    start={{ x: 0, y: 1 }}
-                                    end={{ x: 0.8, y: 0.2 }}
-                                    colors={['#00C569', '#21AD93']}
-                                    style={{
-                                        position: 'absolute',
-                                        height: 7,
-                                        width: `${appUpdateProgress}%`,
-                                        right: 0,
-                                        borderRadius: 10
-                                    }}
-                                >
+                                }}
+                            ></View>
+                            <LinearGradient
+                                start={{ x: 0, y: 1 }}
+                                end={{ x: 0.8, y: 0.2 }}
+                                colors={['#FF9727', '#FF6701']}
+                                style={{
+                                    position: 'absolute',
+                                    height: 7,
+                                    width: `${appUpdateProgress}%`,
+                                    right: 0,
+                                    borderRadius: 10
+                                }}
+                            >
 
                                 </LinearGradient>
                             </View>

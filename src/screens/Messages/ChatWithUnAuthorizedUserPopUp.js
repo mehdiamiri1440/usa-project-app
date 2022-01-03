@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, Linking, Pressable } from 'react-native';
-import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
+import React, { useState } from 'react';
+import { View, Text, Pressable } from 'react-native';
 import { connect } from 'react-redux';
 import { deviceWidth } from '../../utils/deviceDimenssions';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
+import { ValidatedUserDescription } from '../../components/validatedUserIcon';
 
 const ChatWithUnAuthorizedUserPopUp = props => {
 
@@ -11,13 +11,7 @@ const ChatWithUnAuthorizedUserPopUp = props => {
     const { user_info = {} } = userProfile;
     const { is_verified } = user_info;
 
-    const linkToVerification = _ => {
-        return Linking.canOpenURL(`${REACT_APP_API_ENDPOINT_RELEASE}/verification`).then(supported => {
-            if (supported) {
-                Linking.openURL(`${REACT_APP_API_ENDPOINT_RELEASE}/verification`);
-            }
-        });
-    }
+    const [showModal, setShowModal] = useState(false);
 
     return (
         <View
@@ -76,7 +70,7 @@ const ChatWithUnAuthorizedUserPopUp = props => {
                         color: '#ededed',
                     }}
                     activeOpacity={1}
-                    onPress={() => linkToVerification()}
+                    onPress={() => setShowModal(true)}
                     style={{ flexDirection: 'row-reverse' }}>
                     <FontAwesome5 name='exclamation' color='#337AB7' size={20} />
                     <Text style={{ fontFamily: 'IRANSansWeb(FaNum)_Medium', marginHorizontal: 3, color: '#337AB7' }}>
@@ -84,7 +78,14 @@ const ChatWithUnAuthorizedUserPopUp = props => {
                     </Text>
                 </Pressable>
             </View>
-
+            {showModal ?
+                <ValidatedUserDescription
+                    shwModal={showModal}
+                    onRequestClose={() => setShowModal(false)}
+                    {...props}
+                />
+                :
+                null}
         </View>
     )
 };

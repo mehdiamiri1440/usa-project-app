@@ -857,39 +857,6 @@ class EditProfile extends Component {
                     </View>
 
                 </ScrollView>
-
-                <Pressable
-                    android_ripple={{
-                        color: '#ededed'
-                    }}
-                    activeOpacity={1}
-                    onPress={this.shareProfile}
-                    style={{
-                        width: deviceWidth,
-                        flexDirection: 'row-reverse',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        backgroundColor: '#4eb9fb',
-                        padding: 10
-                    }}
-                >
-                    <FontAwesome
-                        name='address-card'
-                        color='white'
-                        size={20}
-                    />
-                    <Text
-                        style={{
-                            color: 'white',
-                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                            marginHorizontal: 7,
-                            fontSize: 16
-                        }}
-                    >
-                        {locales('labels.sendYourProfileToYourFriends')}
-                    </Text>
-                </Pressable>
-
             </>
         )
     }
@@ -1069,7 +1036,7 @@ const ProfileAccomplishes = props => {
                     onPress={_ => onProfileAccomplishmentItemButtonPressed(item)}
                     style={{
                         elevation: 0,
-                        backgroundColor: '#00C569',
+                        backgroundColor: '#FF9828',
                         padding: 10,
                         borderRadius: 8,
                         width: deviceWidth * 0.5,
@@ -1407,7 +1374,7 @@ const ProfileAccomplishes = props => {
                                 onPress={onSubmit}
                                 style={{
                                     elevation: 0,
-                                    backgroundColor: description && !descriptionError && description.length >= 200 ? '#00C569' : '#eee',
+                                    backgroundColor: description && !descriptionError && description.length >= 200 ? '#FF9828' : '#eee',
                                     padding: 10,
                                     borderRadius: 8,
                                     width: deviceWidth * 0.85,
@@ -1599,7 +1566,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         margin: 10,
         borderRadius: 4,
-        backgroundColor: '#00C569',
+        backgroundColor: '#FF9828',
         width: '92%',
         color: 'white',
     },
@@ -1684,7 +1651,7 @@ const styles = StyleSheet.create({
 
     },
     greenButton: {
-        backgroundColor: '#00C569',
+        backgroundColor: '#FF9828',
     },
     forgotContainer: {
         flexDirection: 'row',
