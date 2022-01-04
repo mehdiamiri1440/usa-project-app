@@ -497,6 +497,7 @@ class RegisterProductSuccessfully extends Component {
                             width: item.has_phone ? '50%' : '70%',
                             zIndex: 1000,
                             marginHorizontal: 10,
+                            borderRadius: 8,
                             elevation: 0,
                             marginBottom: 0,
                             position: 'relative',
@@ -519,6 +520,7 @@ class RegisterProductSuccessfully extends Component {
                                 justifyContent: 'center',
                                 borderRadius: 8,
                                 padding: 8,
+                                height: 47,
                                 elevation: 0
                             }}
                         >
