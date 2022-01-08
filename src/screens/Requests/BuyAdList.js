@@ -15,7 +15,6 @@ const BuyAdList = props => {
 
     const {
         item,
-        index,
         selectedButton,
         userProfile = {},
         isUserAllowedToSendMessageLoading,
