@@ -86,8 +86,6 @@ project.ext.react = [
 apply from: "../../node_modules/react-native/react.gradle"
 project.ext.vectoricons = [
     iconFontNames: [ 
-    'MaterialIcons.ttf', 
-    'EvilIcons.ttf',
     'AntDesign.ttf',
     'Entypo.ttf',
     'EvilIcons.ttf',
@@ -159,9 +157,7 @@ android {
       pickFirst '**/arm64-v8a/libc++_shared.so'
       pickFirst '**/libjsc.so'
    }
-  dexOptions {
-      javaMaxHeapSize "4g"
-   }
+
     defaultConfig {
         applicationId "com.buskool"
         minSdkVersion rootProject.ext.minSdkVersion
@@ -252,22 +248,22 @@ android {
 
         }
     }
+
 }
 
+
 dependencies {
-    // For animated GIF support
-    compile 'com.facebook.fresco:fresco:1.+'
-    compile 'com.facebook.fresco:animated-gif:1.+'
+    implementation fileTree(dir: "libs", include: ["*.jar"])
+    //noinspection GradleDynamicVersion
+    implementation "com.facebook.react:react-native:+"  // From node_modules
+
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
     implementation project(':react-native-restart')
-    implementation 'com.facebook.soloader:soloader:0.9.0+'
     implementation project(':react-native-splash-screen')
     implementation project(':react-native-community-toolbar-android')
     implementation project(':react-native-fs')
     implementation project(':react-native-contacts')
-    implementation fileTree(dir: "libs", include: ["*.jar"])
-    implementation "com.facebook.react:react-native:+"  // From node_modules
-    compile project(':react-native-vector-icons')
-    compile project(':RNSendIntentModule')
+    implementation project(':react-native-vector-icons')
     implementation project(':react-native-device-info')
     implementation project(':@react-native-async-storage')
     implementation platform('com.google.firebase:firebase-bom:26.1.0')
@@ -280,6 +276,7 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.1.0-rc01'
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0-alpha02'
 
+
     if (enableHermes) {
         def hermesPath = "../../node_modules/hermes-engine/android/";
         debugImplementation files(hermesPath + "hermes-debug.aar")
@@ -289,10 +286,11 @@ dependencies {
     }
 }
 
+
 // Run this once to be able to run the application with BUCK
 // puts all compile dependencies into folder libs for BUCK to use
 task copyDownloadableDepsToLibs(type: Copy) {
-    from configurations.compile
+    from configurations.implementation
     into 'libs'
 }
 
