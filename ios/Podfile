@@ -37,6 +37,8 @@ target 'Buskool' do
 
 
 
+  pod 'ReactNativeNavigation', :path => '../node_modules/react-native-navigation'
+
   target 'BuskoolTests' do
     inherit! :search_paths
     # Pods for testing
