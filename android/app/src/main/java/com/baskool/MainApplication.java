@@ -17,6 +17,8 @@ import com.burnweb.rnsendintent.RNSendIntentPackage;
 import cl.json.RNSharePackage;
 import cl.json.ShareApplication;
 import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
+import com.facebook.react.bridge.JSIModulePackage;
+import com.swmansion.reanimated.ReanimatedJSIModulePackage;
 
 public class MainApplication extends NavigationApplication {
 

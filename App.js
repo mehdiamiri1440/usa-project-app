@@ -4,7 +4,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 import { setCustomText } from "react-native-global-props";
 import configureStore, { persistor } from './src/redux/configureStore';
 import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
-import { Root } from 'native-base';
+import { NativeBaseProvider, Box } from 'native-base';
 
 import ErrorBoundary from './ErrorBoundary';
 import locales from './locales';
@@ -49,11 +49,11 @@ class App extends React.Component {
         <Provider store={store}>
           <PersistGate loading={null} persistor={persistor}>
             <PaperProvider theme={theme}>
-              <Root>
+              <NativeBaseProvider>
                 <ErrorBoundary>
                   <Router />
                 </ErrorBoundary>
-              </Root>
+              </NativeBaseProvider>
             </PaperProvider>
           </PersistGate>
         </Provider >
