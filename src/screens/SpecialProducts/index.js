@@ -30,6 +30,7 @@ import * as locationActions from '../../redux/locations/actions'
 import { dataGenerator, enumHelper, deviceWidth, deviceHeight } from '../../utils';
 import ENUMS from '../../enums';
 import Header from '../../components/header';
+import { BuskoolTextInput } from '../../components';
 
 let myTimeout;
 class SpecialProducts extends PureComponent {
@@ -1843,51 +1844,78 @@ class SpecialProducts extends PureComponent {
                     title={locales('labels.suggestedProducts')}
                 />
 
-                <View style={{ backgroundColor: 'white' }}>
-                    <View style={{ marginTop: 5, padding: 4 }}>
-                        <InputGroup style={{ borderRadius: 5, backgroundColor: '#F2F2F2' }}>
-                            <Pressable
-                                android_ripple={{
-                                    color: '#ededed'
-                                }}
-                                onPress={() => this.setState({ locationsFlag: true })}
-                                style={{ flexDirection: 'row' }}>
-                                <Entypo name='location-pin' size={25} style={{
-                                    color: (selectedCity) ||
-                                        (province && provinces.find(item => item.id == province).province_name) ? '#556080' : '#777',
+                <View
+                    style={{
+                        backgroundColor: '#f2f2f2',
+                        marginTop: 10
+                    }}
+                >
+                    {/* <InputGroup style={{ borderRadius: 5, backgroundColor: '#F2F2F2' }}> */}
+                    <Pressable
+                        android_ripple={{
+                            color: '#ededed'
+                        }}
+                        onPress={() => this.setState({ locationsFlag: true })}
+                        style={{
+                            flexDirection: 'row',
+                            position: 'absolute',
+                            zIndex: 1,
+                            top: '27%',
+                            left: '1%'
+                        }}
+                    >
+                        <Entypo
+                            name='location-pin'
+                            size={25}
+                            style={{
+                                color: (selectedCity) ||
+                                    (province && provinces.find(item => item.id == province).province_name) ? '#556080' : '#777',
 
-                                }} />
-                                <Text
-                                    style={{
-                                        fontFamily: 'IRANSansWeb(FaNum)_Medium', color: '#777', fontSize: 16,
-                                        color: (selectedCity) ||
-                                            (province && provinces.find(item => item.id == province).province_name) ? '#556080' : '#777',
-
-                                    }}
-                                >
-                                    {
-                                        (selectedCity) ||
-                                        (province && provinces.find(item => item.id == province).province_name) ||
-                                        locales('titles.AllIran')
-                                    }
-                                </Text>
-                            </Pressable>
-                            <Input
-                                value={searchText}
-                                ref={this.serachInputRef}
-                                disabled={!!specialProductsListLoading}
-                                onChangeText={text => this.handleSearch(text)}
-                                onSubmitEditing={this.submitSearching}
-                                style={{
-                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                    paddingBottom: 10, color: '#777', textAlignVertical: 'bottom'
-                                }}
-                                placeholderTextColor="#bebebe"
-                                placeholder={locales('labels.searchProduct')} />
-                            <Icon name='ios-search' style={{ color: '#7E7E7E', marginHorizontal: 5 }} />
-                        </InputGroup>
-
-                    </View>
+                            }} />
+                        <Text
+                            style={{
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                fontSize: 16,
+                                color: (selectedCity) ||
+                                    (province && provinces.find(item => item.id == province).province_name) ? '#556080' : '#777',
+                            }}
+                        >
+                            {
+                                (selectedCity) ||
+                                (province && provinces.find(item => item.id == province).province_name) ||
+                                locales('titles.AllIran')
+                            }
+                        </Text>
+                    </Pressable>
+                    <BuskoolTextInput
+                        value={searchText}
+                        ref={this.serachInputRef}
+                        disabled={!!specialProductsListLoading}
+                        onChangeText={text => this.handleSearch(text)}
+                        onSubmitEditing={this.submitSearching}
+                        style={{
+                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                            color: '#777',
+                            alignSelf: 'center',
+                            right: '-8%',
+                            width: '70%',
+                            paddingVertical: 18,
+                            paddingHorizontal: 10
+                        }}
+                        placeholderTextColor="#bebebe"
+                        placeholder={locales('labels.searchProduct')} />
+                    <FontAwesome5
+                        name='search'
+                        size={18}
+                        style={{
+                            color: '#7E7E7E',
+                            marginHorizontal: 5,
+                            position: 'absolute',
+                            right: '1%',
+                            top: '27%'
+                        }}
+                    />
+                    {/* </InputGroup> */}
 
                 </View>
                 <View

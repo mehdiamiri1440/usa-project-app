@@ -13,7 +13,7 @@ const store = configureStore();
 
 let apiCallsCount = 0;
 
-export const getUrl = (route) => `${REACT_APP_API_ENDPOINT_RELEASE}/${route}`
+export const getUrl = (route) => `https://www.buskool.com/${route}`
 
 export const getTokenFromStorage = () => {
     return new Promise((resolve, reject) => {
