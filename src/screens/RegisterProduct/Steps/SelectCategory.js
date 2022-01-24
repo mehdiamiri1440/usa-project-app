@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 import { View, Text, StyleSheet, Pressable, FlatList, ActivityIndicator, BackHandler } from 'react-native';
 import { connect } from 'react-redux';
 import Svg, { Path, G, Circle } from "react-native-svg";
-import { Button, Input, Label, InputGroup } from 'native-base';
 
 import { deviceWidth, validator } from '../../../utils';
 import * as registerProductActions from '../../../redux/registerProduct/actions';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import { deviceHeight } from '../../../utils/deviceDimenssions';
+import { BuskoolButton, BuskoolTextInput } from '../../../components';
 
 let screenFocused;
 const CategoriesIcons = [
@@ -495,16 +495,29 @@ class SelectCategory extends Component {
         return (
 
             <View
-                style={{ marginVertical: 20, alignSelf: 'flex-end' }}
+                style={{
+                    marginVertical: 20,
+                    alignSelf: 'flex-end',
+                    marginRight: 30
+                }}
             >
-                <Button
+                <BuskoolButton
                     onPress={_ => this.handleGoToPrevStep()}
-                    style={[styles.backButtonContainer, { elevation: 0, flex: 1, marginRight: 30, width: '37%' }]}
+                    style={[
+                        styles.backButtonContainer,
+                        {
+                            elevation: 0,
+                            width: deviceWidth * 0.37,
+                            flexDirection: 'row-reverse',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            height: 45
+                        }]}
                     rounded
                 >
-                    <Text style={styles.backButtonText}>{locales('titles.previousStep')}</Text>
                     <FontAwesome5 name='arrow-right' size={14} color='#7E7E7E' />
-                </Button>
+                    <Text style={styles.backButtonText}>{locales('titles.previousStep')}</Text>
+                </BuskoolButton>
             </View>
         )
     };
@@ -754,49 +767,46 @@ class SelectCategory extends Component {
                         >
                             {locales('titles.productTypeExample', { fieldName: this.handleProductTypeExample() })}
                         </Text>
-                        <InputGroup
-                            regular
+
+                        <BuskoolTextInput
+                            autoCapitalize='none'
+                            autoCorrect={false}
+                            autoCompleteType='off'
                             style={{
+                                textDecorationLine: 'none',
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                fontSize: 14,
+                                height: 45,
+                                direction: 'rtl',
                                 borderRadius: 4,
                                 borderColor: productType ? productTypeError ? '#E41C38' : '#00C569' :
-                                    submitButtonClick ? '#E41C38' : '#666',
+                                    submitButtonClick ? '#E41C38' : '#BDC4CC',
                                 paddingHorizontal: 10,
-                                backgroundColor: '#FBFBFB'
+                                borderWidth: 1,
+                                backgroundColor: '#FBFBFB',
+                                textAlign: 'right',
                             }}
-                        >
-                            <FontAwesome5 name={
-                                productType ? productTypeError ? 'times-circle' : 'check-circle' : submitButtonClick
-                                    ? 'times-circle' : 'edit'}
-                                color={productType ? productTypeError ? '#E41C38' : '#00C569'
-                                    : submitButtonClick ? '#E41C38' : '#BDC4CC'}
-                                size={16}
-                                solid
-                                style={{
-                                    marginLeft: 10
-                                }}
-                            />
-                            <Input
-                                autoCapitalize='none'
-                                autoCorrect={false}
-                                autoCompleteType='off'
-                                style={{
-                                    textDecorationLine: 'none',
-                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                    fontSize: 14,
-                                    height: 45,
-                                    direction: 'rtl',
-                                    borderRadius: 4,
-                                    textAlign: 'right',
-                                }}
-                                onSubmitEditing={this.onSubmit}
-                                onChangeText={this.onProductTypeSubmit}
-                                value={productType}
-                                placeholderTextColor="#BEBEBE"
-                                placeholder={locales('titles.enterYourProductType')}
-                                ref={this.productTypeRef}
-                            />
-                        </InputGroup>
-                        <Label style={{
+                            onSubmitEditing={this.onSubmit}
+                            onChangeText={this.onProductTypeSubmit}
+                            value={productType}
+                            placeholderTextColor="#BEBEBE"
+                            placeholder={locales('titles.enterYourProductType')}
+                            ref={this.productTypeRef}
+                        />
+                        <FontAwesome5 name={
+                            productType ? productTypeError ? 'times-circle' : 'check-circle' : submitButtonClick
+                                ? 'times-circle' : 'edit'}
+                            color={productType ? productTypeError ? '#E41C38' : '#00C569'
+                                : submitButtonClick ? '#E41C38' : '#BDC4CC'}
+                            size={16}
+                            solid
+                            style={{
+                                marginLeft: 28,
+                                position: 'absolute',
+                                top: '33%',
+                            }}
+                        />
+                        <Text style={{
                             height: 30,
                             fontFamily: 'IRANSansWeb(FaNum)_Light',
                         }}>
@@ -806,29 +816,42 @@ class SelectCategory extends Component {
                             }}>
                                 {productTypeError}
                             </Text>}
-                        </Label>
+                        </Text>
+
                         <View style={{
                             marginTop: 50,
-                            flexDirection: 'row', width: deviceWidth, justifyContent: 'space-between'
+                            flexDirection: 'row',
+                            width: deviceWidth * 0.9,
+                            alignSelf: 'center',
+                            justifyContent: 'space-between'
                         }}>
-                            <Button
+                            <BuskoolButton
                                 onPress={() => this.onSubmit()}
                                 style={!this.state.subCategory || !productType ||
                                     !validator.isPersianNameWithDigits(productType)
                                     ? styles.disableLoginButton : styles.loginButton}
                                 rounded
                             >
-                                <FontAwesome5 name='arrow-left' style={{ marginRight: 10 }} size={14} color='white' />
                                 <Text style={styles.buttonText}>{locales('titles.nextStep')}</Text>
-                            </Button>
-                            <Button
+                                <FontAwesome5 name='arrow-left' style={{ marginRight: 10 }} size={14} color='white' />
+                            </BuskoolButton>
+                            <BuskoolButton
                                 onPress={_ => this.handleGoToPrevStep()}
-                                style={[styles.backButtonContainer, { width: '37%', elevation: 0, marginRight: 40 }]}
+                                style={[
+                                    styles.backButtonContainer,
+                                    {
+                                        width: '37%',
+                                        elevation: 0,
+                                        flexDirection: 'row-reverse',
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        height: 45
+                                    }]}
                                 rounded
                             >
-                                <Text style={styles.backButtonText}>{locales('titles.previousStep')}</Text>
                                 <FontAwesome5 name='arrow-right' style={{ marginLeft: 10 }} size={14} s color='#7E7E7E' />
-                            </Button>
+                                <Text style={styles.backButtonText}>{locales('titles.previousStep')}</Text>
+                            </BuskoolButton>
                         </View>
 
                     </View>
@@ -868,6 +891,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#B5B5B5',
         width: '37%',
         color: 'white',
+        height: 45,
+        flexDirection: 'row-reverse',
         alignItems: 'center',
         justifyContent: 'center'
     },
@@ -876,9 +901,11 @@ const styles = StyleSheet.create({
         elevation: 0,
         borderRadius: 5,
         backgroundColor: '#FF9828',
+        height: 45,
+        flexDirection: 'row-reverse',
+        alignItems: 'center',
         width: '37%',
         color: 'white',
-        alignItems: 'center',
         alignSelf: 'flex-start',
         justifyContent: 'center'
     },
