@@ -1,13 +1,11 @@
 import React from 'react'
 import { Pressable, Text, StyleSheet, View, FlatList, ActivityIndicator, BackHandler } from 'react-native'
-import AntDesign from 'react-native-vector-icons/dist/AntDesign';
-import RNPickerSelect from 'react-native-picker-select';
-import { Button, Item, Label } from 'native-base';
 import { connect } from 'react-redux'
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import { deviceHeight, deviceWidth } from '../../../utils/index'
 import * as locationActions from '../../../redux/locations/actions'
 import ENUMS from '../../../enums';
+import { BuskoolButton } from '../../../components';
 
 class ChooseCity extends React.Component {
     constructor(props) {
@@ -239,14 +237,21 @@ class ChooseCity extends React.Component {
             <View
                 style={{ margin: 20, alignSelf: 'flex-end' }}
             >
-                <Button
+                <BuskoolButton
                     onPress={() => isCity ? this.setState({ city: '', province: '' }) : this.props.changeStep(3)}
-                    style={[styles.backButtonContainer, { flex: 1 }]}
+                    style={[styles.backButtonContainer, {
+                        width: '37%',
+                        elevation: 0,
+                        flexDirection: 'row-reverse',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        height: 45
+                    }]}
                     rounded
                 >
-                    <Text style={styles.backButtonText}>{locales('titles.previousStep')}</Text>
                     <FontAwesome5 name='arrow-right' style={{ marginLeft: 10 }} size={14} color='#7E7E7E' />
-                </Button>
+                    <Text style={styles.backButtonText}>{locales('titles.previousStep')}</Text>
+                </BuskoolButton>
             </View>
         )
     };
