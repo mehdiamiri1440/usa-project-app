@@ -1,7 +1,6 @@
 import React, { PureComponent, createRef } from 'react';
-import { Text, View, Modal, FlatList, StyleSheet, Image, ImageBackground, Pressable } from 'react-native';
-import { Dialog, Portal, Paragraph } from 'react-native-paper';
-import { Icon, InputGroup, Input, Button } from 'native-base';
+import { Text, View, Modal, FlatList, StyleSheet, Image, Pressable } from 'react-native';
+import { Dialog } from 'react-native-paper';
 import RBSheet from "react-native-raw-bottom-sheet";
 import { Navigation } from 'react-native-navigation';
 import analytics from '@react-native-firebase/analytics';
@@ -27,6 +26,7 @@ import Filters from './Filters';
 import Header from '../../components/header';
 import ENUMS from '../../enums';
 import { responsiveHeight } from 'react-native-responsive-dimensions';
+import { BuskoolButton, BuskoolTextInput } from '../../components';
 
 Jmoment.locale('fa')
 Jmoment.loadPersian({ dialect: 'persian-modern' });
@@ -465,7 +465,7 @@ class Requests extends PureComponent {
                     >
                         {locales('labels.registerProductToAccessBuyerListMadeForYou')}
                     </Text>
-                    <Button
+                    <BuskoolButton
                         onPress={_ => this.props.navigation.navigate('RegisterProductStack')}
                         style={{
                             backgroundColor: 'white',
@@ -487,7 +487,7 @@ class Requests extends PureComponent {
                         >
                             {locales('labels.registerProductAndFindBuyer')}
                         </Text>
-                    </Button>
+                    </BuskoolButton>
                     <View
                         style={{
                             backgroundColor: 'transparent',
@@ -699,7 +699,7 @@ class Requests extends PureComponent {
                         >
                             {locales('labels.promoteYourAccountToAccessPhoneAndBuyers')}
                         </Text>
-                        <Button
+                        <BuskoolButton
                             onPress={_ => this.props.navigation.navigate('PromoteRegistration')}
                             style={{
                                 backgroundColor: "#128C7E",
@@ -707,6 +707,7 @@ class Requests extends PureComponent {
                                 alignItems: 'center',
                                 justifyContent: 'center',
                                 borderRadius: 6,
+                                height: 45,
                                 position: 'absolute',
                                 bottom: 25,
                                 left: '5%',
@@ -722,7 +723,7 @@ class Requests extends PureComponent {
                             >
                                 {locales('titles.promoteRegistration')}
                             </Text>
-                        </Button>
+                        </BuskoolButton>
                     </Pressable>
                     :
                     null
@@ -862,12 +863,15 @@ class Requests extends PureComponent {
                 </Text>
                     : null
                 }
-                <Button
+                <BuskoolButton
                     onPress={_ => this.props.navigation.navigate('RegisterProductStack', { screen: 'RegisterProduct' })}
                     style={{
                         alignSelf: "center",
                         width: '50%',
                         borderRadius: 10,
+                        height: 45,
+                        alignItems: 'center',
+                        justifyContent: 'center',
                         backgroundColor: "#FF9828",
                         elevation: 0,
                         marginTop: 20
@@ -898,7 +902,7 @@ class Requests extends PureComponent {
                             {locales('labels.registerProduct')}
                         </Text>
                     </View>
-                </Button>
+                </BuskoolButton>
             </View>
         )
     };
@@ -1552,13 +1556,13 @@ class Requests extends PureComponent {
                         <Text style={{ textAlign: 'center', fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16, color: 'black' }}>
                             {locales('titles.onTimeBuyAdRequestAndPromote')}
                         </Text>
-                        <Button
+                        <BuskoolButton
                             onPress={() => {
                                 this.updateFlag.current.close();
                                 this.props.navigation.navigate('PromoteRegistration')
                             }}
                             style={{
-                                borderRadius: 5, backgroundColor: '#FF9828',
+                                borderRadius: 5, backgroundColor: '#FF9828', height: 45, alignItems: 'center', justifyContent: 'center',
                                 alignSelf: 'center', margin: 10, width: deviceWidth * 0.3
                             }}
                         >
@@ -1566,7 +1570,7 @@ class Requests extends PureComponent {
                                 color: 'white', textAlign: 'center', width: '100%',
                                 fontFamily: 'IRANSansWeb(FaNum)_Light'
                             }}>{locales('titles.promoteRegistration')}</Text>
-                        </Button>
+                        </BuskoolButton>
                     </View>
                 </RBSheet>
 
@@ -1667,8 +1671,13 @@ class Requests extends PureComponent {
                                 textAlign: 'center',
                                 alignItems: 'center'
                             }}>
-                                <Button
-                                    style={[styles.modalButton, styles.greenButton, { width: '65%', top: -25, marginBottom: 30 }]}
+                                <BuskoolButton
+                                    style={[styles.modalButton, styles.greenButton, {
+                                        width: '65%',
+                                        top: -25,
+                                        marginBottom: 30,
+                                        height: 45
+                                    }]}
                                     onPress={() => {
                                         this.openMobileNumberWarnModal(false);
                                         this.props.navigation.navigate('PromoteRegistration');
@@ -1678,7 +1687,7 @@ class Requests extends PureComponent {
                                     <Text style={[{ fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16 },
                                     styles.buttonText]}>{locales('titles.promoteRegistration')}
                                     </Text>
-                                </Button>
+                                </BuskoolButton>
                             </View>
                         </Dialog>
                     </Modal >
@@ -1784,8 +1793,13 @@ class Requests extends PureComponent {
                                 textAlign: 'center',
                                 alignItems: 'center'
                             }}>
-                                <Button
-                                    style={[styles.modalButton, styles.greenButton, { width: '65%', top: -25, marginBottom: 30 }]}
+                                <BuskoolButton
+                                    style={[styles.modalButton, styles.greenButton, {
+                                        width: '65%',
+                                        top: -25,
+                                        marginBottom: 30,
+                                        height: 45
+                                    }]}
                                     onPress={() => {
                                         this.hideDialog();
                                         this.props.navigation.navigate('ExtraBuyAdCapacity');
@@ -1794,7 +1808,7 @@ class Requests extends PureComponent {
                                     <Text style={styles.buttonText}>
                                         {locales('titles.increaseCapacity')}
                                     </Text>
-                                </Button>
+                                </BuskoolButton>
                             </View>
                         </Dialog>
                     </Modal >
@@ -1894,12 +1908,13 @@ class Requests extends PureComponent {
                                 textAlign: 'center',
                                 alignItems: 'center'
                             }}>
-                                <Button
+                                <BuskoolButton
                                     style={[styles.modalButton, styles.greenButton, {
                                         width: '65%',
                                         top: -15,
                                         marginBottom: 30,
                                         borderRadius: 8,
+                                        height: 45,
                                         elevation: 0
                                     }]}
                                     onPress={() => {
@@ -1909,7 +1924,7 @@ class Requests extends PureComponent {
                                 >
                                     <Text style={styles.buttonText}>{locales('titles.promoteRegistration')}
                                     </Text>
-                                </Button>
+                                </BuskoolButton>
                             </View>
                         </Dialog>
                     </Modal >
@@ -1926,41 +1941,40 @@ class Requests extends PureComponent {
                     {...this.props}
                 />
 
-
-                <InputGroup
+                <View
                     style={{
-                        borderRadius: 5,
                         backgroundColor: '#F2F2F2',
-                        paddingHorizontal: 10,
-                        width: deviceWidth * 0.98,
                         marginTop: 10,
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        alignSelf: 'center'
+                        width: '100%',
                     }}
                 >
-                    <Input
+                    <BuskoolTextInput
                         value={searchText}
                         ref={this.serachInputRef}
                         onChangeText={text => this.handleSearch(text)}
                         style={{
                             fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                            paddingBottom: 10,
                             color: '#777',
-                            textAlignVertical: 'bottom'
+                            backgroundColor: '#F2F2F2',
+                            paddingVertical: 18,
+                            width: '92%',
+                            paddingHorizontal: 10,
                         }}
                         placeholderTextColor="#bebebe"
                         placeholder={locales('labels.searchBuyAdRequest')}
                     />
-                    <Icon
-                        name='ios-search'
+                    <FontAwesome5
+                        name='search'
+                        size={18}
                         style={{
                             color: '#7E7E7E',
-                            right: -5
+                            marginHorizontal: 5,
+                            position: 'absolute',
+                            right: '1%',
+                            top: '27%'
                         }}
                     />
-                </InputGroup>
-
+                </View>
 
                 <View
                     style={{
@@ -1994,9 +2008,11 @@ class Requests extends PureComponent {
                     onScroll={event => this.setState({ scrollOffset: event.nativeEvent.contentOffset.y })}
                     keyboardShouldPersistTaps='handled'
                     ListEmptyComponent={this.renderListEmptyComponent}
-                    data={!this.props.loggedInUserId ?
-                        buyAdRequestsList
-                        : buyAdRequestsList.filter(item => item.has_msg || item.has_phone)}
+                    data={
+                        !this.props.loggedInUserId ?
+                            buyAdRequestsList
+                            : buyAdRequestsList.filter(item => item.has_msg || item.has_phone)
+                    }
                     extraData={this.state}
                     onScrollToIndexFailed={this.onScrollToIndexFailed}
                     keyExtractor={(item) => item.id.toString()}

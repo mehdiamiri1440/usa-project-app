@@ -1,7 +1,7 @@
 import React, { useState, memo } from 'react';
 import { connect } from 'react-redux';
 import { View, Image, Text, ActivityIndicator, Linking, Pressable } from 'react-native';
-import { Button, Toast } from 'native-base';
+import { Toast } from 'native-base';
 import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import LinearGradient from 'react-native-linear-gradient';
@@ -9,6 +9,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import { formatter } from '../../utils';
 import { deviceWidth, validator } from '../../utils';
 import * as buyAdActions from '../../redux/buyAdRequest/actions';
+import { BuskoolButton } from '../../components';
 
 
 const BuyAdList = props => {
@@ -410,7 +411,7 @@ const BuyAdList = props => {
             }}
             >
                 {item.has_phone ?
-                    <Button
+                    <BuskoolButton
                         small
                         onPress={() => fetchContactInfo(item)}
                         style={{
@@ -471,10 +472,10 @@ const BuyAdList = props => {
 
                         </LinearGradient>
 
-                    </Button>
+                    </BuskoolButton>
                     : null}
                 {(item.has_msg || !!!loggedInUserId) ?
-                    <Button
+                    <BuskoolButton
                         small
                         onPress={event => {
                             event.stopPropagation()
@@ -536,7 +537,7 @@ const BuyAdList = props => {
                             </Text>
                         </LinearGradient>
 
-                    </Button>
+                    </BuskoolButton>
                     : null
                 }
             </View>
