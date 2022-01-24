@@ -1,7 +1,5 @@
 // import react-native element
 import React, { Component } from 'react';
-import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
-import { ActionSheet, Button } from 'native-base';
 import {
     Pressable, BackHandler,
     Image, View, Text, StyleSheet
@@ -14,6 +12,7 @@ import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 
 import { deviceWidth, deviceHeight, permissions } from '../../../utils';
 import ChooseImage from '../../../components/cameraActionSheet';
+import { BuskoolButton } from '../../../components';
 class ProductImages extends Component {
     constructor(props) {
         super(props);
@@ -288,22 +287,22 @@ class ProductImages extends Component {
                         flexDirection: 'row',
                         justifyContent: 'space-between'
                     }}>
-                        <Button
+                        <BuskoolButton
                             onPress={() => this.onSubmit()}
                             style={!images.length ? styles.disableLoginButton : styles.loginButton}
                             rounded
                         >
-                            <FontAwesome5 name='arrow-left' style={{ marginRight: 10 }} size={14} color='white' />
                             <Text style={styles.buttonText}>{locales('titles.nextStep')}</Text>
-                        </Button>
-                        <Button
+                            <FontAwesome5 name='arrow-left' style={{ marginRight: 10 }} size={14} color='white' />
+                        </BuskoolButton>
+                        <BuskoolButton
                             onPress={() => this.props.changeStep(4)}
                             style={styles.backButtonContainer}
                             rounded
                         >
-                            <Text style={styles.backButtonText}>{locales('titles.previousStep')}</Text>
                             <FontAwesome5 name='arrow-right' style={{ marginLeft: 10 }} size={14} color='#7E7E7E' />
-                        </Button>
+                            <Text style={styles.backButtonText}>{locales('titles.previousStep')}</Text>
+                        </BuskoolButton>
                     </View>
                 </ScrollView>
 
@@ -339,16 +338,18 @@ const styles = StyleSheet.create({
         textAlign: 'center'
     },
     backButtonContainer: {
+        width: '37%',
+        margin: 10,
         textAlign: 'center',
+        elevation: 0,
         borderWidth: 1,
         borderColor: '#BDC4CC',
         backgroundColor: 'white',
         alignItems: 'center',
+        height: 45,
         borderRadius: 5,
         justifyContent: 'center',
-        width: '37%',
-        elevation: 0,
-        margin: 10,
+        flexDirection: 'row-reverse'
     },
     disableLoginButton: {
         textAlign: 'center',
@@ -359,6 +360,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: '#B5B5B5',
         borderRadius: 5,
+        flexDirection: 'row-reverse',
+        height: 45,
         alignSelf: 'flex-start',
         justifyContent: 'center'
     },
@@ -368,6 +371,8 @@ const styles = StyleSheet.create({
         elevation: 0,
         backgroundColor: '#FF9828',
         width: '37%',
+        flexDirection: 'row-reverse',
+        height: 45,
         borderRadius: 5,
         color: 'white',
         alignItems: 'center',
