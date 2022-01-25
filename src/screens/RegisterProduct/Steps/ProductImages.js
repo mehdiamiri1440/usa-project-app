@@ -21,11 +21,15 @@ class ProductImages extends Component {
             avatarSource: '',
             errorFlag: false,
             imageSizeError: false,
-            loaded: false
+            loaded: false,
+            isOpen: false
         }
     }
 
     isComponentMounted = false;
+
+    ref = React.createRef();
+
     componentDidMount() {
         this.isComponentMounted = true;
         if (this.isComponentMounted) {
@@ -111,14 +115,29 @@ class ProductImages extends Component {
         })
     }
 
+    openSheet = index => {
+        this.setState({ selectedIndex: index, isOpen: true });
+        this.ref?.current?.open();
+    };
+
+    closeSheet = _ => {
+        this.ref?.current?.close();
+        this.setState({ isOpen: false });
+    };
 
     render() {
 
         let {
-            images = []
+            images = [],
+            isOpen
         } = this.state;
         return (
             <>
+                <ChooseImage
+                    ref={this.ref}
+                    closeSheet={this.closeSheet}
+                    isOpen={isOpen}
+                />
                 <ScrollView
                     contentContainerStyle={{ padding: 10 }}>
 
@@ -170,7 +189,7 @@ class ProductImages extends Component {
                                 color: '#ededed'
                             }}
                             key={index}
-                            onPress={() => this.chooseProductImage(index)}
+                            onPress={_ => this.openSheet(index)}
                             style={{
                                 margin: 7,
                                 height: deviceWidth / 2.4,
@@ -189,7 +208,7 @@ class ProductImages extends Component {
                                 android_ripple={{
                                     color: '#ededed'
                                 }}
-                                onPress={() => this.chooseProductImage(index)}
+                                onPress={_ => this.openSheet(index)}
                                 style={{
                                     position: 'absolute',
                                     opacity: 0.5,
@@ -240,7 +259,7 @@ class ProductImages extends Component {
                                 android_ripple={{
                                     color: '#ededed'
                                 }}
-                                onPress={() => this.chooseProductImage()}
+                                onPress={_ => this.openSheet()}
                                 style={{
                                     margin: 7,
                                     height: deviceWidth / 2.4,

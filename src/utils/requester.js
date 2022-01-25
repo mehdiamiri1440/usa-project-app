@@ -11,7 +11,7 @@ import { dataGenerator } from '../utils';
 
 const store = configureStore();
 
-let apiCallsCount = 0;
+let apiCallsCount = 0, invokeTimes = 0;
 
 export const getUrl = (route) => `https://www.buskool.com/${route}`
 
@@ -26,15 +26,30 @@ export const getTokenFromStorage = () => {
                         resolve(result);
                     }
                     else {
-                        resolve(randomToken)
+                        if (invokeTimes <= 3) {
+                            getTokenFromStorage();
+                            invokeTimes = invokeTimes + 1;
+                        }
+                        else
+                            resolve(false)
                     }
                 })
                 .catch(error => {
-                    resolve(randomToken)
+                    if (invokeTimes <= 3) {
+                        getTokenFromStorage();
+                        invokeTimes = invokeTimes + 1;
+                    }
+                    else
+                        resolve(false)
                 })
         }
         catch (e) {
-            resolve(randomToken)
+            if (invokeTimes <= 3) {
+                getTokenFromStorage();
+                invokeTimes = invokeTimes + 1;
+            }
+            else
+                resolve(false)
         }
     })
 };

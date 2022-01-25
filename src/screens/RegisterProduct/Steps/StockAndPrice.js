@@ -311,22 +311,22 @@ class StockAndPrice extends Component {
         } = this.state;
 
         if (!amount || amountError) {
-            this.amountRef.current._root.focus()
+            this.amountRef?.current?._root.focus()
             return;
         }
 
         if (!minimumOrder || minimumOrderError) {
-            this.minimumOrderRef.current._root.focus()
+            this.minimumOrderRef?.current?._root.focus()
             return;
         }
 
         if (!minPrice || minPriceError) {
-            this.minimumPriceRef.current._root.focus()
+            this.minimumPriceRef?.current?._root.focus()
             return;
         }
 
         if (!maximumPrice || maxPriceError) {
-            this.maximumPriceRef.current._root.focus()
+            this.maximumPriceRef?.current?._root.focus()
             return;
         }
 

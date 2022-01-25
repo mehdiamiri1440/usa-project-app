@@ -9,6 +9,7 @@ import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import { deviceWidth, deviceHeight } from '../../../utils/deviceDimenssions';
 
 import { validator } from '../../../utils';
+import { BuskoolButton } from '../../../components';
 
 class ProductDecription extends Component {
     constructor(props) {
@@ -207,22 +208,22 @@ class ProductDecription extends Component {
                         flexDirection: 'row',
                         justifyContent: 'space-between'
                     }}>
-                        <Button
+                        <BuskoolButton
                             onPress={() => !descriptionError && this.onSubmit()}
                             style={descriptionError ? styles.disableLoginButton : styles.loginButton}
                             rounded
                         >
                             <FontAwesome5 name='arrow-left' style={{ marginRight: 10 }} size={14} color='white' />
                             <Text style={styles.buttonText}>{locales('titles.nextStep')}</Text>
-                        </Button>
-                        <Button
+                        </BuskoolButton>
+                        <BuskoolButton
                             onPress={() => this.props.changeStep(5)}
                             style={styles.backButtonContainer}
                             rounded
                         >
                             <Text style={styles.backButtonText}>{locales('titles.previousStep')}</Text>
                             <FontAwesome5 name='arrow-right' style={{ marginLeft: 10 }} size={14} color='#7E7E7E' />
-                        </Button>
+                        </BuskoolButton>
                     </View>
 
                 </View>

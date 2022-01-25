@@ -1,11 +1,11 @@
-import {
-    ActionSheet
-} from 'native-base';
+import React, { useEffect } from 'react';
+import { Text } from 'react-native'
 import {
     launchCamera,
     launchImageLibrary
 } from 'react-native-image-picker';
-
+import RBSheet from "react-native-raw-bottom-sheet";
+import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import {
     permissions
 } from '../../utils';
@@ -23,11 +23,15 @@ const options = {
     },
 };
 
-const ChooseImage = _ => new Promise((resolve, reject) => ActionSheet.show(
-    {
-        options: [locales('labels.camera'), locales('labels.gallery')],
-    },
-    async buttonIndex => {
+const ChooseImage = React.forwardRef((props, ref) => {
+
+    const {
+        isOpen
+    } = props;
+
+
+
+    const selectImage = async buttonIndex => {
 
         const Errors = [
             {
@@ -89,7 +93,40 @@ const ChooseImage = _ => new Promise((resolve, reject) => ActionSheet.show(
                 break;
         };
     }
-)
-);
+
+    return (
+        <RBSheet
+            ref={ref}
+            closeOnDragDown
+            closeOnPressMask
+            onClose={_ => ref?.current?.close()}
+            height={320}
+            animationType='fade'
+            customStyles={{
+                draggableIcon: {
+                    backgroundColor: "#000"
+                },
+                container: {
+                    borderTopLeftRadius: 12,
+                    borderTopRightRadius: 12,
+                    backgroundColor: '#FAFAFA'
+                }
+            }}
+        >
+            <FontAwesome5
+                onPress={_ => ref?.current?.close()}
+                name='times'
+                color='#777'
+                size={20}
+                style={{
+                    position: 'absolute',
+                    right: 15,
+                    top: 10,
+                }}
+            />
+            <Text>sdf</Text>
+        </RBSheet>
+    )
+})
 
 export default ChooseImage;
