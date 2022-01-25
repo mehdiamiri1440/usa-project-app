@@ -473,6 +473,7 @@ class Requests extends PureComponent {
                             borderRadius: 6,
                             width: '70%',
                             marginRight: 5,
+                            height: 45,
                             alignItems: 'center',
                             justifyContent: 'center',
                             alignSelf: 'flex-end'
