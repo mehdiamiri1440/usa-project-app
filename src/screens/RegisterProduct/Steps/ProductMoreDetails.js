@@ -1,7 +1,6 @@
 // import react-native element
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Button, Item, Input, Label } from 'native-base';
 import {
     View, Text, StyleSheet, ActivityIndicator,
     BackHandler, Pressable, ScrollView
@@ -9,8 +8,8 @@ import {
 import { deviceWidth, deviceHeight } from '../../../utils/deviceDimenssions';
 import RNPickerSelect from 'react-native-picker-select';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
-import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
 import { dataGenerator, validator } from '../../../utils';
+import { BuskoolButton, BuskoolTextInput } from '../../../components';
 
 let tempDefaults = [
     {
@@ -349,126 +348,104 @@ class ProductMoreDetails extends Component {
                                         flexDirection: 'row-reverse',
                                         justifyContent: 'space-between',
                                     }}>
-                                        <View >
-                                            <Item regular
+                                        <View
+                                            style={{
+                                                backgroundColor: '#fff',
+                                                borderWidth: 1,
+                                                overflow: "hidden",
+                                                alignSelf: 'center',
+                                                borderColor: detail.error && !detail.error.length ? '#00C569' : detail.error && detail.error.length ? '#D50000' : '#bebebe',
+                                                borderRadius: 4,
+
+                                            }}
+                                        >
+                                            <RNPickerSelect
+                                                Icon={() => <FontAwesome5 name='angle-down' size={18} style={{
+                                                    top: 3
+                                                }} color='gray' />}
+                                                useNativeAndroidPickerStyle={false}
+                                                onValueChange={(value, dropIndex) => this.setItemKey(value, dropIndex, index)}
+                                                style={styles}
+                                                ref={this.pickerRef}
+                                                placeholder={{
+                                                    label: locales('titles.selectOne'),
+                                                    fontFamily: 'IRANSansWeb(FaNum)_Bold',
+                                                    value: detail.itemKey
+                                                }}
+                                                items={defaultFieldsOptions.filter(item => !item.alreadySelected).map(item => ({
+                                                    label: item.name, value: item.name
+                                                }))}
+                                            />
+                                        </View>
+
+                                        <View style={{
+                                            borderColor: '#bebebe',
+                                            borderWidth: 1,
+                                            borderRadius: 4,
+                                            width: deviceWidth * 0.44
+                                        }}>
+
+                                            <BuskoolTextInput
+                                                editable={!!detail.itemKey}
+                                                autoCapitalize='none'
+                                                autoCorrect={false}
+                                                autoCompleteType='off'
                                                 style={{
+                                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                                    textDecorationLine: 'none',
                                                     height: 45,
-                                                    marginVertical: 10,
-                                                    backgroundColor: '#fff',
-                                                    overflow: "hidden",
-                                                    alignSelf: 'center',
-                                                    borderColor: detail.error && !detail.error.length ? '#00C569' : detail.error && detail.error.length ? '#D50000' : '#a8a8a8',
-                                                    borderRadius: 5,
-                                                    marginLeft: 5,
+                                                    fontSize: 14,
+                                                    direction: 'rtl',
+                                                    paddingRight: 5,
+                                                    textAlign: 'right',
 
                                                 }}
-                                            >
-                                                <RNPickerSelect
-                                                    Icon={() => <FontAwesome5 name='angle-down' size={18} style={{
-                                                        top: 3
-                                                    }} color='gray' />}
-                                                    useNativeAndroidPickerStyle={false}
-                                                    onValueChange={(value, dropIndex) => this.setItemKey(value, dropIndex, index)}
-                                                    style={styles}
-                                                    ref={this.pickerRef}
-                                                    placeholder={{
-                                                        label: locales('titles.selectOne'),
-                                                        fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                                        value: detail.itemKey
-                                                    }}
-                                                    items={defaultFieldsOptions.filter(item => !item.alreadySelected).map(item => ({
-                                                        label: item.name, value: item.name
-                                                    }))}
-                                                />
-                                            </Item>
-                                        </View>
-                                        {/* <Dropdown
-                                error={detail.error}
-                                onChangeText={(value, dropDownIndex) => this.setItemKey(value, dropDownIndex, index)}
-                                label={locales('titles.selectOne')}
-                                data={defaultFieldsOptions}
-                                containerStyle={{
-                                    fontSize: 18,
-                                    paddingHorizontal: 20,
-                                    width: 195
-                                }}
-                            /> */}
-                                        <View style={{
-                                            flex: 1,
-                                            marginVertical: 10,
-                                        }}>
-                                            <Item error={!!detail.error} regular style={{
-                                                height: 45,
-                                                backgroundColor: '#fff',
-                                                overflow: "hidden",
-                                                borderColor: description.length ? '#00C569' : '#a8a8a8',
-                                                borderRadius: 5,
-                                                padding: 3
-                                            }}>
-                                                <Input
-                                                    disabled={!detail.itemKey}
-                                                    autoCapitalize='none'
-                                                    autoCorrect={false}
-                                                    autoCompleteType='off'
-                                                    style={{
-                                                        fontFamily: 'IRANSansWeb(FaNum)_Medium', textDecorationLine: 'none', fontSize: 14,
-                                                        direction: 'rtl',
-                                                        textAlign: 'right'
-                                                    }}
-                                                    onChangeText={(a, b, c) => this.onDescriptionSubmit(index, a, b, c)}
-                                                    placeholderTextColor="#bebebe"
-                                                    placeholder={locales('titles.writeDescription')}
+                                                onChangeText={(a, b, c) => this.onDescriptionSubmit(index, a, b, c)}
+                                                placeholderTextColor="#bebebe"
+                                                placeholder={locales('titles.writeDescription')}
 
 
-                                                />
-                                            </Item>
+                                            />
                                         </View>
                                     </View>
-                                    {/* <TextField
-                                baseColor={description.length ? '#00C569' : '#a8a8a8'}
-                                onChangeText={(a, b, c) => this.onDescriptionSubmit(index, a, b, c)}
-                                error={detail.error}
-                                disabled={!detail.itemKey}
-                                containerStyle={{ width: 170 }}
-                                fontSize={18}
-                                isRtl={true}
-                                labelTextStyle={{ padding: 5 }}
-                                label={locales('titles.writeDescription')}
-                            /> */}
+
                                 </View>}
-                                <Label style={{
-                                    fontSize: 14, marginTop: -8, marginRight: 2,
+                                <Text style={{
+                                    fontSize: 14,
+                                    marginVertical: 2,
+                                    marginRight: 2,
                                     height: 20,
                                     fontFamily: 'IRANSansWeb(FaNum)_Light',
                                     color: '#D81A1A', width: deviceWidth * 0.9
-                                }}>{!!detail.error && detail.error.length && detail.error}</Label>
+                                }}>
+                                    {!!detail.error && detail.error.length && detail.error}
+                                </Text>
                             </React.Fragment>
                         )
                         )}
-
-
-
                         <View style={{
                             marginVertical: 0, flexDirection: 'row',
                             width: deviceWidth, justifyContent: 'space-between',
-
                         }}>
-                            <Button
+                            <BuskoolButton
                                 onPress={() => this.addMoreRow()}
                                 style={[styles.addMoreButton, {
                                     borderWidth: 1,
                                     elevation: 0,
-                                    borderColor: '#FF9828'
+                                    borderColor: '#FF9828',
+                                    flexDirection: 'row-reverse',
+                                    alignItems: 'center',
+                                    justifyContent: 'center'
                                 }]}
                                 rounded
                             >
-                                <Text style={styles.addMoreButtonText}>{locales('labels.addMore')}</Text>
                                 <FontAwesome5 name='plus' size={14} color='#FF9828' />
-                            </Button>
+                                <Text style={styles.addMoreButtonText}>{locales('labels.addMore')}</Text>
+                            </BuskoolButton>
                         </View>
                         <View style={{ marginVertical: 20, flexDirection: 'row', justifyContent: 'space-between' }}>
 
-                            <Button
+                            <BuskoolButton
                                 onPress={() => this.onSubmit()}
                                 style={[styles.loginButton]}
                                 rounded
@@ -485,15 +462,15 @@ class ProductMoreDetails extends Component {
                                 />
                                 <Text style={styles.buttonText}>{locales('titles.finalSubmit')}</Text>
 
-                            </Button>
-                            <Button
+                            </BuskoolButton>
+                            <BuskoolButton
                                 onPress={() => this.props.changeStep(6)}
                                 style={[styles.backButtonContainer]}
                                 rounded
                             >
-                                <Text style={styles.backButtonText}>{locales('titles.previousStep')}</Text>
                                 <FontAwesome5 name='arrow-right' style={{ marginLeft: 10 }} size={14} color='#7E7E7E' />
-                            </Button>
+                                <Text style={styles.backButtonText}>{locales('titles.previousStep')}</Text>
+                            </BuskoolButton>
                         </View>
 
                     </View>
@@ -502,9 +479,6 @@ class ProductMoreDetails extends Component {
         )
     }
 }
-
-
-
 const styles = StyleSheet.create({
     loginFailedContainer: {
         backgroundColor: '#F8D7DA',
@@ -541,6 +515,8 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         alignItems: 'center',
         borderRadius: 5,
+        flexDirection: 'row-reverse',
+        height: 45,
         justifyContent: 'center',
         width: '37%',
         elevation: 0,
@@ -554,12 +530,16 @@ const styles = StyleSheet.create({
         elevation: 0,
         backgroundColor: '#B5B5B5',
         borderRadius: 5,
+        flexDirection: 'row-reverse',
+        height: 45,
         alignSelf: 'flex-start',
         justifyContent: 'center'
     },
     loginButton: {
         textAlign: 'center',
         margin: 10,
+        flexDirection: 'row-reverse',
+        height: 45,
         width: '37%',
         backgroundColor: '#FF9828',
         borderRadius: 5,
@@ -651,10 +631,9 @@ const styles = StyleSheet.create({
         fontSize: 13,
         paddingHorizontal: deviceWidth * 0.04,
         fontFamily: 'IRANSansWeb(FaNum)_Medium',
-        // paddingVertical: 8,
         color: 'black',
         height: 50,
-        width: deviceWidth * 0.45,
+        width: deviceWidth * 0.44,
     },
     iconContainer: {
         left: 10,
