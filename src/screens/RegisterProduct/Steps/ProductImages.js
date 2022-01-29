@@ -10,7 +10,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 
-import { deviceWidth, deviceHeight, permissions } from '../../../utils';
+import { deviceWidth, deviceHeight } from '../../../utils';
 import ChooseImage from '../../../components/cameraActionSheet';
 import { BuskoolButton } from '../../../components';
 class ProductImages extends Component {

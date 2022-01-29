@@ -1,6 +1,5 @@
 // import react-native element
 import React, { Component } from 'react';
-import { Button, Textarea, InputGroup, Label } from 'native-base';
 import { View, Text, StyleSheet, BackHandler } from "react-native";
 import { ScrollView } from 'react-native-gesture-handler';
 
@@ -9,7 +8,7 @@ import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import { deviceWidth, deviceHeight } from '../../../utils/deviceDimenssions';
 
 import { validator } from '../../../utils';
-import { BuskoolButton } from '../../../components';
+import { BuskoolButton, BuskoolTextInput } from '../../../components';
 
 class ProductDecription extends Component {
     constructor(props) {
@@ -93,56 +92,56 @@ class ProductDecription extends Component {
                     </Text>
 
                     <View style={styles.textInputPadding}>
-                        {/* <Label style={{ color: 'black', fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5, fontSize: 15, marginVertical: 5 }}>
-                            {locales('titles.writeYourFinalDescription')}
-                        </Label> */}
-                        <InputGroup
-                            regular
+                        <BuskoolTextInput
+                            multiline
+                            onChangeText={this.onDescriptionSubmit}
+                            error=''
+                            value={description}
+                            autoCapitalize='none'
+                            autoCompleteType='off'
+                            autoCorrect={false}
+                            placeholderTextColor='#777777'
+                            placeholder={locales('titles.descriptionWithExample')}
+                            ref={this.descriptionRef}
                             style={{
+                                paddingTop: 10,
+                                direction: 'rtl',
+                                textAlign: 'right',
+                                width: '100%',
+                                minHeight: deviceHeight * 0.4,
+                                overflow: 'hidden',
+                                paddingHorizontal: 15,
+                                paddingVertical: 2,
+                                color: '#333',
+                                paddingTop: 20,
+                                fontSize: 13,
+                                textAlignVertical: 'top',
+                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
                                 borderRadius: 4,
-                                borderColor: description ? descriptionError ? '#E41C38' : description.length < 100 ? '#6D7179' : '#00C569' :
-                                    descriptionClicked ? '#E41C38' : '#6D7179',
+                                borderWidth: 1,
+                                borderColor: description ? descriptionError ? '#E41C38' : description.length < 100 ? '#BDC4CC' : '#00C569' :
+                                    descriptionClicked ? '#E41C38' : '#BDC4CC',
                                 paddingLeft: 15,
-                                paddingHorizontal: 10,
                                 backgroundColor: '#FBFBFB'
-                            }}>
-                            <FontAwesome5 name={
+                            }}
+                            rowSpan={5}
+                        />
+                        <FontAwesome5
+                            name={
                                 description ? descriptionError ? 'times-circle' : description.length < 100 ? 'edit' : 'check-circle' :
                                     descriptionClicked
                                         ? 'times-circle' : 'edit'}
-                                color={description ? descriptionError ? '#E41C38' : description.length < 100 ? "#BDC4CC" : '#00C569'
-                                    : descriptionClicked ? '#E41C38' : '#BDC4CC'}
-                                size={16}
-                                solid
-                                style={{ position: 'absolute', top: 10, left: 10 }}
-                            />
-                            <Textarea
-                                onChangeText={this.onDescriptionSubmit}
-                                error=''
-                                value={description}
-                                autoCapitalize='none'
-                                autoCompleteType='off'
-                                autoCorrect={false}
-                                placeholderTextColor='#777777'
-                                placeholder={locales('titles.descriptionWithExample')}
-                                ref={this.descriptionRef}
-                                style={{
-                                    paddingTop: 10,
-                                    direction: 'rtl',
-                                    textAlign: 'right',
-                                    width: '100%',
-                                    minHeight: deviceHeight * 0.4,
-                                    borderRadius: 4,
-                                    overflow: 'hidden',
-                                    paddingHorizontal: 15,
-                                    paddingVertical: 2,
-                                    color: '#333',
-                                    fontSize: 13,
-                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                }}
-                                rowSpan={5}
-                            />
-                        </InputGroup>
+                            color={description ? descriptionError ? '#E41C38' : description.length < 100 ? "#BDC4CC" : '#00C569'
+                                : descriptionClicked ? '#E41C38' : '#BDC4CC'}
+                            size={16}
+                            solid
+                            style={{
+                                marginLeft: 15,
+                                position: 'absolute',
+                                top: '10%',
+                                left: '5%'
+                            }}
+                        />
                         {description && description.length ?
                             <View
                                 style={{
@@ -172,14 +171,14 @@ class ProductDecription extends Component {
                             : null
                         }
                     </View>
-                    {description.length > 100 ? <Label
+                    {description.length > 100 ? <Text
                         style={{
                             fontFamily: 'IRANSansWeb(FaNum)_Light',
                             height: 20, fontSize: 14, color: '#D81A1A',
                             marginRight: 20
                         }}>
                         {!!descriptionError && descriptionError}
-                    </Label>
+                    </Text>
                         : null}
 
                     {/* 
@@ -213,16 +212,16 @@ class ProductDecription extends Component {
                             style={descriptionError ? styles.disableLoginButton : styles.loginButton}
                             rounded
                         >
-                            <FontAwesome5 name='arrow-left' style={{ marginRight: 10 }} size={14} color='white' />
                             <Text style={styles.buttonText}>{locales('titles.nextStep')}</Text>
+                            <FontAwesome5 name='arrow-left' style={{ marginRight: 10 }} size={14} color='white' />
                         </BuskoolButton>
                         <BuskoolButton
                             onPress={() => this.props.changeStep(5)}
                             style={styles.backButtonContainer}
                             rounded
                         >
-                            <Text style={styles.backButtonText}>{locales('titles.previousStep')}</Text>
                             <FontAwesome5 name='arrow-right' style={{ marginLeft: 10 }} size={14} color='#7E7E7E' />
+                            <Text style={styles.backButtonText}>{locales('titles.previousStep')}</Text>
                         </BuskoolButton>
                     </View>
 
@@ -263,6 +262,8 @@ const styles = StyleSheet.create({
         borderColor: '#BDC4CC',
         backgroundColor: 'white',
         alignItems: 'center',
+        height: 45,
+        flexDirection: 'row-reverse',
         borderRadius: 5,
         justifyContent: 'center',
         width: '37%',
@@ -273,6 +274,8 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         margin: 10,
         elevation: 0,
+        flexDirection: 'row-reverse',
+        height: 45,
         width: '37%',
         color: 'white',
         alignItems: 'center',
@@ -287,6 +290,8 @@ const styles = StyleSheet.create({
         elevation: 0,
         backgroundColor: '#FF9828',
         borderRadius: 5,
+        flexDirection: 'row-reverse',
+        height: 45,
         width: '37%',
         color: 'white',
         alignItems: 'center',
