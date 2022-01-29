@@ -1,5 +1,8 @@
-import React, { useEffect } from 'react';
-import { Text } from 'react-native'
+import React from 'react';
+import {
+    Text,
+    View
+} from 'react-native'
 import {
     launchCamera,
     launchImageLibrary
@@ -26,7 +29,8 @@ const options = {
 const ChooseImage = React.forwardRef((props, ref) => {
 
     const {
-        isOpen
+        isOpen,
+        closeSheet = _ => { }
     } = props;
 
 
@@ -54,36 +58,29 @@ const ChooseImage = React.forwardRef((props, ref) => {
 
         const isAllowedToOpenCamera = await permissions.requestCameraPermission();
 
-        if (!isAllowedToOpenCamera)
-            return reject({
-                error: Errors[3]
-            });
-
+        if (!isAllowedToOpenCamera) {
+            image = { error: Errors[3] }
+            return closeSheet();
+        }
         const resolver = image => {
             if (image.didCancel)
-                return reject(
-                    {
-                        error: Errors[2],
-                        extraData: image.didCancel
-                    }
-                );
+
+                image = {
+                    error: Errors[2],
+                    extraData: image.didCancel
+                }
 
             else if (image.fileSize > 5242880 || image.fileSize < 20480)
-                return reject(
-                    {
-                        error: Errors[0],
-                    }
-                );
+
+                image = { error: Errors[0] }
+
 
             else if (image.error)
-                return reject(
-                    {
-                        error: Errors[1],
-                        extraData: image.error
-                    }
-                );
-
-            else return resolve(image);
+                image = {
+                    error: Errors[1],
+                    extraData: image.error
+                }
+            closeSheet(image && image.assets && image.assets.length ? image.assets[0] : undefined);
         };
 
         switch (buttonIndex) {
@@ -94,13 +91,15 @@ const ChooseImage = React.forwardRef((props, ref) => {
         };
     }
 
+    if (!isOpen)
+        return null;
     return (
         <RBSheet
             ref={ref}
             closeOnDragDown
             closeOnPressMask
-            onClose={_ => ref?.current?.close()}
-            height={320}
+            onClose={_ => closeSheet()}
+            height={150}
             animationType='fade'
             customStyles={{
                 draggableIcon: {
@@ -109,12 +108,12 @@ const ChooseImage = React.forwardRef((props, ref) => {
                 container: {
                     borderTopLeftRadius: 12,
                     borderTopRightRadius: 12,
-                    backgroundColor: '#FAFAFA'
+                    backgroundColor: '#FAFAFA',
                 }
             }}
         >
             <FontAwesome5
-                onPress={_ => ref?.current?.close()}
+                onPress={_ => closeSheet()}
                 name='times'
                 color='#777'
                 size={20}
@@ -124,7 +123,58 @@ const ChooseImage = React.forwardRef((props, ref) => {
                     top: 10,
                 }}
             />
-            <Text>sdf</Text>
+            <View
+                style={{
+                    flexDirection: 'row-reverse',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    padding: 10
+                }}
+            >
+                <FontAwesome5
+                    name='camera'
+                    size={20}
+                    solid
+                    color='#bebebe'
+                />
+                <Text
+                    style={{
+                        fontFamily: 'IRANSansWeb(FaNum)',
+                        fontSize: 20,
+                        marginHorizontal: 5,
+                    }}
+
+                    onPress={_ => selectImage(0)}
+                >
+                    {locales('labels.camera')}
+                </Text>
+            </View>
+            <View
+                style={{
+                    flexDirection: 'row-reverse',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    padding: 10
+                }}
+            >
+                <FontAwesome5
+                    name='images'
+                    size={20}
+                    solid
+                    color='#bebebe'
+                />
+                <Text
+                    style={{
+                        fontFamily: 'IRANSansWeb(FaNum)',
+                        fontSize: 20,
+                        marginHorizontal: 5,
+                    }}
+
+                    onPress={_ => selectImage(1)}
+                >
+                    {locales('labels.gallery')}
+                </Text>
+            </View>
         </RBSheet>
     )
 })

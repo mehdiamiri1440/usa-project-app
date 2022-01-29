@@ -55,7 +55,13 @@ class ProductImages extends Component {
         return true;
     };
 
-    chooseProductImage = async (index) => {
+    chooseProductImage = _ => {
+
+        const {
+            selectedIndex: index,
+            selectedImage: image
+        } = this.state;
+
         try {
             const {
                 images = []
@@ -63,9 +69,7 @@ class ProductImages extends Component {
 
             if (images && images.length >= 4)
                 return;
-
-            const image = await ChooseImage();
-            if (!image)
+            if (!image || image.error)
                 return;
 
             const source = { uri: image.uri };
@@ -93,7 +97,7 @@ class ProductImages extends Component {
             )
         }
         catch (error) {
-            if (error.error.id == 1)
+            if (error && error.error && error.error.id && error.error.id == 1)
                 this.setState({ imageSizeError: true });
         }
     };
@@ -116,13 +120,16 @@ class ProductImages extends Component {
     }
 
     openSheet = index => {
-        this.setState({ selectedIndex: index, isOpen: true });
-        this.ref?.current?.open();
+        this.setState({ selectedIndex: index, isOpen: true }, _ => {
+            this.ref?.current?.open();
+        });
     };
 
-    closeSheet = _ => {
-        this.ref?.current?.close();
-        this.setState({ isOpen: false });
+    closeSheet = image => {
+        this.setState({ selectedImage: image, isOpen: false }, _ => {
+            this.ref?.current?.close();
+            this.chooseProductImage();
+        });
     };
 
     render() {
@@ -133,11 +140,12 @@ class ProductImages extends Component {
         } = this.state;
         return (
             <>
-                <ChooseImage
+                {isOpen ? <ChooseImage
                     ref={this.ref}
                     closeSheet={this.closeSheet}
                     isOpen={isOpen}
-                />
+                /> : null
+                }
                 <ScrollView
                     contentContainerStyle={{ padding: 10 }}>
 
