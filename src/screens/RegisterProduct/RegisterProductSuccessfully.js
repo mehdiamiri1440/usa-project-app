@@ -16,7 +16,7 @@ import {
 import { Button } from 'native-base';
 import LinearGradient from 'react-native-linear-gradient';
 import { connect } from 'react-redux';
-import { Dialog, Portal, Paragraph } from 'react-native-paper';
+import { Dialog } from 'react-native-paper';
 import Svg, { Path, Circle } from "react-native-svg";
 
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
@@ -28,7 +28,7 @@ import * as productActions from '../../redux/registerProduct/actions';
 import * as requestActions from '../../redux/buyAdRequest/actions';
 import * as registerProductActions from '../../redux/registerProduct/actions';
 import { responsiveHeight } from 'react-native-responsive-dimensions';
-
+import { BuskoolButton } from '../../components';
 if (
     Platform.OS === "android" &&
     UIManager.setLayoutAnimationEnabledExperimental
@@ -420,7 +420,7 @@ class RegisterProductSuccessfully extends Component {
                 }}
                 >
                     {item.has_phone ?
-                        <Button
+                        <BuskoolButton
                             small
 
                             onPress={event => {
@@ -432,6 +432,7 @@ class RegisterProductSuccessfully extends Component {
                                 borderColor: !!item.is_golden ? '#c7a84f' : '#FF9828',
                                 width: '50%',
                                 zIndex: 1000,
+                                height: 45,
                                 marginHorizontal: 10,
                                 position: 'relative',
                                 alignSelf: 'center',
@@ -486,9 +487,9 @@ class RegisterProductSuccessfully extends Component {
 
                             </LinearGradient>
 
-                        </Button>
+                        </BuskoolButton>
                         : null}
-                    <Button
+                    <BuskoolButton
                         small
                         onPress={event => !item.expired && this.openChat(event, item, false)}
                         style={[item.expired ? styles.disableLoginButton : styles.loginButton,
@@ -498,6 +499,7 @@ class RegisterProductSuccessfully extends Component {
                             zIndex: 1000,
                             marginHorizontal: 10,
                             borderRadius: 8,
+                            height: 45,
                             elevation: 0,
                             marginBottom: 0,
                             position: 'relative',
@@ -556,7 +558,7 @@ class RegisterProductSuccessfully extends Component {
                             />
                         </LinearGradient>
 
-                    </Button>
+                    </BuskoolButton>
 
                 </View>
                 {(item.isContactInfoShown) ?
@@ -1069,8 +1071,10 @@ class RegisterProductSuccessfully extends Component {
                                 alignItems: 'center'
                             }}>
                                 {active_pakage_type == 0 ?
-                                    <Button
-                                        style={[styles.modalButton, styles.greenButton, { width: '65%', top: -25, marginBottom: 30 }]}
+                                    <BuskoolButton
+                                        style={[styles.modalButton, styles.greenButton, {
+                                            width: '65%', top: -25, marginBottom: 30, height: 45
+                                        }]}
                                         onPress={() => {
                                             this.setState({ showMobileNumberWarnModal: false })
                                             this.props.navigation.navigate('PromoteRegistration');
@@ -1080,7 +1084,7 @@ class RegisterProductSuccessfully extends Component {
                                         <Text style={[{ fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16 },
                                         styles.buttonText]}>{locales('titles.promoteRegistration')}
                                         </Text>
-                                    </Button>
+                                    </BuskoolButton>
                                     : null
                                 }
                             </View>
@@ -1342,16 +1346,16 @@ class RegisterProductSuccessfully extends Component {
                             >
                                 {locales('titles.whoWantsWhat')}
                             </Text>
-                            <Button
+                            <BuskoolButton
                                 style={[styles.loginButton, {
-                                    justifyContent: 'center', width: '75%',
+                                    justifyContent: 'center', width: '75%', height: 45,
                                     alignItems: 'center', alignSelf: 'center', marginVertical: 20
                                 }]}
                                 onPress={() => this.props.navigation.navigate('RequestsStack', { screen: 'Requests', params: { subCategoryId, subCategoryName } })}
                             >
                                 <Text style={styles.buttonText}>
                                     {locales('titles.seeBuyAds')}</Text>
-                            </Button>
+                            </BuskoolButton>
                         </View>
                     }
                 </ScrollView>
