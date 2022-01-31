@@ -1,19 +1,17 @@
-import React, { Component, useState, useRef, useEffect } from 'react';
+import React, { Component, useState, useRef } from 'react';
 import {
     Image, Text, View, Pressable, ScrollView, StyleSheet, ActivityIndicator, Linking,
-    FlatList, LayoutAnimation, UIManager, Platform, Modal, Animated
+    FlatList, LayoutAnimation, UIManager, Platform, Modal
 } from 'react-native';
 import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
-import { Dialog, Portal, Paragraph, Checkbox } from 'react-native-paper';
+import { Dialog, Paragraph, Checkbox } from 'react-native-paper';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import analytics from '@react-native-firebase/analytics';
 import { connect } from 'react-redux';
-import { Button, Textarea, ActionSheet, InputGroup, Label } from 'native-base';
 import ShadowView from '@vikasrg/react-native-simple-shadow-view';
 
 import Feather from 'react-native-vector-icons/dist/Feather';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
-import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
 import MaterialIcons from 'react-native-vector-icons/dist/MaterialIcons';
 
 import * as profileActions from '../../../redux/profile/actions';
@@ -21,6 +19,7 @@ import { permissions, deviceHeight, deviceWidth, validator } from '../../../util
 import Header from '../../../components/header';
 import ChooseImage from '../../../components/cameraActionSheet';
 import ContactsListModal from '../../../components/contactsListModal';
+import { BuskoolTextInput, BuskoolButton } from '../../../components';
 
 let myTimeout;
 
@@ -442,120 +441,132 @@ class EditProfile extends Component {
                         />
                     </View> : null}
 
-                <Portal
-                    style={{
-                        padding: 0,
-                        margin: 0
-
-                    }}>
-                    <Dialog
-                        dismissable
-                        onDismiss={() => this.setState({ showViewPermissionModal: false })}
+                {showViewPermissionModal ?
+                    <Modal
+                        onRequestClose={() => this.setState({ showViewPermissionModal: false })}
                         visible={showViewPermissionModal}
-                        style={styles.dialogWrapper}
+                        transparent={true}
+                        animationType="fade"
+                        onDismiss={() => this.setState({ showViewPermissionModal: false })}
                     >
-                        <Dialog.Actions
-                            style={styles.dialogHeader}
+                        <Dialog
+                            dismissable
+                            onDismiss={() => this.setState({ showViewPermissionModal: false })}
+                            visible={showViewPermissionModal}
+                            style={styles.dialogWrapper}
                         >
-                            <Button
-                                onPress={() => this.setState({ showViewPermissionModal: false })}
-                                style={styles.closeDialogModal}>
-                                <FontAwesome5 name="times" color="#777" solid size={18} />
-                            </Button>
-                            <Paragraph style={styles.headerTextDialogModal}>
-                                {locales('titles.editProfile')}
-                            </Paragraph>
-                        </Dialog.Actions>
-                        <View
-                            style={{
-                                width: '100%',
-                                alignItems: 'center'
-                            }}>
+                            <Dialog.Actions
+                                style={styles.dialogHeader}
+                            >
+                                <BuskoolButton
+                                    onPress={() => this.setState({ showViewPermissionModal: false })}
+                                    style={styles.closeDialogModal}>
+                                    <FontAwesome5 name="times" color="#777" solid size={18} />
+                                </BuskoolButton>
+                                <Paragraph style={styles.headerTextDialogModal}>
+                                    {locales('titles.editProfile')}
+                                </Paragraph>
+                            </Dialog.Actions>
+                            <View
+                                style={{
+                                    width: '100%',
+                                    alignItems: 'center'
+                                }}>
 
-                            <Feather name="check" color="#a5dc86" size={70} style={[styles.dialogIcon, {
-                                borderColor: '#edf8e6',
-                            }]} />
+                                <Feather name="check" color="#a5dc86" size={70} style={[styles.dialogIcon, {
+                                    borderColor: '#edf8e6',
+                                }]} />
 
-                        </View>
-                        <Dialog.Actions style={styles.mainWrapperTextDialogModal}>
+                            </View>
+                            <Dialog.Actions style={styles.mainWrapperTextDialogModal}>
 
-                            <Text style={styles.mainTextDialogModal}>
-                                {locales('titles.editionsDone')}
-                            </Text>
-
-                        </Dialog.Actions>
-                        <Dialog.Actions style={{
-                            justifyContent: 'center',
-                            width: '100%',
-                            padding: 0
-                        }}>
-                            <Button
-                                style={styles.modalCloseButton}
-                                onPress={() => this.setState({ showViewPermissionModal: false })}>
-
-                                <Text style={styles.closeButtonText}>{locales('titles.gotIt')}
+                                <Text style={styles.mainTextDialogModal}>
+                                    {locales('titles.editionsDone')}
                                 </Text>
-                            </Button>
-                        </Dialog.Actions>
-                    </Dialog>
-                </Portal >
+
+                            </Dialog.Actions>
+                            <Dialog.Actions style={{
+                                justifyContent: 'center',
+                                width: '100%',
+                                padding: 0
+                            }}>
+                                <BuskoolButton
+                                    style={styles.modalCloseButton}
+                                    onPress={() => this.setState({ showViewPermissionModal: false })}>
+
+                                    <Text style={styles.closeButtonText}>{locales('titles.gotIt')}
+                                    </Text>
+                                </BuskoolButton>
+                            </Dialog.Actions>
+                        </Dialog>
+                    </Modal >
+                    : null
+                }
 
 
-                < Portal
-                    style={{
-                        padding: 0,
-                        margin: 0
-
-                    }}>
-                    <Dialog
+                {showSubmitEditionModal ?
+                    <Modal
+                        onRequestClose={_ => this.setState({ showSubmitEditionModal: false })}
                         visible={showSubmitEditionModal}
-                        style={styles.dialogWrapper}
+                        transparent={true}
+                        animationType="fade"
+                        onDismiss={_ => this.setState({ showSubmitEditionModal: false })}
                     >
-                        <Dialog.Actions
-                            style={styles.dialogHeader}
+                        <Dialog
+                            visible={showSubmitEditionModal}
+                            onDismiss={_ => this.setState({ showSubmitEditionModal: false })}
+                            style={styles.dialogWrapper}
                         >
-                            <Button
-                                onPress={() => this.setState({ showSubmitEditionModal: false })}
-                                style={styles.closeDialogModal}>
-                                <FontAwesome5 name="times" color="#777" solid size={18} />
-                            </Button>
-                            <Paragraph style={styles.headerTextDialogModal}>
-                                {locales('titles.editProfile')}
-                            </Paragraph>
-                        </Dialog.Actions>
-                        <View
-                            style={{
-                                width: '100%',
-                                alignItems: 'center'
-                            }}>
+                            <Dialog.Actions
+                                style={styles.dialogHeader}
+                            >
+                                <FontAwesome5
+                                    style={[styles.closeDialogModal, { padding: 10 }]}
+                                    onPress={() => this.setState({ showSubmitEditionModal: false })}
+                                    name="times"
+                                    color="#777"
+                                    solid
+                                    size={18}
+                                />
+                                <Paragraph style={styles.headerTextDialogModal}>
+                                    {locales('titles.editProfile')}
+                                </Paragraph>
+                            </Dialog.Actions>
+                            <View
+                                style={{
+                                    width: '100%',
+                                    alignItems: 'center'
+                                }}>
 
-                            <Feather name="check" color="#a5dc86" size={70} style={[styles.dialogIcon, {
-                                borderColor: '#edf8e6',
-                            }]} />
+                                <Feather name="check" color="#a5dc86" size={70} style={[styles.dialogIcon, {
+                                    borderColor: '#edf8e6',
+                                }]} />
 
-                        </View>
-                        <Dialog.Actions style={styles.mainWrapperTextDialogModal}>
+                            </View>
+                            <Dialog.Actions style={styles.mainWrapperTextDialogModal}>
 
-                            <Text style={styles.mainTextDialogModal}>
-                                {locales('titles.editionsDone')}
-                            </Text>
-
-                        </Dialog.Actions>
-                        <Dialog.Actions style={{
-                            justifyContent: 'center',
-                            width: '100%',
-                            padding: 0
-                        }}>
-                            <Button
-                                style={styles.modalCloseButton}
-                                onPress={() => this.setState({ showSubmitEditionModal: false })}>
-
-                                <Text style={styles.closeButtonText}>{locales('titles.gotIt')}
+                                <Text style={styles.mainTextDialogModal}>
+                                    {locales('titles.editionsDone')}
                                 </Text>
-                            </Button>
-                        </Dialog.Actions>
-                    </Dialog>
-                </Portal >
+
+                            </Dialog.Actions>
+                            <Dialog.Actions style={{
+                                justifyContent: 'center',
+                                width: '100%',
+                                padding: 0
+                            }}>
+                                <BuskoolButton
+                                    style={styles.modalCloseButton}
+                                    onPress={() => this.setState({ showSubmitEditionModal: false })}>
+
+                                    <Text style={styles.closeButtonText}>{locales('titles.gotIt')}
+                                    </Text>
+                                </BuskoolButton>
+                            </Dialog.Actions>
+                        </Dialog>
+                    </Modal >
+                    : null
+                }
 
                 <Header
                     title={locales('titles.editProfile')}
@@ -592,11 +603,13 @@ class EditProfile extends Component {
                                 }}
                             >
                                 <ShadowView>
-                                    <Button
+                                    <BuskoolButton
                                         onPress={this.openActionSheet}
                                         style={{
                                             position: 'absolute',
                                             width: '100%',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
                                             height: '100%',
                                             zIndex: 1,
                                             backgroundColor: 'rgba(0,0,0,0.5)',
@@ -606,7 +619,7 @@ class EditProfile extends Component {
 
                                         <FontAwesome5 name="camera" solid size={35} color="#fff"
                                         />
-                                    </Button>
+                                    </BuskoolButton>
                                     <Image
                                         style={{
                                             justifyContent: 'center',
@@ -695,25 +708,35 @@ class EditProfile extends Component {
                             }}>
                                 {locales('labels.writeAboutYourActivity')}
                             </Text>
-                            <Textarea
+                            <BuskoolTextInput
+                                multiline
                                 onChangeText={this.handleDescriptionChange}
                                 value={description}
                                 style={{
                                     borderRadius: 4,
                                     overflow: 'hidden',
-                                    backgroundColor: '#fff',
                                     paddingHorizontal: 15,
                                     paddingVertical: 2,
                                     borderWidth: 1,
                                     borderColor: '#999999',
                                     color: '#333',
+                                    textAlignVertical: 'top',
                                     fontSize: 13,
                                     fontFamily: 'IRANSansWeb(FaNum)_Medium',
                                     height: deviceHeight * 0.25,
+                                    direction: 'rtl',
+                                    textAlign: 'right',
+                                    width: '100%',
+                                    backgroundColor: '#fff'
                                 }}
-                                bordered
                                 placeholderTextColor="#BEBEBE"
-                                placeholder={locales('titles.headerDescription')} />
+                                placeholder={locales('titles.headerDescription')}
+                                error=''
+                                autoCapitalize='none'
+                                autoCompleteType='off'
+                                autoCorrect={false}
+                                rowSpan={5}
+                            />
 
                         </View>
 
@@ -800,8 +823,13 @@ class EditProfile extends Component {
                         <View style={{
                             marginTop: 20
                         }}>
-                            <Button
-                                style={[styles.loginButton, { alignSelf: 'center' }]}
+                            <BuskoolButton
+                                style={[styles.loginButton, {
+                                    alignSelf: 'center',
+                                    height: 45,
+                                    alignItems: 'center',
+                                    justifyContent: 'center'
+                                }]}
                                 onPress={_ => this.editProfile()}>
                                 <Text style={[styles.buttonText, { margin: 0, alignSelf: 'center' }]}>
                                     {locales('titles.submitChanges')}
@@ -813,7 +841,7 @@ class EditProfile extends Component {
                                         width: 25, height: 25, borderRadius: 15
                                     }}
                                 />
-                            </Button>
+                            </BuskoolButton>
                             {imageSizeError ?
                                 <Text style={{
                                     width: '100%',
@@ -1032,7 +1060,7 @@ const ProfileAccomplishes = props => {
                 >
                     {locales(item.text)}
                 </Text>
-                <Button
+                <BuskoolButton
                     onPress={_ => onProfileAccomplishmentItemButtonPressed(item)}
                     style={{
                         elevation: 0,
@@ -1055,7 +1083,7 @@ const ProfileAccomplishes = props => {
                     >
                         {locales(item.buttonText)}
                     </Text>
-                </Button>
+                </BuskoolButton>
             </View>
         )
     };
@@ -1218,7 +1246,7 @@ const ProfileAccomplishes = props => {
                         </View>
                       */}
                         <View>
-                            <InputGroup
+                            {/* <InputGroup
                                 regular
                                 style={{
                                     borderRadius: 4,
@@ -1228,41 +1256,47 @@ const ProfileAccomplishes = props => {
                                     paddingHorizontal: 10,
                                     borderWidth: 3,
                                     backgroundColor: '#FBFBFB',
-                                }}>
-                                <FontAwesome5 name={
-                                    description ? descriptionError ? 'times-circle' : description.length < 200 ? 'edit' : 'check-circle' : descriptionClicked
-                                        ? 'times-circle' : 'edit'}
-                                    color={description ? descriptionError ? '#E41C38' : description.length < 200 ? '#6D7179' : '#00C569'
-                                        : descriptionClicked ? '#E41C38' : '#BDC4CC'}
-                                    size={16}
-                                    solid
-                                    style={{ position: 'absolute', top: 10, left: 10 }}
-                                />
-                                <Textarea
-                                    onChangeText={handleDescriptionTextChange}
-                                    error=''
-                                    value={description}
-                                    autoCapitalize='none'
-                                    autoCompleteType='off'
-                                    autoCorrect={false}
-                                    style={{
-                                        paddingTop: 10,
-                                        direction: 'rtl',
-                                        textAlign: 'right',
-                                        width: '100%',
-                                        minHeight: deviceHeight * 0.4,
-                                        borderRadius: 4,
-                                        overflow: 'hidden',
-                                        paddingHorizontal: 15,
-                                        paddingVertical: 2,
-                                        color: '#333',
-                                        fontSize: 13,
-                                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                    }}
-                                    placeholderTextColor="#BEBEBE"
-                                    placeholder={`${locales('titles.writeHere')}...`}
-                                />
-                            </InputGroup>
+                                }}> */}
+
+                            <BuskoolTextInput
+                                multiline
+                                onChangeText={handleDescriptionTextChange}
+                                error=''
+                                value={description}
+                                autoCapitalize='none'
+                                autoCompleteType='off'
+                                autoCorrect={false}
+                                style={{
+                                    paddingTop: 10,
+                                    direction: 'rtl',
+                                    textAlign: 'right',
+                                    width: '100%',
+                                    height: deviceHeight * 0.4,
+                                    borderRadius: 4,
+                                    borderWidth: 1,
+                                    overflow: 'hidden',
+                                    paddingHorizontal: 15,
+                                    paddingVertical: 2,
+                                    color: '#333',
+                                    fontSize: 13,
+                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                    borderColor: '#999999',
+                                    textAlignVertical: 'top',
+                                    backgroundColor: '#fff'
+                                }}
+                                placeholderTextColor="#BEBEBE"
+                                placeholder={`${locales('titles.writeHere')}...`}
+                            />
+                            <FontAwesome5 name={
+                                description ? descriptionError ? 'times-circle' : description.length < 200 ? 'edit' : 'check-circle' : descriptionClicked
+                                    ? 'times-circle' : 'edit'}
+                                color={description ? descriptionError ? '#E41C38' : description.length < 200 ? '#6D7179' : '#00C569'
+                                    : descriptionClicked ? '#E41C38' : '#BDC4CC'}
+                                size={16}
+                                solid
+                                style={{ position: 'absolute', top: 10, left: 10 }}
+                            />
+                            {/* </InputGroup> */}
                             {description && description.length ?
                                 <View
                                     style={{
@@ -1327,12 +1361,12 @@ const ProfileAccomplishes = props => {
                         </View>
 
                         {descriptionError ?
-                            <Label style={{
+                            <Text style={{
                                 fontFamily: 'IRANSansWeb(FaNum)_Light',
                                 height: 20, fontSize: 14, color: '#D81A1A'
                             }}>
                                 {!!descriptionError && descriptionError}
-                            </Label>
+                            </Text>
                             : null
                         }
 
@@ -1344,7 +1378,7 @@ const ProfileAccomplishes = props => {
                                 marginTop: 10
                             }}
                         >
-                            {/* <Button
+                            {/* <BuskoolButton
                                 onPress={_ => setDescriptionTextModalVisiblity(false)}
                                 style={{
                                     elevation: 0,
@@ -1368,9 +1402,9 @@ const ProfileAccomplishes = props => {
                                 >
                                     {locales('titles.close')}
                                 </Text>
-                            </Button> */}
+                            </BuskoolButton> */}
 
-                            <Button
+                            <BuskoolButton
                                 onPress={onSubmit}
                                 style={{
                                     elevation: 0,
@@ -1398,7 +1432,7 @@ const ProfileAccomplishes = props => {
                                         size={20}
                                         style={{
                                             position: 'absolute',
-                                            left: '20%',
+                                            left: '40%',
                                             top: '40%',
                                             elevation: 0,
                                             borderRadius: 25
@@ -1407,7 +1441,7 @@ const ProfileAccomplishes = props => {
 
                                     />
                                     : null}
-                            </Button>
+                            </BuskoolButton>
                         </View>
                     </ScrollView>
                 </Modal>
@@ -1629,6 +1663,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: 'white',
         alignItems: 'center',
+        height: 45,
         alignSelf: 'flex-start',
         justifyContent: 'center',
         elevation: 0,
