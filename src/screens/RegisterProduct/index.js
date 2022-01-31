@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Text, View, StyleSheet, BackHandler, ActivityIndicator, ScrollView } from 'react-native'
+import { Text, View, StyleSheet, BackHandler } from 'react-native'
 import { connect } from 'react-redux';
 import analytics from '@react-native-firebase/analytics';
 
@@ -62,7 +62,7 @@ class RegisterProduct extends React.Component {
             city: '',
             description: '',
             province: '',
-            stepNumber: 5,
+            stepNumber: 1,
             subCategoryName: '',
             subCategoryId: null,
 
@@ -596,7 +596,6 @@ class RegisterProduct extends React.Component {
                                 </View>
                             ))
                             : null}
-
 
 
                         <View style={styles.stepsContainer}>
