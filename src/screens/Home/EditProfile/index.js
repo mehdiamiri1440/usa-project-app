@@ -49,6 +49,9 @@ class EditProfile extends Component {
             showSubmitEditionModal: false,
             shouldShowContactInfo: false,
             showViewPermissionModal: false,
+            selectedImage: null,
+            isChooseImageOpen: false,
+            fromAccomplishment: false,
             ProfileAccomplishmentItemsArray: [
                 {
                     id: 1,
@@ -99,6 +102,8 @@ class EditProfile extends Component {
         }
 
     }
+
+    ref = React.createRef();
 
     componentDidMount() {
         analytics().logEvent('profile_edit');
@@ -243,9 +248,15 @@ class EditProfile extends Component {
         })
     };
 
-    openActionSheet = async fromAccomplishment => {
+    openActionSheet = async _ => {
+
+        const {
+            selectedImage: image,
+            fromAccomplishment
+        } = this.state;
+
         try {
-            const image = await ChooseImage();
+
             const source = { uri: image.uri };
             this.setState(state => {
                 state.imageSizeError = false;
@@ -269,7 +280,7 @@ class EditProfile extends Component {
 
         }
         catch (error) {
-            if (error.error.id == 1)
+            if (error && error.error && error.error.id && error.error.id == 1)
                 this.setState({ imageSizeError: true });
         }
     }
@@ -372,6 +383,20 @@ class EditProfile extends Component {
         this.setState({ showContactListModal });
     };
 
+
+    openSheet = (fromAccomplishment = false) => {
+        this.setState({ isChooseImageOpen: true, fromAccomplishment: fromAccomplishment ?? false }, _ => {
+            this.ref?.current?.open();
+        });
+    };
+
+    closeSheet = image => {
+        this.setState({ selectedImage: image, isChooseImageOpen: false }, _ => {
+            this.ref?.current?.close();
+            this.openActionSheet();
+        });
+    };
+
     render() {
         const {
             editProfileLoading,
@@ -404,11 +429,19 @@ class EditProfile extends Component {
             shouldShowContactInfo,
             showViewPermissionModal,
             ProfileAccomplishmentItemsArray = [],
-            showContactListModal
+            showContactListModal,
+            isChooseImageOpen
         } = this.state;
 
         return (
             <>
+                {isChooseImageOpen ?
+                    <ChooseImage
+                        ref={this.ref}
+                        closeSheet={this.closeSheet}
+                        isOpen={isChooseImageOpen}
+                    /> : null
+                }
                 {showContactListModal ?
                     <ContactsListModal
                         visible={showContactListModal}
@@ -604,7 +637,7 @@ class EditProfile extends Component {
                             >
                                 <ShadowView>
                                     <BuskoolButton
-                                        onPress={this.openActionSheet}
+                                        onPress={_ => this.openSheet(false)}
                                         style={{
                                             position: 'absolute',
                                             width: '100%',
@@ -690,7 +723,7 @@ class EditProfile extends Component {
                             ProfileAccomplishmentItemsArray.filter(item => item.shouldShow).length > 0 ?
                             <ProfileAccomplishes
                                 handleDescriptionChange={this.handleDescriptionChange}
-                                openActionSheet={this.openActionSheet}
+                                openActionSheet={this.openSheet}
                                 onRequestCloseContactListModal={this.onRequestCloseContactListModal}
                                 ProfileAccomplishmentItemsArrayFromProps={ProfileAccomplishmentItemsArray}
                                 editProfileFromParent={this.editProfile}
@@ -967,7 +1000,7 @@ const ProfileAccomplishes = props => {
             }
             case 'titles.introduceToFirends': {
                 const {
-                    userProfile = {}
+                    userProfile = {},
                 } = props;
 
                 const {
