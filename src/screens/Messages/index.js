@@ -13,6 +13,8 @@ import MessageContext from './MessagesContext';
 import MessagesTab from './MessagesTab';
 import RequestsTab from './RequestsTab';
 import Header from '../../components/header';
+import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
+import { BuskoolTextInput } from '../../components';
 
 const Messages = props => {
 
@@ -164,7 +166,7 @@ const Messages = props => {
                     left: 0,
                     backgroundColor: 'white',
                 }}>
-                    <InputGroup
+                    {/* <InputGroup
                         rounded
                         style={{
                             borderWidth: 0,
@@ -174,27 +176,41 @@ const Messages = props => {
                             width: '100%',
                             borderRadius: 0,
 
-                        }}>
-                        <Input
-                            value={searchText}
-                            ref={serachInputRef}
-                            onChangeText={handleSearch}
-                            style={{
-                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                color: '#777'
-                            }}
-                            placeholder={is_seller ? locales('labels.search') : locales('labels.searchContacts')}
-                            placeholderTextColor="#e0e0e0"
-
-                        />
-                        <Icon
-                            name='ios-search'
-                            style={{
-                                color: '#e0e0e0',
-                                marginHorizontal: 5
-                            }}
-                        />
-                    </InputGroup>
+                        }}> */}
+                    <BuskoolTextInput
+                        value={searchText}
+                        ref={serachInputRef}
+                        onChangeText={handleSearch}
+                        style={{
+                            fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                            color: '#777',
+                            direction: 'rtl',
+                            borderWidth: 1,
+                            textAlign: 'right',
+                            height: 45,
+                            borderColor: '#e0e0e0',
+                            borderBottomColor: '#e0e0e0',
+                            borderBottomWidth: 1,
+                            width: '100%',
+                            borderRadius: 0,
+                            alignSelf: 'center',
+                            paddingHorizontal: 40
+                        }}
+                        placeholder={is_seller ? locales('labels.search') : locales('labels.searchContacts')}
+                        placeholderTextColor="#e0e0e0"
+                    />
+                    <FontAwesome5
+                        name='search'
+                        size={18}
+                        style={{
+                            color: '#e0e0e0',
+                            marginHorizontal: 5,
+                            position: 'absolute',
+                            right: '5%',
+                            top: '27%'
+                        }}
+                    />
+                    {/* </InputGroup> */}
                 </View>
 
                 {is_seller ?
