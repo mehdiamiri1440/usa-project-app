@@ -13,7 +13,7 @@ const store = configureStore();
 
 let apiCallsCount = 0, invokeTimes = 0;
 
-export const getUrl = (route) => `https://www.buskool.com/${route}`
+export const getUrl = (route) => `${REACT_APP_API_ENDPOINT_RELEASE}/${route}`
 
 export const getTokenFromStorage = () => {
     return new Promise((resolve, reject) => {
@@ -54,7 +54,7 @@ export const getTokenFromStorage = () => {
     })
 };
 
-const getRequestHeaders = async (withAuth) => {
+const getRequestHeaders = async (withAuth, isFormData) => {
 
     let token = await getTokenFromStorage();
 
@@ -63,7 +63,7 @@ const getRequestHeaders = async (withAuth) => {
     // console.log('token in getequestHeaders()', token)
 
     let headerObject = {
-        'Content-Type': 'application/json; charset=utf-8',
+        'Content-Type': isFormData ? 'multipart/form-data' : 'application/json; charset=utf-8',
         'X-Requested-With': 'XMLHttpRequest',
     };
 
@@ -114,10 +114,10 @@ const checkInternetConnectivity = _ => NetInfo.fetch().then(({
 }
 );
 
-export const fetchAPI = async ({ route, method = 'GET', data = {}, withAuth = true, params = null, onUploadProgress = _ => { } }) => {
+export const fetchAPI = async ({ route, method = 'GET', data = {}, withAuth = true, params = null, onUploadProgress = _ => { }, isFormData = false }) => {
     checkInternetConnectivity();
-    const headers = await getRequestHeaders(withAuth);
-    // console.log('route', route, 'headers', headers)
+    const headers = await getRequestHeaders(withAuth, isFormData);
+    // console.log('route', route, 'headers', headers, 'data', data)
     return new Promise((resolve, reject) => {
         axios
             .request({
@@ -152,7 +152,7 @@ export const fetchAPI = async ({ route, method = 'GET', data = {}, withAuth = tr
                         // console.log('new token saved', tokenSaved)
                         if (tokenSaved === true) {
                             // console.log('going to do new api call with new token')
-                            resolve(fetchAPI({ route, method, data, withAuth, onUploadProgress }));
+                            resolve(fetchAPI({ route, method, data, withAuth, onUploadProgress, isFormData }));
                             // .then(result => resolve(result.data ? result.data : result))
                             // .catch(err => reject(err))
                         }
@@ -177,7 +177,7 @@ export const fetchAPI = async ({ route, method = 'GET', data = {}, withAuth = tr
                         return redirectToLogin();
                     apiCallsCount = apiCallsCount + 1;
                     // console.log('333', 'route', route, err, err?.status, err.response)
-                    resolve(fetchAPI({ route, method, data, withAuth, onUploadProgress }));
+                    resolve(fetchAPI({ route, method, data, withAuth, onUploadProgress, isFormData }));
                     reject(err);
                 }
 
