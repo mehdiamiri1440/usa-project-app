@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Text, View, FlatList, Image } from 'react-native';
 import { connect } from 'react-redux';
-import { Button } from 'native-base';
 import analytics from '@react-native-firebase/analytics';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import ContentLoader, { Rect } from "react-content-loader/native"
@@ -11,6 +10,7 @@ import { deviceWidth, deviceHeight } from '../../../utils/deviceDimenssions';
 import Product from '../../ProductsList/Product';
 import Header from '../../../components/header';
 import ENUMS from '../../../enums';
+import { BuskoolButton } from '../../../components';
 class MyProducts extends Component {
     constructor(props) {
         super(props)
@@ -123,7 +123,7 @@ class MyProducts extends Component {
                     >
                         {locales('labels.pressButtonToRegisterProduct')}
                     </Text>
-                    <Button
+                    <BuskoolButton
                         onPress={_ => this.props.navigation.navigate('RegisterProductStack', { screen: 'RegisterProduct' })}
                         style={{
                             flexDirection: 'row-reverse',
@@ -131,6 +131,7 @@ class MyProducts extends Component {
                             alignItems: 'center',
                             alignSelf: "center",
                             width: '50%',
+                            height: 45,
                             borderRadius: 10,
                             backgroundColor: "#FF9828",
                             elevation: 0,
@@ -153,7 +154,7 @@ class MyProducts extends Component {
                         >
                             {locales('labels.registerProduct')}
                         </Text>
-                    </Button>
+                    </BuskoolButton>
                 </View>
             )
         }
