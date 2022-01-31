@@ -30,7 +30,8 @@ class ProductDecription extends Component {
             BackHandler.addEventListener('hardwareBackPress', this.handleHardWareBackButtonPressed);
             if (this.props.description) {
                 const { description } = this.props;
-                this.descriptionRef.current.value = description;
+                if (this.descriptionRef && this.descriptionRef.current && this.descriptionRef.current.value)
+                    this.descriptionRef.current.value = description;
                 this.setState({ description })
             }
             // BackHandler.addEventListener('hardwareBackPress', _ => {
