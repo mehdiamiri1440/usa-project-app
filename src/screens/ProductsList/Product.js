@@ -11,7 +11,7 @@ import {
     from 'react-native';
 import { connect } from 'react-redux';
 import { Dialog, Portal, Paragraph } from 'react-native-paper';
-import { Input, Label, Item, Toast, Button } from 'native-base';
+import { Toast } from 'native-base';
 import Svg, { Path, G } from "react-native-svg"
 import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
 import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
@@ -30,6 +30,7 @@ import * as productListActions from '../../redux/productsList/actions'
 import * as profileActions from '../../redux/profile/actions'
 import ValidatedUserIcon from '../../components/validatedUserIcon';
 import { formatter, validator } from '../../utils';
+import { BuskoolTextInput, BuskoolButton } from '../../components';
 
 class Product extends PureComponent {
     constructor(props) {
@@ -566,12 +567,12 @@ class Product extends PureComponent {
                                 justifyContent: 'center',
                                 alignItems: 'center'
                             }}>
-                                <Button
+                                <BuskoolButton
                                     style={[styles.loginButton, { width: '50%' }]}
                                     onPress={() => this.setState({ showValidatedUserModal: false })}>
                                     <Text style={[styles.buttonText, { alignSelf: 'center' }]}>{locales('titles.close')}
                                     </Text>
-                                </Button>
+                                </BuskoolButton>
                             </Dialog.Actions>
                         </Dialog>
                     </Portal>
@@ -638,7 +639,7 @@ class Product extends PureComponent {
                                 >
                                     <View style={[styles.textInputPadding]}
                                     >
-                                        <Label
+                                        <Text
                                             style={{
                                                 color: 'black',
                                                 fontFamily: 'IRANSansWeb(FaNum)_Bold',
@@ -646,36 +647,39 @@ class Product extends PureComponent {
                                             }}
                                         >
                                             {locales('titles.amount')}
-                                        </Label>
-                                        <Item
+                                        </Text>
+                                        {/* <Item
                                             regular
                                             style={{
                                                 borderColor: amountError ? '#D50000' : amount && amount.length ? '#00C569' : '#a8a8a8',
                                                 borderRadius: 5, padding: 3
-                                            }}>
-                                            <Input
-                                                style={{
-                                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                                    fontSize: 14,
-                                                    borderRadius: 4,
-                                                    flexDirection: 'row',
-                                                    textDecorationLine: 'none',
-                                                    direction: 'rtl',
-                                                    textAlign: 'right'
-                                                }}
-                                                placeholderTextColor="#BEBEBE"
-                                                autoCapitalize='none'
-                                                autoCorrect={false}
-                                                keyboardType='number-pad'
-                                                autoCompleteType='off'
-                                                onChangeText={this.onAmountSubmit}
-                                                value={amount}
-                                                placeholder={locales('titles.amountWithExample')}
-                                                ref={this.amountRef}
+                                            }}> */}
+                                        <BuskoolTextInput
+                                            style={{
+                                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                                fontSize: 14,
+                                                borderRadius: 4,
+                                                flexDirection: 'row',
+                                                textDecorationLine: 'none',
+                                                borderWidth: 1,
+                                                borderColor: '#ebebeb',
+                                                padding: 10,
+                                                direction: 'rtl',
+                                                textAlign: 'right'
+                                            }}
+                                            placeholderTextColor="#BEBEBE"
+                                            autoCapitalize='none'
+                                            autoCorrect={false}
+                                            keyboardType='number-pad'
+                                            autoCompleteType='off'
+                                            onChangeText={this.onAmountSubmit}
+                                            value={amount}
+                                            placeholder={locales('titles.amountWithExample')}
+                                            ref={this.amountRef}
 
-                                            />
-                                        </Item>
-                                        <Label style={{
+                                        />
+                                        {/* </Item> */}
+                                        <Text style={{
                                             height: 20,
                                             fontFamily: 'IRANSansWeb(FaNum)_Light',
                                             textAlign: !amountError && amount && amount.length ? 'left' : 'right'
@@ -685,12 +689,12 @@ class Product extends PureComponent {
                                                 fontSize: 14, color: '#D81A1A',
                                                 fontFamily: 'IRANSansWeb(FaNum)_Light',
                                             }}> {amountError}</Text>}
-                                        </Label>
+                                        </Text>
                                     </View>
                                     <View
                                         style={[styles.textInputPadding]}
                                     >
-                                        <Label
+                                        <Text
                                             style={{
                                                 color: 'black',
                                                 fontFamily: 'IRANSansWeb(FaNum)_Bold',
@@ -698,36 +702,39 @@ class Product extends PureComponent {
                                             }}
                                         >
                                             {`${locales('titles.minOrder')} (${locales('labels.kiloGram')})`}
-                                        </Label>
-                                        <Item
+                                        </Text>
+                                        {/* <Item
                                             regular
                                             style={{
                                                 borderColor: minimumOrderError ? '#D50000' : minimumOrder && minimumOrder.length ? '#00C569' : '#a8a8a8',
                                                 borderRadius: 5,
                                                 padding: 3
-                                            }}>
-                                            <Input
-                                                autoCapitalize='none'
-                                                autoCorrect={false}
-                                                autoCompleteType='off'
-                                                keyboardType='number-pad'
-                                                onChangeText={this.onMinimumOrderSubmit}
-                                                value={minimumOrder}
-                                                placeholder={locales('titles.minimumOrderWithExample')}
-                                                ref={this.minimumOrderRef}
-                                                style={{
-                                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                                    fontSize: 14,
-                                                    borderRadius: 4,
-                                                    flexDirection: 'row',
-                                                    textDecorationLine: 'none',
-                                                    direction: 'rtl',
-                                                    textAlign: 'right'
-                                                }}
-                                                placeholderTextColor="#BEBEBE"
-                                            />
-                                        </Item>
-                                        <Label style={{
+                                            }}> */}
+                                        <BuskoolTextInput
+                                            autoCapitalize='none'
+                                            autoCorrect={false}
+                                            autoCompleteType='off'
+                                            keyboardType='number-pad'
+                                            onChangeText={this.onMinimumOrderSubmit}
+                                            value={minimumOrder}
+                                            placeholder={locales('titles.minimumOrderWithExample')}
+                                            ref={this.minimumOrderRef}
+                                            style={{
+                                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                                fontSize: 14,
+                                                borderRadius: 4,
+                                                flexDirection: 'row',
+                                                borderWidth: 1,
+                                                borderColor: '#ebebeb',
+                                                padding: 10,
+                                                textDecorationLine: 'none',
+                                                direction: 'rtl',
+                                                textAlign: 'right'
+                                            }}
+                                            placeholderTextColor="#BEBEBE"
+                                        />
+                                        {/* </Item> */}
+                                        <Text style={{
                                             height: 20,
                                             fontFamily: 'IRANSansWeb(FaNum)_Light',
                                             textAlign: !minimumOrderError && minimumOrder && minimumOrder.length ? 'left' : 'right'
@@ -737,12 +744,12 @@ class Product extends PureComponent {
                                                 fontSize: 14, color: '#D81A1A',
                                                 fontFamily: 'IRANSansWeb(FaNum)_Light',
                                             }}> {minimumOrderError}</Text>}
-                                        </Label>
+                                        </Text>
                                     </View>
                                     <View
                                         style={[styles.textInputPadding]}
                                     >
-                                        <Label
+                                        <Text
                                             style={{
                                                 color: 'black',
                                                 fontFamily: 'IRANSansWeb(FaNum)_Bold',
@@ -750,46 +757,49 @@ class Product extends PureComponent {
                                             }}
                                         >
                                             {locales('titles.minimumPrice')}
-                                        </Label>
-                                        <Item
+                                        </Text>
+                                        {/* <Item
                                             regular
                                             style={{
                                                 borderColor: minimumPriceError ? '#D50000' : minimumPrice && minimumPrice.length ? '#00C569' : '#a8a8a8',
                                                 borderRadius: 5,
                                                 padding: 3
-                                            }}>
-                                            <Input
-                                                autoCapitalize='none'
-                                                autoCorrect={false}
-                                                keyboardType='number-pad'
-                                                autoCompleteType='off'
-                                                onChangeText={this.onMinimumPriceSubmit}
-                                                value={minimumPrice}
-                                                placeholder={locales('titles.minimumPriceWithExample')}
-                                                ref={this.minimumPriceRef}
-                                                style={{
-                                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                                    fontSize: 14,
-                                                    flexDirection: 'row',
-                                                    borderRadius: 4,
-                                                    textDecorationLine: 'none',
-                                                    direction: 'rtl',
-                                                    textAlign: 'right'
-                                                }}
-                                                placeholderTextColor="#BEBEBE"
-                                            />
-                                        </Item>
-                                        <Label style={{
+                                            }}> */}
+                                        <BuskoolTextInput
+                                            autoCapitalize='none'
+                                            autoCorrect={false}
+                                            keyboardType='number-pad'
+                                            autoCompleteType='off'
+                                            onChangeText={this.onMinimumPriceSubmit}
+                                            value={minimumPrice}
+                                            placeholder={locales('titles.minimumPriceWithExample')}
+                                            ref={this.minimumPriceRef}
+                                            style={{
+                                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                                fontSize: 14,
+                                                flexDirection: 'row',
+                                                borderRadius: 4,
+                                                borderWidth: 1,
+                                                borderColor: '#ebebeb',
+                                                padding: 10,
+                                                textDecorationLine: 'none',
+                                                direction: 'rtl',
+                                                textAlign: 'right'
+                                            }}
+                                            placeholderTextColor="#BEBEBE"
+                                        />
+                                        {/* </Item> */}
+                                        <Text style={{
                                             fontSize: 14, color: '#D81A1A', height: 20,
                                             fontFamily: 'IRANSansWeb(FaNum)_Light',
                                         }}>
                                             {!!minimumPriceError ? minimumPriceError : null}
-                                        </Label>
+                                        </Text>
                                     </View>
                                     <View
                                         style={[styles.textInputPadding]}
                                     >
-                                        <Label
+                                        <Text
                                             style={{
                                                 color: 'black',
                                                 fontFamily: 'IRANSansWeb(FaNum)_Bold',
@@ -797,44 +807,47 @@ class Product extends PureComponent {
                                             }}
                                         >
                                             {locales('titles.maximumPrice')}
-                                        </Label>
-                                        <Item
+                                        </Text>
+                                        {/* <Item
                                             regular
                                             style={{
                                                 borderColor: maximumPriceError ? '#D50000' : maximumPrice && maximumPrice.length ? '#00C569' : '#a8a8a8',
                                                 borderRadius: 5,
                                                 padding: 3
-                                            }}>
-                                            <Input
-                                                autoCapitalize='none'
-                                                autoCorrect={false}
-                                                autoCompleteType='off'
-                                                keyboardType='number-pad'
-                                                onChangeText={this.onMaximumPriceSubmit}
-                                                value={maximumPrice}
-                                                placeholder={locales('titles.maximumPriceWithExample')}
-                                                ref={this.maximumPriceRef}
-                                                style={{
-                                                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                                    fontSize: 14,
-                                                    borderRadius: 4,
-                                                    flexDirection: 'row',
-                                                    textDecorationLine: 'none',
-                                                    direction: 'rtl',
-                                                    textAlign: 'right'
+                                            }}> */}
+                                        <BuskoolTextInput
+                                            autoCapitalize='none'
+                                            autoCorrect={false}
+                                            autoCompleteType='off'
+                                            keyboardType='number-pad'
+                                            onChangeText={this.onMaximumPriceSubmit}
+                                            value={maximumPrice}
+                                            placeholder={locales('titles.maximumPriceWithExample')}
+                                            ref={this.maximumPriceRef}
+                                            style={{
+                                                fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                                                fontSize: 14,
+                                                borderRadius: 4,
+                                                flexDirection: 'row',
+                                                borderWidth: 1,
+                                                borderColor: '#ebebeb',
+                                                padding: 10,
+                                                textDecorationLine: 'none',
+                                                direction: 'rtl',
+                                                textAlign: 'right'
 
-                                                }}
-                                                placeholderTextColor="#BEBEBE"
-                                            />
-                                        </Item>
-                                        <Label style={{
+                                            }}
+                                            placeholderTextColor="#BEBEBE"
+                                        />
+                                        {/* </Item> */}
+                                        <Text style={{
                                             fontSize: 14, color: '#D81A1A', height: 20,
                                             fontFamily: 'IRANSansWeb(FaNum)_Light',
                                         }}>
                                             {!!maximumPriceError ? maximumPriceError : null}
-                                        </Label>
+                                        </Text>
                                     </View>
-                                    <Button
+                                    <BuskoolButton
                                         style={[
                                             !minimumOrder.length ||
                                                 !amount.length ||
@@ -847,6 +860,7 @@ class Product extends PureComponent {
                                                 ? {
                                                     textAlign: 'center',
                                                     borderRadius: 5,
+                                                    height: 45,
                                                     backgroundColor: '#B5B5B5',
                                                     color: 'white',
                                                 }
@@ -854,6 +868,7 @@ class Product extends PureComponent {
                                             {
                                                 marginVertical: 0,
                                                 width: '50%',
+                                                height: 45,
                                                 elevation: 0,
                                                 alignItems: 'center',
                                                 alignSelf: 'center',
@@ -871,7 +886,7 @@ class Product extends PureComponent {
                                                 }]}>
                                             {locales('titles.submitChanges')}
                                         </Text>
-                                    </Button>
+                                    </BuskoolButton>
                                 </ScrollView>
                             </Dialog.ScrollArea>
                             :
@@ -917,12 +932,14 @@ class Product extends PureComponent {
                 </Modal >
                     : null}
 
-                < Portal
-                    style={{
-                        padding: 0,
-                        margin: 0
 
-                    }}>
+                {deleteProductFlag ? <Modal
+                    onDismiss={() => this.setState({ deleteProductFlag: false })}
+                    onRequestClose={() => this.setState({ deleteProductFlag: false })}
+                    visible={deleteProductFlag}
+                    transparent={true}
+                    animationType='fade'
+                >
                     <Dialog
                         visible={deleteProductFlag}
                         onDismiss={() => this.setState({ deleteProductFlag: false })}
@@ -931,11 +948,11 @@ class Product extends PureComponent {
                         <Dialog.Actions
                             style={styles.dialogHeader}
                         >
-                            <Button
+                            <BuskoolButton
                                 onPress={() => this.setState({ deleteProductFlag: false })}
                                 style={styles.closeDialogModal}>
                                 <FontAwesome5 name="times" color="#777" solid size={18} />
-                            </Button>
+                            </BuskoolButton>
                             <Paragraph style={styles.headerTextDialogModal}>
                                 {locales('labels.deleteProduct')}
                             </Paragraph>
@@ -966,14 +983,14 @@ class Product extends PureComponent {
                                 textAlign: 'center',
                                 alignItems: 'center'
                             }}>
-                                <Button
+                                <BuskoolButton
                                     style={[styles.modalButton, styles.redButton]}
                                     onPress={() => this.deleteProduct(productId)}
                                 >
 
                                     <Text style={styles.buttonText}>{locales('titles.deleteIt')}
                                     </Text>
-                                </Button>
+                                </BuskoolButton>
                             </View>
                         </>
                             : <>
@@ -1006,17 +1023,18 @@ class Product extends PureComponent {
                             width: '100%',
                             padding: 0
                         }}>
-                            <Button
+                            <BuskoolButton
                                 style={styles.modalCloseButton}
                                 onPress={() => this.setState({ deleteProductFlag: false })}
                             >
 
                                 <Text style={styles.closeButtonText}>{locales('titles.close')}
                                 </Text>
-                            </Button>
+                            </BuskoolButton>
                         </Dialog.Actions>
                     </Dialog>
-                </Portal >
+                </Modal >
+                    : null}
 
                 {deletedProductId != productId ?
                     <View transparent style={styles.cardWrapper, {
@@ -1528,7 +1546,7 @@ class Product extends PureComponent {
                                             marginVertical: 10,
 
                                         }}>
-                                            <Button
+                                            <BuskoolButton
                                                 style={{
                                                     color: 'white',
                                                     fontSize: 18,
@@ -1557,8 +1575,8 @@ class Product extends PureComponent {
                                                         {locales('titles.elevateProduct')}
                                                     </Text>
                                                 </View>
-                                            </Button>
-                                            <Button
+                                            </BuskoolButton>
+                                            <BuskoolButton
                                                 style={{
                                                     color: 'white',
                                                     fontSize: 18,
@@ -1566,6 +1584,8 @@ class Product extends PureComponent {
                                                     fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                                     // maxWidth: 130,
                                                     flex: 1,
+                                                    justifyContent: 'center',
+                                                    alignItems: 'center',
                                                     backgroundColor: 'rgba(20, 0, 146, 0.25)',
                                                     height: 40,
                                                     elevation: 0
@@ -1598,7 +1618,7 @@ class Product extends PureComponent {
                                                 </View>
 
 
-                                            </Button>
+                                            </BuskoolButton>
                                         </View>
 
                                     </View>
@@ -1691,8 +1711,8 @@ const styles = StyleSheet.create({
         position: "absolute",
         top: 0,
         right: 0,
+        height: 45,
         padding: 15,
-        height: '100%',
         backgroundColor: 'transparent',
         elevation: 0
     },
@@ -1718,6 +1738,7 @@ const styles = StyleSheet.create({
     modalButton: {
         textAlign: 'center',
         width: '100%',
+        height: 45,
         fontSize: 16,
         maxWidth: 145,
         marginVertical: 10,
@@ -1732,6 +1753,7 @@ const styles = StyleSheet.create({
         width: '100%',
         fontSize: 16,
         color: 'white',
+        height: 45,
         alignItems: 'center',
         alignSelf: 'flex-start',
         justifyContent: 'center',

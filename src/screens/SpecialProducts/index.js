@@ -15,7 +15,6 @@ import { Navigation } from 'react-native-navigation';
 import analytics from '@react-native-firebase/analytics';
 import ContentLoader, { Rect } from "react-content-loader/native"
 import RNPickerSelect from 'react-native-picker-select';
-import { Icon, InputGroup, Input, Item, Label, Button } from 'native-base';
 import LinearGradient from 'react-native-linear-gradient';
 import ShadowView from '@vikasrg/react-native-simple-shadow-view';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -30,7 +29,7 @@ import * as locationActions from '../../redux/locations/actions'
 import { dataGenerator, enumHelper, deviceWidth, deviceHeight } from '../../utils';
 import ENUMS from '../../enums';
 import Header from '../../components/header';
-import { BuskoolTextInput } from '../../components';
+import { BuskoolTextInput, BuskoolButton } from '../../components';
 
 let myTimeout;
 class SpecialProducts extends PureComponent {
@@ -851,7 +850,7 @@ class SpecialProducts extends PureComponent {
                     </Text>
                         : null
                     }
-                    <Button
+                    <BuskoolButton
                         onPress={_ => this.props.navigation.navigate('RegisterRequestStack', { screen: 'RegisterRequest' })}
                         style={{
                             alignSelf: "center",
@@ -859,6 +858,9 @@ class SpecialProducts extends PureComponent {
                             borderRadius: 10,
                             backgroundColor: "#FF9828",
                             elevation: 0,
+                            height: 45,
+                            alignItems: 'center',
+                            justifyContent: 'center',
                             marginTop: 20
                         }}
                     >
@@ -887,7 +889,7 @@ class SpecialProducts extends PureComponent {
                                 {locales('titles.registerBuyAdRequest')}
                             </Text>
                         </View>
-                    </Button>
+                    </BuskoolButton>
                 </View>
             )
         if (!loaded || specialProductsListLoading || preFetchLoading) {
@@ -1025,7 +1027,7 @@ class SpecialProducts extends PureComponent {
                     {locales('titles.registerNewBuyAdRequest')}
                 </Text>
 
-                <Button
+                <BuskoolButton
                     style={{
                         backgroundColor: '#1DA1F2', borderRadius: 5,
                         width: deviceWidth * 0.6, flexDirection: 'row-reverse',
@@ -1047,7 +1049,7 @@ class SpecialProducts extends PureComponent {
                         color='white'
                         size={25}
                     />
-                </Button>
+                </BuskoolButton>
                 <View
                     style={{
                         backgroundColor: 'rgba(0,156,131,0.8)',
@@ -1670,39 +1672,30 @@ class SpecialProducts extends PureComponent {
                             }}>
 
                                 <View style={[{ alignSelf: 'center' }, styles.labelInputPadding]}>
-                                    <Label style={{ color: '#666666', fontSize: 16, fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
+                                    <Text style={{ color: '#666666', fontSize: 16, fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
                                         {locales('labels.targetProvince')}
-                                    </Label>
-                                    <Item regular
-                                        style={{
-                                            width: deviceWidth * 0.9,
-                                            borderRadius: 5,
-                                            alignSelf: 'center',
-                                            borderColor: '#a8a8a8'
+                                    </Text>
+                                    <RNPickerSelect
+                                        Icon={() => <FontAwesome5 name='angle-down' size={25} color='gray' />}
+                                        useNativeAndroidPickerStyle={false}
+                                        onValueChange={this.setProvince}
+                                        style={styles}
+                                        value={province}
+                                        disabled={categoriesLoading}
+                                        placeholder={{
+                                            label: locales('labels.pleaseSelectTargetProvince'),
+                                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                         }}
-                                    >
-                                        <RNPickerSelect
-                                            Icon={() => <FontAwesome5 name='angle-down' size={25} color='gray' />}
-                                            useNativeAndroidPickerStyle={false}
-                                            onValueChange={this.setProvince}
-                                            style={styles}
-                                            value={province}
-                                            disabled={categoriesLoading}
-                                            placeholder={{
-                                                label: locales('labels.pleaseSelectTargetProvince'),
-                                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                            }}
-                                            items={[...provinces.map(item => ({
-                                                label: item.province_name, value: item.id
-                                            }))]}
-                                        />
-                                    </Item>
+                                        items={[...provinces.map(item => ({
+                                            label: item.province_name, value: item.id
+                                        }))]}
+                                    />
                                 </View>
 
                                 <View style={[{ marginTop: 30 }, styles.labelInputPadding]}>
-                                    <Label style={{ color: '#666666', fontSize: 16, fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
+                                    <Text style={{ color: '#666666', fontSize: 16, fontFamily: 'IRANSansWeb(FaNum)_Bold', padding: 5 }}>
                                         {locales('labels.targetCity')}
-                                    </Label>
+                                    </Text>
                                     {(provinceLoading || fetchCitiesLoading) ?
                                         <ActivityIndicator size="small" color="#00C569"
                                             style={{
@@ -1710,38 +1703,29 @@ class SpecialProducts extends PureComponent {
                                                 width: 50, height: 50, borderRadius: 25
                                             }}
                                         /> : null}
-                                    <Item regular
-                                        style={{
-                                            width: deviceWidth * 0.9,
-                                            borderRadius: 5,
-                                            alignSelf: 'center',
-                                            borderColor: '#a8a8a8'
+                                    <RNPickerSelect
+                                        Icon={() => <FontAwesome5 name='angle-down' size={25} color='gray' />}
+                                        useNativeAndroidPickerStyle={false}
+                                        onValueChange={this.setCity}
+                                        disabled={provinceLoading || !province}
+                                        style={styles}
+                                        value={city}
+                                        placeholder={{
+                                            label: locales('labels.pleaseSelectTargetCity'),
+                                            fontFamily: 'IRANSansWeb(FaNum)_Bold',
                                         }}
-                                    >
-                                        <RNPickerSelect
-                                            Icon={() => <FontAwesome5 name='angle-down' size={25} color='gray' />}
-                                            useNativeAndroidPickerStyle={false}
-                                            onValueChange={this.setCity}
-                                            disabled={provinceLoading || !province}
-                                            style={styles}
-                                            value={city}
-                                            placeholder={{
-                                                label: locales('labels.pleaseSelectTargetCity'),
-                                                fontFamily: 'IRANSansWeb(FaNum)_Bold',
-                                            }}
-                                            items={[...cities.map(item => ({
-                                                label: item.city_name, value: item.id
-                                            }))]}
-                                        />
-                                    </Item>
+                                        items={[...cities.map(item => ({
+                                            label: item.city_name, value: item.id
+                                        }))]}
+                                    />
                                 </View>
 
                                 <View style={{
                                     flexDirection: 'row-reverse', justifyContent: 'space-between', marginVertical: 25,
                                     alignItems: 'center'
                                 }}>
-                                    <Button
-                                        style={[styles.loginButton, { width: '60%' }]}
+                                    <BuskoolButton
+                                        style={[styles.loginButton, { width: '60%', height: 45 }]}
                                         onPress={this.searchLocation}>
                                         <ActivityIndicator size="small" color="white"
                                             animating={selectedButton == 1 && !!specialProductsListLoading}
@@ -1759,8 +1743,8 @@ class SpecialProducts extends PureComponent {
                                             {locales('labels.applyFilter')}
                                         </Text>
 
-                                    </Button>
-                                    {/* <Button
+                                    </BuskoolButton>
+                                    {/* <BuskoolButton
                                                     style={[styles.loginButton, { width: '50%', flexDirection: 'row', backgroundColor: '#556080', }]}
                                                     onPress={this.deleteFilter}>
                                                     <ActivityIndicator size="small" color="white"
@@ -1779,7 +1763,7 @@ class SpecialProducts extends PureComponent {
                                                         {locales('labels.deleteFilter')}
                                                     </Text>
 
-                                                </Button> */}
+                                                </BuskoolButton> */}
                                 </View>
 
                             </View>
@@ -2117,11 +2101,14 @@ const styles = StyleSheet.create({
     },
     inputAndroid: {
         fontSize: 13,
-        paddingHorizontal: 10,
+        paddingHorizontal: deviceWidth * 0.05,
         fontFamily: 'IRANSansWeb(FaNum)_Medium',
         paddingVertical: 8,
         height: 50,
-        color: 'black',
+        color: 'rgba(0,0,0,0.7)',
+        borderRadius: 4,
+        borderWidth: 1,
+        borderColor: '#a8a8a8',
         width: deviceWidth * 0.9,
     },
     iconContainer: {
