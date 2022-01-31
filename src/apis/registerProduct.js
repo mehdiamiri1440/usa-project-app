@@ -56,7 +56,8 @@ export const addNewProduct = (productObject, onUploadProgress) => {
                 method: 'POST',
                 data: productObject,
                 withAuth: true,
-                onUploadProgress
+                onUploadProgress,
+                isFormData: true
             })
             .then(result => {
                 resolve(result);

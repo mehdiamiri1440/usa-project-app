@@ -121,6 +121,7 @@ export const editProfile = item => {
                 method: 'POST',
                 data: item,
                 withAuth: true,
+                isFormData: true
             })
             .then(result => {
                 resolve(result)

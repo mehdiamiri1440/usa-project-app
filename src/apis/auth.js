@@ -174,6 +174,7 @@ export const setEvidences = evidences => {
                 method: 'POST',
                 data: evidences,
                 withAuth: true,
+                isFormData: true
             })
             .then(result => {
                 resolve(result);
