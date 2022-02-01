@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, Pressable, TouchableOpacity, StyleSheet, ScrollView, RefreshControl } from 'react-native';
-import { Card } from 'native-base';
 import { connect } from 'react-redux';
 import analytics from '@react-native-firebase/analytics';
 import ShadowView from '@vikasrg/react-native-simple-shadow-view';
@@ -120,8 +119,13 @@ const Dashboard = props => {
                         </TouchableOpacity>
                         : null
                 }
-
-                <Card transparent  >
+                <View
+                    style={{
+                        borderWidth: 1,
+                        overflow: 'hidden',
+                        borderColor: '#ebebeb'
+                    }}
+                >
                     <ShadowView
                         style={{
                             flex: 1,
@@ -134,10 +138,8 @@ const Dashboard = props => {
                             shadowRadius: 1,
                             shadowOffset: { width: 0, height: 2 },
                             flexDirection: 'column',
-                            overflow: 'hidden',
                             paddingVertical: 15,
-                            minHeight: 170,
-                            marginBottom: 30,
+                            height: 190
                         }}>
 
                         <View>
@@ -187,9 +189,16 @@ const Dashboard = props => {
                         </Pressable>}
 
                     </ShadowView>
-                </Card>
+                </View>
 
-                <Card transparent  >
+                <View
+                    style={{
+                        borderWidth: 1,
+                        marginVertical: 30,
+                        overflow: 'hidden',
+                        borderColor: '#ebebeb'
+                    }}
+                >
                     <ShadowView
                         style={{
                             flex: 1,
@@ -200,8 +209,7 @@ const Dashboard = props => {
                             flexDirection: 'column',
                             overflow: 'hidden',
                             paddingVertical: 15,
-                            height: 170,
-                            marginBottom: 30,
+                            height: 190,
                             shadowColor: 'black',
                             shadowOpacity: 0.13,
                             shadowRadius: 1,
@@ -255,9 +263,16 @@ const Dashboard = props => {
                         </Pressable>
 
                     </ShadowView>
-                </Card>
+                </View>
 
-                <Card transparent  >
+                <View
+                    style={{
+                        borderWidth: 1,
+                        marginVertical: 30,
+                        overflow: 'hidden',
+                        borderColor: '#ebebeb'
+                    }}
+                >
                     <ShadowView
                         style={{
                             flex: 1,
@@ -266,9 +281,8 @@ const Dashboard = props => {
                             backgroundColor: 'white',
                             alignItems: 'flex-end',
                             flexDirection: 'column',
-                            overflow: 'hidden',
                             paddingVertical: 15,
-                            height: 170,
+                            height: 190,
                             shadowColor: 'black',
                             shadowOpacity: 0.13,
                             shadowRadius: 1,
@@ -323,9 +337,16 @@ const Dashboard = props => {
                                 {locales('titles.increaseReplyCapacity')}</Text>
                         </Pressable>
                     </ShadowView>
-                </Card>
+                </View>
 
-                <Card transparent  >
+                <View
+                    style={{
+                        borderWidth: 1,
+                        marginVertical: 30,
+                        overflow: 'hidden',
+                        borderColor: '#ebebeb'
+                    }}
+                >
                     <ShadowView
                         style={{
                             flex: 1,
@@ -334,10 +355,8 @@ const Dashboard = props => {
                             backgroundColor: 'white',
                             alignItems: 'flex-end',
                             flexDirection: 'column',
-                            overflow: 'hidden',
                             paddingVertical: 15,
-                            height: 170,
-                            marginBottom: 30,
+                            height: 190,
                             shadowColor: 'black',
                             shadowOpacity: 0.13,
                             shadowRadius: 1,
@@ -390,9 +409,16 @@ const Dashboard = props => {
                                 {locales('labels.editProfileAuthentication')}</Text>
                         </Pressable> : null}
                     </ShadowView>
-                </Card>
+                </View>
 
-                <Card transparent  >
+                <View
+                    style={{
+                        borderWidth: 1,
+                        marginVertical: 30,
+                        overflow: 'hidden',
+                        borderColor: '#ebebeb'
+                    }}
+                >
                     <ShadowView
                         style={{
                             flex: 1,
@@ -403,8 +429,7 @@ const Dashboard = props => {
                             flexDirection: 'column',
                             overflow: 'hidden',
                             paddingVertical: 15,
-                            height: 170,
-                            marginBottom: 30,
+                            height: 190,
                             shadowColor: 'black',
                             shadowOpacity: 0.13,
                             shadowRadius: 1,
@@ -458,11 +483,17 @@ const Dashboard = props => {
                                 {locales('titles.accessToGoldens')}</Text>
                         </Pressable> : null}
                     </ShadowView>
-                </Card>
+                </View>
 
-                <Card transparent style={{
-                    marginBottom: 40
-                }}>
+                <View
+                    style={{
+                        borderWidth: 1,
+                        marginTop: 30,
+                        bottom: 40,
+                        overflow: 'hidden',
+                        borderColor: '#ebebeb'
+                    }}
+                >
                     <ShadowView
                         style={{
                             flex: 1,
@@ -473,8 +504,7 @@ const Dashboard = props => {
                             flexDirection: 'column',
                             overflow: 'hidden',
                             paddingVertical: 15,
-                            height: 170,
-                            marginBottom: 30,
+                            height: 190,
                             shadowColor: 'black',
                             shadowOpacity: 0.13,
                             shadowRadius: 1,
@@ -528,7 +558,7 @@ const Dashboard = props => {
                         </Pressable>
 
                     </ShadowView>
-                </Card>
+                </View>
 
             </ScrollView>
         </>
