@@ -15,7 +15,6 @@ import { REACT_APP_API_ENDPOINT_RELEASE } from '@env';
 import { useScrollToTop, useIsFocused, useRoute, useNavigationState } from '@react-navigation/native';
 import Svg, { Path, Defs, LinearGradient, Stop } from "react-native-svg"
 import BgLinearGradient from 'react-native-linear-gradient';
-import { Button } from 'native-base';
 
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import Feather from 'react-native-vector-icons/dist/Feather';
@@ -29,6 +28,7 @@ import { versionName } from '../../../version.json';
 import { homeRoutes, sellerSpecialRoutes, buyerSpecialRoutes } from './HomeRoutes';
 import ENUMS from '../../enums';
 import Header from '../../components/header';
+import { BuskoolButton } from '../../components';
 class Home extends React.Component {
 
     constructor(props) {
@@ -1061,7 +1061,7 @@ const InviteFriendsBanner = props => {
                                         marginTop: 10
                                     }}
                                 >
-                                    <Button
+                                    <BuskoolButton
                                         onPress={_ => props.navigation.navigate('Referral')}
                                         style={{
                                             width: '100%',
@@ -1069,6 +1069,7 @@ const InviteFriendsBanner = props => {
                                             elevation: 0,
                                             alignItems: 'center',
                                             justifyContent: 'center',
+                                            height: 45
                                         }}
                                     >
 
@@ -1092,7 +1093,7 @@ const InviteFriendsBanner = props => {
                                                 left: '20%',
                                             }}
                                         />
-                                    </Button>
+                                    </BuskoolButton>
                                 </BgLinearGradient>
                             </View>
                             <View
