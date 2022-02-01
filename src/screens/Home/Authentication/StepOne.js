@@ -1,7 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, Image, StyleSheet, Pressable, BackHandler } from 'react-native';
-import { ActionSheet, Button } from 'native-base';
-import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
@@ -9,10 +7,13 @@ import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 
 import { deviceWidth, deviceHeight } from '../../../utils';
 import ChooseImage from '../../../components/cameraActionSheet';
+import { BuskoolButton } from '../../../components';
 
 const StepOne = props => {
 
+    const ref = useRef(null);
 
+    const [isOpen, setIsOpen] = useState(false);
     const [idCard, setIdCard] = useState({});
     const [idCardError, setIdCardError] = useState('');
 
@@ -29,11 +30,11 @@ const StepOne = props => {
         return false;
     };
 
-    const chooseImage = async _ => {
+    const chooseImage = image => {
         try {
-            const image = await ChooseImage();
-            if (!image)
+            if (!image || image.error)
                 return;
+
             let resultObj = {
                 uri: image.uri,
                 type: image.type,
@@ -45,7 +46,7 @@ const StepOne = props => {
 
         }
         catch (error) {
-            if (error.error.id == 1)
+            if (error && error.error && error.error.id && error.error.id == 1)
                 setIdCardError(error.error.text);
             else
                 setIdCardError(locales('errors.fieldNeeded', { fieldName: locales('labels.idCard') }));
@@ -67,6 +68,21 @@ const StepOne = props => {
 
     };
 
+    openSheet = _ => {
+        setIsOpen(true);
+        setTimeout(() => {
+            ref?.current?.open();
+        }, 100);
+    };
+
+    closeSheet = image => {
+        setIsOpen(false);
+        setTimeout(() => {
+            ref?.current?.close();
+            chooseImage(image);
+        }, 100);
+    };
+
     return (
         <View
             style={{
@@ -74,6 +90,12 @@ const StepOne = props => {
                 padding: 20,
             }}
         >
+            {isOpen ? <ChooseImage
+                ref={ref}
+                closeSheet={closeSheet}
+                isOpen={isOpen}
+            /> : null
+            }
             <Text
                 style={{
                     fontSize: 18,
@@ -145,7 +167,7 @@ const StepOne = props => {
                         android_ripple={{
                             color: '#ededed'
                         }}
-                        onPress={chooseImage}
+                        onPress={openSheet}
                         style={{
                             // flex: 3,
                             // marginHorizontal: 10,
@@ -198,7 +220,7 @@ const StepOne = props => {
                         color: '#ededed'
                     }}
                     activeOpacity={1}
-                    onPress={chooseImage}
+                    onPress={openSheet}
                     style={{
                         borderWidth: 1,
                         borderRadius: 7,
@@ -229,16 +251,16 @@ const StepOne = props => {
                 flexDirection: 'row', marginVertical: 20,
                 width: deviceWidth, justifyContent: 'space-between', width: '100%'
             }}>
-                <Button
+                <BuskoolButton
                     onPress={onSubmit}
                     style={(!!!idCard.uri || idCardError) ? styles.disableLoginButton : styles.loginButton}
                     rounded
                 >
-                    <AntDesign name='arrowleft' size={25} color='white' />
                     <Text style={styles.buttonText}>
                         {locales('titles.nextStep')}
                     </Text>
-                </Button>
+                    <AntDesign name='arrowleft' size={25} color='white' />
+                </BuskoolButton>
             </View>
         </View>
     )
@@ -274,6 +296,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         alignItems: 'center',
         borderRadius: 5,
+        flexDirection: 'row-reverse',
         justifyContent: 'center',
         width: '37%',
         elevation: 0,
@@ -283,8 +306,10 @@ const styles = StyleSheet.create({
         marginVertical: 10,
         width: deviceWidth * 0.4,
         borderRadius: 5,
+        flexDirection: 'row-reverse',
         elevation: 0,
         color: 'white',
+        height: 45,
         alignItems: 'center',
         backgroundColor: '#e0e0e0',
         alignSelf: 'flex-start',
@@ -296,8 +321,10 @@ const styles = StyleSheet.create({
         backgroundColor: '#FF9828',
         elevation: 0,
         borderRadius: 5,
+        flexDirection: 'row-reverse',
         width: deviceWidth * 0.4,
         color: 'white',
+        height: 45,
         alignItems: 'center',
         alignSelf: 'flex-start',
         justifyContent: 'center'

@@ -1,22 +1,23 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, Image, StyleSheet, Pressable, ActivityIndicator, BackHandler } from 'react-native';
-import { ActionSheet, Button } from 'native-base';
-import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import { connect } from 'react-redux';
 
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 
-import { deviceWidth, deviceHeight, permissions } from '../../../utils';
+import { deviceWidth, deviceHeight } from '../../../utils';
 import ChooseImage from '../../../components/cameraActionSheet';
+import { BuskoolButton } from '../../../components';
 
 const StepThree = props => {
 
     const {
         setEvidencesLoading
     } = props;
+    const ref = useRef(null);
 
+    const [isOpen, setIsOpen] = useState(false);
     let [evidence, setEvidence] = useState({});
     let [evidenceError, setEvidenceError] = useState('');
 
@@ -35,10 +36,10 @@ const StepThree = props => {
         return true;
     };
 
-    const chooseImage = async _ => {
+    const chooseImage = image => {
         try {
-            const image = await ChooseImage();
-            if (!image)
+
+            if (!image || image.error)
                 return;
             let resultObj = {
                 uri: image.uri,
@@ -51,7 +52,7 @@ const StepThree = props => {
 
         }
         catch (error) {
-            if (error.error.id == 1)
+            if (error && error.error && error.error.id && error.error.id == 1)
                 setEvidenceError(error.error.text);
             else
                 setEvidenceError(locales('errors.fieldNeeded', { fieldName: locales('labels.evidence') }));
@@ -74,6 +75,21 @@ const StepThree = props => {
 
     };
 
+    openSheet = _ => {
+        setIsOpen(true);
+        setTimeout(() => {
+            ref?.current?.open();
+        }, 100);
+    };
+
+    closeSheet = image => {
+        setIsOpen(false);
+        setTimeout(() => {
+            ref?.current?.close();
+            chooseImage(image);
+        }, 100);
+    };
+
     return (
         <View
             style={{
@@ -81,6 +97,12 @@ const StepThree = props => {
                 padding: 20,
             }}
         >
+            {isOpen ? <ChooseImage
+                ref={ref}
+                closeSheet={closeSheet}
+                isOpen={isOpen}
+            /> : null
+            }
             <Text
                 style={{
                     fontSize: 17,
@@ -172,7 +194,7 @@ const StepThree = props => {
                         android_ripple={{
                             color: '#ededed'
                         }}
-                        onPress={chooseImage}
+                        onPress={openSheet}
                         style={{
                             height: deviceHeight * 0.23,
                             width: '95%',
@@ -226,7 +248,7 @@ const StepThree = props => {
                         color: '#ededed'
                     }}
                     activeOpacity={1}
-                    onPress={chooseImage}
+                    onPress={openSheet}
                     style={{
                         borderWidth: 1,
                         borderRadius: 12,
@@ -259,7 +281,7 @@ const StepThree = props => {
                     width: '100%',
                     marginBottom: 65
                 }}>
-                <Button
+                <BuskoolButton
                     onPress={onSubmit}
                     style={(!!!evidence.uri || evidenceError) ? styles.disableLoginButton : styles.loginButton}
                     rounded
@@ -280,15 +302,15 @@ const StepThree = props => {
                     <Text style={styles.buttonText}>
                         {locales('titles.finalSubmit')}
                     </Text>
-                </Button>
-                <Button
+                </BuskoolButton>
+                <BuskoolButton
                     onPress={() => props.changeStep(2)}
                     style={styles.backButtonContainer}
                     rounded
                 >
-                    <Text style={styles.backButtonText}>{locales('titles.previousStep')}</Text>
                     <AntDesign name='arrowright' size={25} color='#7E7E7E' />
-                </Button>
+                    <Text style={styles.backButtonText}>{locales('titles.previousStep')}</Text>
+                </BuskoolButton>
             </View>
         </View>
     )
@@ -325,6 +347,8 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         alignItems: 'center',
         borderRadius: 5,
+        height: 45,
+        flexDirection: 'row-reverse',
         justifyContent: 'center',
         width: deviceWidth * 0.4,
         elevation: 0,
@@ -335,6 +359,8 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         elevation: 0,
         color: 'white',
+        height: 45,
+        flexDirection: 'row-reverse',
         alignItems: 'center',
         backgroundColor: '#B5B5B5',
         alignSelf: 'flex-start',
@@ -344,6 +370,8 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         backgroundColor: '#FF9828',
         elevation: 0,
+        height: 45,
+        flexDirection: 'row-reverse',
         borderRadius: 5,
         width: deviceWidth * 0.4,
         color: 'white',
