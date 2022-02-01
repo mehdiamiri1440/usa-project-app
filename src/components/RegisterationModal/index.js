@@ -15,12 +15,6 @@ import {
     FlatList,
     Pressable,
 } from 'react-native';
-import {
-    Button,
-    Input,
-    Label,
-    InputGroup
-} from 'native-base';
 import { connect } from 'react-redux';
 import {
     CodeField,
@@ -43,6 +37,7 @@ import * as locationActions from '../../redux/locations/actions';
 import Header from '../header';
 import Timer from '../timer';
 import ENUMS from '../../enums';
+import { BuskoolButton, BuskoolTextInput } from '..';
 
 const RegisterationModal = props => {
 
@@ -430,31 +425,8 @@ const GetMobileNumber = props => {
                 {locales('titles.enterPhoneNumber')}
             </Text>
 
-            <InputGroup
-                regular
-                style={{
-                    borderRadius: 8,
-                    borderColor: (mobileNumberError ? '#D50000' :
-                        (mobileNumber.length && validator.isMobileNumber(mobileNumber)) ?
-                            '#00C569' :
-                            '#a8a8a8'),
-                    paddingHorizontal: 10,
-                    backgroundColor: '#FBFBFB',
-                }}
-            >
-                <FontAwesome5
-                    name={mobileNumberError ? 'times-circle' : 'phone-square-alt'}
-                    color={(mobileNumberError ? '#D50000' :
-                        (mobileNumber.length && validator.isMobileNumber(mobileNumber)) ?
-                            '#00C569' :
-                            '#a8a8a8')}
-                    size={16}
-                    solid
-                    style={{
-                        marginLeft: 10,
-                    }}
-                />
-                <Input
+            <View>
+                <BuskoolTextInput
                     onSubmitEditing={submitMobileNumber}
                     autoCapitalize='none'
                     autoCorrect={false}
@@ -468,7 +440,15 @@ const GetMobileNumber = props => {
                         flexDirection: 'row',
                         textDecorationLine: 'none',
                         direction: 'rtl',
-                        textAlign: 'right'
+                        textAlign: 'right',
+                        borderWidth: 1,
+                        borderRadius: 8,
+                        borderColor: (mobileNumberError ? '#D50000' :
+                            (mobileNumber.length && validator.isMobileNumber(mobileNumber)) ?
+                                '#00C569' :
+                                '#a8a8a8'),
+                        paddingHorizontal: 10,
+                        backgroundColor: '#FBFBFB',
                     }}
                     onChangeText={onMobileNumberChanged}
                     value={mobileNumber}
@@ -476,8 +456,23 @@ const GetMobileNumber = props => {
                     placeholderTextColor="#BEBEBE"
                     ref={mobileNumberRef}
                 />
-            </InputGroup>
-            <Label
+                <FontAwesome5
+                    name={mobileNumberError ? 'times-circle' : 'phone-square-alt'}
+                    color={(mobileNumberError ? '#D50000' :
+                        (mobileNumber.length && validator.isMobileNumber(mobileNumber)) ?
+                            '#00C569' :
+                            '#a8a8a8')}
+                    size={16}
+                    solid
+                    style={{
+                        marginLeft: 10,
+                        position: 'absolute',
+                        top: '30%'
+                    }}
+                />
+            </View>
+
+            <Text
                 style={{
                     height: 25,
                     fontFamily: 'IRANSansWeb(FaNum)_Light',
@@ -496,9 +491,9 @@ const GetMobileNumber = props => {
                     </Text>
                     : null
                 }
-            </Label>
+            </Text>
 
-            <Button
+            <BuskoolButton
                 onPress={submitMobileNumber}
                 style={{
                     backgroundColor: mobileNumber.length && validator.isMobileNumber(mobileNumber) ?
@@ -509,9 +504,20 @@ const GetMobileNumber = props => {
                     justifyContent: 'center',
                     elevation: 0,
                     borderRadius: 8,
-                    height: 50
+                    height: 50,
+                    flexDirection: 'row-reverse'
                 }}
             >
+                <Text
+                    style={{
+                        fontSize: 18,
+                        color: 'white',
+                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                        marginHorizontal: 5
+                    }}
+                >
+                    {locales('titles.submitNumber')}
+                </Text>
                 {
                     !!checkAlreadySignedUpMobileNumberLoading ?
                         <ActivityIndicator
@@ -525,17 +531,7 @@ const GetMobileNumber = props => {
                             color='white'
                         />
                 }
-                <Text
-                    style={{
-                        fontSize: 18,
-                        color: 'white',
-                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                        marginHorizontal: 5
-                    }}
-                >
-                    {locales('titles.submitNumber')}
-                </Text>
-            </Button>
+            </BuskoolButton>
         </View>
     );
 };
@@ -728,7 +724,7 @@ const GetVerificationCode = props => {
                         </Text>
                     )}
                 />
-                <Label style={{
+                <Text style={{
                     fontSize: 14,
                     marginTop: 30,
                     color: '#D81A1A',
@@ -737,7 +733,7 @@ const GetVerificationCode = props => {
                     height: 50
                 }}>
                     {valueError}
-                </Label>
+                </Text>
             </SafeAreaView>
 
             <View
@@ -773,14 +769,12 @@ const GetVerificationCode = props => {
                     alignItems: 'center'
                 }}
             >
-                <Button
+                <BuskoolButton
                     onPress={() => onVerificationCodeSubmited(value)}
                     style={[value.length !== 4 ? styles.disableLoginButton : styles.loginButton, { paddingTop: 4 }]}
                     rounded
                 >
-                    <Text style={styles.buttonText}>
-                        {locales('titles.checkCode')}
-                    </Text>
+
                     {
                         !!checkActivisionCodeLoading || !!userProfileLoading || !!loginLoading ?
                             <ActivityIndicator
@@ -789,7 +783,7 @@ const GetVerificationCode = props => {
                                 style={{
                                     position: 'absolute',
                                     left: '15%',
-                                    top: '40%',
+                                    top: '32%',
                                     borderRadius: 15
                                 }}
                             />
@@ -800,27 +794,30 @@ const GetVerificationCode = props => {
                                 name='arrow-left'
                                 style={{
                                     position: 'absolute',
-                                    left: '17%',
+                                    right: '17%',
                                     top: '40%',
                                     borderRadius: 15
                                 }}
                             />
                     }
-                </Button>
-                <Button
+                    <Text style={[styles.buttonText, { bottom: 3 }]}>
+                        {locales('titles.checkCode')}
+                    </Text>
+                </BuskoolButton>
+                <BuskoolButton
                     onPress={() => changeStep(1)}
                     style={[styles.backButtonContainer, { borderRadius: 8 }]}
                     rounded
                 >
-                    <Text style={styles.backButtonText}>
-                        {locales('titles.previousStep')}
-                    </Text>
                     <FontAwesome5
                         name='arrow-right'
                         size={15}
                         color='#909090'
                     />
-                </Button>
+                    <Text style={styles.backButtonText}>
+                        {locales('titles.previousStep')}
+                    </Text>
+                </BuskoolButton>
             </View>
 
         </ScrollView>
@@ -950,28 +947,8 @@ const GetFullName = props => {
                     {locales('titles.enterFirstName')}
                 </Text>
 
-                <InputGroup
-                    regular
-                    style={{
-                        borderRadius: 8,
-                        borderColor: (firstNameError ? '#D50000' : ((firstName.length && validator.isPersianName(firstName)) ? '#00C569' : '#a8a8a8')),
-                        paddingHorizontal: 10,
-                        backgroundColor: '#FBFBFB',
-                    }}
-                >
-                    <FontAwesome5
-                        name={
-                            firstName ? firstNameError ? 'times-circle' : 'check-circle' : firstNameClicked
-                                ? 'times-circle' : 'edit'}
-                        color={firstName ? firstNameError ? '#E41C38' : '#00C569'
-                            : firstNameClicked ? '#E41C38' : '#BDC4CC'}
-                        size={16}
-                        solid
-                        style={{
-                            marginLeft: 10,
-                        }}
-                    />
-                    <Input
+                <View>
+                    <BuskoolTextInput
                         onSubmitEditing={handleAutoFocus}
                         autoCapitalize='none'
                         autoCorrect={false}
@@ -984,7 +961,12 @@ const GetFullName = props => {
                             flexDirection: 'row',
                             textDecorationLine: 'none',
                             direction: 'rtl',
-                            textAlign: 'right'
+                            textAlign: 'right',
+                            borderRadius: 8,
+                            borderColor: (firstNameError ? '#D50000' : ((firstName.length && validator.isPersianName(firstName)) ? '#00C569' : '#a8a8a8')),
+                            paddingHorizontal: 10,
+                            backgroundColor: '#FBFBFB',
+                            borderWidth: 1
                         }}
                         onChangeText={onFirstNameChanged}
                         value={firstName}
@@ -993,8 +975,22 @@ const GetFullName = props => {
                         ref={firstNameRef}
 
                     />
-                </InputGroup>
-                <Label
+                    <FontAwesome5
+                        name={
+                            firstName ? firstNameError ? 'times-circle' : 'check-circle' : firstNameClicked
+                                ? 'times-circle' : 'edit'}
+                        color={firstName ? firstNameError ? '#E41C38' : '#00C569'
+                            : firstNameClicked ? '#E41C38' : '#BDC4CC'}
+                        size={16}
+                        solid
+                        style={{
+                            marginLeft: 10,
+                            top: '30%',
+                            position: 'absolute'
+                        }}
+                    />
+                </View>
+                <Text
                     style={{
                         height: 25,
                         fontFamily: 'IRANSansWeb(FaNum)_Light',
@@ -1013,7 +1009,7 @@ const GetFullName = props => {
                         </Text>
                         : null
                     }
-                </Label>
+                </Text>
 
                 <Text
                     style={{
@@ -1026,29 +1022,8 @@ const GetFullName = props => {
                 >
                     {locales('titles.enterLastName')}
                 </Text>
-
-                <InputGroup
-                    regular
-                    style={{
-                        borderRadius: 8,
-                        borderColor: (lastNameError ? '#D50000' : ((lastName.length && validator.isPersianName(lastName)) ? '#00C569' : '#a8a8a8')),
-                        paddingHorizontal: 10,
-                        backgroundColor: '#FBFBFB',
-                    }}
-                >
-                    <FontAwesome5
-                        name={
-                            lastName ? lastNameError ? 'times-circle' : 'check-circle' : lastNameClicked
-                                ? 'times-circle' : 'edit'}
-                        color={lastName ? lastNameError ? '#E41C38' : '#00C569'
-                            : lastNameClicked ? '#E41C38' : '#BDC4CC'}
-                        size={16}
-                        solid
-                        style={{
-                            marginLeft: 10,
-                        }}
-                    />
-                    <Input
+                <View>
+                    <BuskoolTextInput
                         onSubmitEditing={handleAutoFocus}
                         autoCapitalize='none'
                         autoCorrect={false}
@@ -1061,7 +1036,12 @@ const GetFullName = props => {
                             flexDirection: 'row',
                             textDecorationLine: 'none',
                             direction: 'rtl',
-                            textAlign: 'right'
+                            textAlign: 'right',
+                            borderRadius: 8,
+                            borderColor: (lastNameError ? '#D50000' : ((lastName.length && validator.isPersianName(lastName)) ? '#00C569' : '#a8a8a8')),
+                            paddingHorizontal: 10,
+                            backgroundColor: '#FBFBFB',
+                            borderWidth: 1
                         }}
                         onChangeText={onLastNameChanged}
                         value={lastName}
@@ -1070,8 +1050,22 @@ const GetFullName = props => {
                         ref={lastNameRef}
 
                     />
-                </InputGroup>
-                <Label
+                    <FontAwesome5
+                        name={
+                            lastName ? lastNameError ? 'times-circle' : 'check-circle' : lastNameClicked
+                                ? 'times-circle' : 'edit'}
+                        color={lastName ? lastNameError ? '#E41C38' : '#00C569'
+                            : lastNameClicked ? '#E41C38' : '#BDC4CC'}
+                        size={16}
+                        solid
+                        style={{
+                            marginLeft: 10,
+                            top: '30%',
+                            position: 'absolute'
+                        }}
+                    />
+                </View>
+                <Text
                     style={{
                         height: 25,
                         fontFamily: 'IRANSansWeb(FaNum)_Light',
@@ -1090,7 +1084,7 @@ const GetFullName = props => {
                         </Text>
                         : null
                     }
-                </Label>
+                </Text>
 
                 <View
                     style={{
@@ -1102,7 +1096,7 @@ const GetFullName = props => {
                         marginTop: 20
                     }}
                 >
-                    <Button
+                    <BuskoolButton
                         onPress={onSubmit}
                         style={{
                             backgroundColor: lastName.length && firstName.length && !firstNameError && !lastNameError ?
@@ -1112,14 +1106,11 @@ const GetFullName = props => {
                             alignItems: 'center',
                             justifyContent: 'center',
                             elevation: 0,
+                            flexDirection: 'row-reverse',
+                            height: 45,
                             borderRadius: 8,
                         }}
                     >
-                        <FontAwesome5
-                            name='arrow-left'
-                            size={15}
-                            color='white'
-                        />
                         <Text
                             style={{
                                 fontSize: 18,
@@ -1130,21 +1121,26 @@ const GetFullName = props => {
                         >
                             {locales('titles.nextStep')}
                         </Text>
-                    </Button>
-                    <Button
+                        <FontAwesome5
+                            name='arrow-left'
+                            size={15}
+                            color='white'
+                        />
+                    </BuskoolButton>
+                    <BuskoolButton
                         onPress={() => changeStep(2)}
                         style={[styles.backButtonContainer, { borderRadius: 8 }]}
                         rounded
                     >
-                        <Text style={styles.backButtonText}>
-                            {locales('titles.previousStep')}
-                        </Text>
                         <FontAwesome5
                             name='arrow-right'
                             size={15}
                             color='#909090'
                         />
-                    </Button>
+                        <Text style={styles.backButtonText}>
+                            {locales('titles.previousStep')}
+                        </Text>
+                    </BuskoolButton>
                 </View>
 
             </View>
@@ -1431,20 +1427,20 @@ const GetIntentType = props => {
                 </Pressable>
 
             </View>
-            <Button
+            <BuskoolButton
                 onPress={() => changeStep(3)}
                 style={[styles.backButtonContainer, { borderRadius: 8, marginTop: 50 }]}
                 rounded
             >
-                <Text style={styles.backButtonText}>
-                    {locales('titles.previousStep')}
-                </Text>
                 <FontAwesome5
                     name='arrow-right'
                     size={15}
                     color='#909090'
                 />
-            </Button>
+                <Text style={styles.backButtonText}>
+                    {locales('titles.previousStep')}
+                </Text>
+            </BuskoolButton>
         </View>
     );
 };
@@ -1590,16 +1586,31 @@ const GetProvince = props => {
             >
                 {locales('labels.searchForTargetProvince')}
             </Text>
-
-            <InputGroup
-                regular
-                style={{
-                    borderRadius: 8,
-                    borderColor: '#a8a8a8',
-                    paddingHorizontal: 10,
-                    backgroundColor: '#FBFBFB',
-                }}
-            >
+            <View>
+                <BuskoolTextInput
+                    autoCapitalize='none'
+                    autoCorrect={false}
+                    autoCompleteType='off'
+                    style={{
+                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                        fontSize: 14,
+                        borderRadius: 4,
+                        height: 45,
+                        flexDirection: 'row',
+                        textDecorationLine: 'none',
+                        direction: 'rtl',
+                        textAlign: 'right',
+                        borderRadius: 8,
+                        borderColor: '#a8a8a8',
+                        paddingHorizontal: 10,
+                        backgroundColor: '#FBFBFB',
+                        borderWidth: 1
+                    }}
+                    onChangeText={onProvinceSearchChanged}
+                    value={provinceSearch}
+                    placeholder={locales('labels.searchForProvince')}
+                    placeholderTextColor="#BEBEBE"
+                />
                 <FontAwesome5
                     name={provinceSearch ? 'times' : 'search'}
                     color='#a8a8a8'
@@ -1614,28 +1625,11 @@ const GetProvince = props => {
                     solid
                     style={{
                         marginLeft: 10,
+                        position: 'absolute',
+                        top: '30%'
                     }}
                 />
-                <Input
-                    autoCapitalize='none'
-                    autoCorrect={false}
-                    autoCompleteType='off'
-                    style={{
-                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                        fontSize: 14,
-                        borderRadius: 4,
-                        height: 45,
-                        flexDirection: 'row',
-                        textDecorationLine: 'none',
-                        direction: 'rtl',
-                        textAlign: 'right'
-                    }}
-                    onChangeText={onProvinceSearchChanged}
-                    value={provinceSearch}
-                    placeholder={locales('labels.searchForProvince')}
-                    placeholderTextColor="#BEBEBE"
-                />
-            </InputGroup>
+            </View>
 
             <FlatList
                 keyboardDismissMode='none'
@@ -1653,20 +1647,20 @@ const GetProvince = props => {
                 ListEmptyComponent={renderProvincesListEmptyComponent}
             />
 
-            <Button
+            <BuskoolButton
                 onPress={() => changeStep(4)}
                 style={[styles.backButtonContainer, { borderRadius: 8, margin: 0 }]}
                 rounded
             >
-                <Text style={styles.backButtonText}>
-                    {locales('titles.previousStep')}
-                </Text>
                 <FontAwesome5
                     name='arrow-right'
                     size={15}
                     color='#909090'
                 />
-            </Button>
+                <Text style={styles.backButtonText}>
+                    {locales('titles.previousStep')}
+                </Text>
+            </BuskoolButton>
 
         </View>
     )
@@ -1794,15 +1788,31 @@ const GetCity = props => {
                 {locales('labels.searchForTargetCity')}
             </Text>
 
-            <InputGroup
-                regular
-                style={{
-                    borderRadius: 8,
-                    borderColor: '#a8a8a8',
-                    paddingHorizontal: 10,
-                    backgroundColor: '#FBFBFB',
-                }}
-            >
+            <View>
+                <BuskoolTextInput
+                    autoCapitalize='none'
+                    autoCorrect={false}
+                    autoCompleteType='off'
+                    style={{
+                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                        fontSize: 14,
+                        borderRadius: 4,
+                        height: 45,
+                        flexDirection: 'row',
+                        textDecorationLine: 'none',
+                        direction: 'rtl',
+                        textAlign: 'right',
+                        borderRadius: 8,
+                        borderColor: '#a8a8a8',
+                        paddingHorizontal: 10,
+                        backgroundColor: '#FBFBFB',
+                        borderWidth: 1
+                    }}
+                    onChangeText={onCitySearchChanged}
+                    value={citySearch}
+                    placeholder={locales('labels.searchForCity')}
+                    placeholderTextColor="#BEBEBE"
+                />
                 <FontAwesome5
                     name={citySearch ? 'times' : 'search'}
                     color='#a8a8a8'
@@ -1817,28 +1827,11 @@ const GetCity = props => {
                     solid
                     style={{
                         marginLeft: 10,
+                        position: 'absolute',
+                        top: '30%'
                     }}
                 />
-                <Input
-                    autoCapitalize='none'
-                    autoCorrect={false}
-                    autoCompleteType='off'
-                    style={{
-                        fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                        fontSize: 14,
-                        borderRadius: 4,
-                        height: 45,
-                        flexDirection: 'row',
-                        textDecorationLine: 'none',
-                        direction: 'rtl',
-                        textAlign: 'right'
-                    }}
-                    onChangeText={onCitySearchChanged}
-                    value={citySearch}
-                    placeholder={locales('labels.searchForCity')}
-                    placeholderTextColor="#BEBEBE"
-                />
-            </InputGroup>
+            </View>
 
             <FlatList
                 keyboardDismissMode='none'
@@ -1856,20 +1849,20 @@ const GetCity = props => {
                 ListEmptyComponent={renderCitiesListEmptyComponent}
             />
 
-            <Button
+            <BuskoolButton
                 onPress={() => changeStep(5)}
                 style={[styles.backButtonContainer, { borderRadius: 8, margin: 0 }]}
                 rounded
             >
-                <Text style={styles.backButtonText}>
-                    {locales('titles.previousStep')}
-                </Text>
                 <FontAwesome5
                     name='arrow-right'
                     size={15}
                     color='#909090'
                 />
-            </Button>
+                <Text style={styles.backButtonText}>
+                    {locales('titles.previousStep')}
+                </Text>
+            </BuskoolButton>
 
         </View>
     )
@@ -1995,7 +1988,7 @@ const GetIntentToSendBuyAdRequest = props => {
                     marginTop: 30
                 }}
             >
-                <Button
+                <BuskoolButton
                     onPress={_ => onIntentButtonClicked(1)}
                     style={{
                         backgroundColor: showBuyAdFields ? '#E0E0E0' : '#00C569',
@@ -2017,9 +2010,9 @@ const GetIntentToSendBuyAdRequest = props => {
                     >
                         {locales('labels.yes')}
                     </Text>
-                </Button>
+                </BuskoolButton>
 
-                <Button
+                <BuskoolButton
                     onPress={_ => onIntentButtonClicked(0)}
                     style={{
                         backgroundColor: '#E41C38',
@@ -2041,7 +2034,7 @@ const GetIntentToSendBuyAdRequest = props => {
                     >
                         {locales('labels.no')}
                     </Text>
-                </Button>
+                </BuskoolButton>
             </View>
             {showBuyAdFields ?
                 <View
@@ -2081,28 +2074,8 @@ const GetIntentToSendBuyAdRequest = props => {
                             </Text>
                         </Text>
 
-                        <InputGroup
-                            regular
-                            style={{
-                                borderRadius: 8,
-                                borderColor: (productTypeError ? '#D50000' : ((productType.length && validator.isPersianName(productType)) ? '#00C569' : '#a8a8a8')),
-                                paddingHorizontal: 10,
-                                backgroundColor: '#FBFBFB',
-                            }}
-                        >
-                            <FontAwesome5
-                                name={
-                                    productType ? productTypeError ? 'times-circle' : 'check-circle' : productTypeClicked
-                                        ? 'times-circle' : 'edit'}
-                                color={productType ? productTypeError ? '#E41C38' : '#00C569'
-                                    : productTypeClicked ? '#E41C38' : '#BDC4CC'}
-                                size={16}
-                                solid
-                                style={{
-                                    marginLeft: 10,
-                                }}
-                            />
-                            <Input
+                        <View>
+                            <BuskoolTextInput
                                 autoCapitalize='none'
                                 autoCorrect={false}
                                 autoCompleteType='off'
@@ -2114,7 +2087,12 @@ const GetIntentToSendBuyAdRequest = props => {
                                     flexDirection: 'row',
                                     textDecorationLine: 'none',
                                     direction: 'rtl',
-                                    textAlign: 'right'
+                                    textAlign: 'right',
+                                    borderRadius: 8,
+                                    borderColor: (productTypeError ? '#D50000' : ((productType.length && validator.isPersianName(productType)) ? '#00C569' : '#a8a8a8')),
+                                    paddingHorizontal: 10,
+                                    backgroundColor: '#FBFBFB',
+                                    borderWidth: 1
                                 }}
                                 onChangeText={onProductTypeChanged}
                                 value={productType}
@@ -2122,8 +2100,22 @@ const GetIntentToSendBuyAdRequest = props => {
                                 placeholderTextColor="#BEBEBE"
 
                             />
-                        </InputGroup>
-                        <Label
+                            <FontAwesome5
+                                name={
+                                    productType ? productTypeError ? 'times-circle' : 'check-circle' : productTypeClicked
+                                        ? 'times-circle' : 'edit'}
+                                color={productType ? productTypeError ? '#E41C38' : '#00C569'
+                                    : productTypeClicked ? '#E41C38' : '#BDC4CC'}
+                                size={16}
+                                solid
+                                style={{
+                                    marginLeft: 10,
+                                    position: 'absolute',
+                                    top: '30%'
+                                }}
+                            />
+                        </View>
+                        <Text
                             style={{
                                 height: 25,
                                 fontFamily: 'IRANSansWeb(FaNum)_Light',
@@ -2142,7 +2134,7 @@ const GetIntentToSendBuyAdRequest = props => {
                                 </Text>
                                 : null
                             }
-                        </Label>
+                        </Text>
 
                     </View>
 
@@ -2218,28 +2210,8 @@ const GetIntentToSendBuyAdRequest = props => {
                             </Text>
                         </Text>
 
-                        <InputGroup
-                            regular
-                            style={{
-                                borderRadius: 8,
-                                borderColor: (amountError ? '#D50000' : (amount.length ? '#00C569' : '#a8a8a8')),
-                                paddingHorizontal: 10,
-                                backgroundColor: '#FBFBFB',
-                            }}
-                        >
-                            <FontAwesome5
-                                name={
-                                    amount ? amountError ? 'times-circle' : 'check-circle' : amountClicked
-                                        ? 'times-circle' : 'edit'}
-                                color={amount ? amountError ? '#E41C38' : '#00C569'
-                                    : amountClicked ? '#E41C38' : '#BDC4CC'}
-                                size={16}
-                                solid
-                                style={{
-                                    marginLeft: 10,
-                                }}
-                            />
-                            <Input
+                        <View>
+                            <BuskoolTextInput
                                 maxLength={13}
                                 autoCapitalize='none'
                                 keyboardType='number-pad'
@@ -2253,7 +2225,12 @@ const GetIntentToSendBuyAdRequest = props => {
                                     flexDirection: 'row',
                                     textDecorationLine: 'none',
                                     direction: 'rtl',
-                                    textAlign: 'right'
+                                    textAlign: 'right',
+                                    borderRadius: 8,
+                                    borderColor: (amountError ? '#D50000' : (amount.length ? '#00C569' : '#a8a8a8')),
+                                    paddingHorizontal: 10,
+                                    backgroundColor: '#FBFBFB',
+                                    borderWidth: 1
                                 }}
                                 onChangeText={onAmountChanged}
                                 value={amount}
@@ -2261,9 +2238,23 @@ const GetIntentToSendBuyAdRequest = props => {
                                 placeholderTextColor="#BEBEBE"
 
                             />
-                        </InputGroup>
+                            <FontAwesome5
+                                name={
+                                    amount ? amountError ? 'times-circle' : 'check-circle' : amountClicked
+                                        ? 'times-circle' : 'edit'}
+                                color={amount ? amountError ? '#E41C38' : '#00C569'
+                                    : amountClicked ? '#E41C38' : '#BDC4CC'}
+                                size={16}
+                                solid
+                                style={{
+                                    marginLeft: 10,
+                                    position: 'aboslute',
+                                    top: '30%'
+                                }}
+                            />
+                        </View>
 
-                        <Label style={{
+                        <Text style={{
                             height: 50,
                             fontFamily: 'IRANSansWeb(FaNum)_Light',
                             textAlign: !amountError && amount.length ? 'left' : 'right'
@@ -2279,7 +2270,7 @@ const GetIntentToSendBuyAdRequest = props => {
                             }}>
                                 {amountText}</Text> : null}
 
-                        </Label>
+                        </Text>
 
                     </View>
                     <View
@@ -2292,7 +2283,7 @@ const GetIntentToSendBuyAdRequest = props => {
                             marginTop: 40
                         }}
                     >
-                        <Button
+                        <BuskoolButton
                             onPress={onSubmit}
                             style={{
                                 backgroundColor: amount && amount.length && !amountError && !productTypeError ?
@@ -2301,6 +2292,8 @@ const GetIntentToSendBuyAdRequest = props => {
                                 width: '45%',
                                 alignItems: 'center',
                                 justifyContent: 'center',
+                                flexDirection: 'row-reverse',
+                                height: 45,
                                 elevation: 0,
                                 borderRadius: 8,
                             }}
@@ -2320,39 +2313,39 @@ const GetIntentToSendBuyAdRequest = props => {
                             >
                                 {locales('labels.justSubmit')}
                             </Text>
-                        </Button>
-                        <Button
+                        </BuskoolButton>
+                        <BuskoolButton
                             onPress={() => changeStep(6)}
                             style={[styles.backButtonContainer, { borderRadius: 8 }]}
                             rounded
                         >
-                            <Text style={styles.backButtonText}>
-                                {locales('titles.previousStep')}
-                            </Text>
                             <FontAwesome5
                                 name='arrow-right'
                                 size={15}
                                 color='#909090'
                             />
-                        </Button>
+                            <Text style={styles.backButtonText}>
+                                {locales('titles.previousStep')}
+                            </Text>
+                        </BuskoolButton>
                     </View>
 
                 </View>
                 :
-                <Button
+                <BuskoolButton
                     onPress={() => changeStep(6)}
                     style={[styles.backButtonContainer, { borderRadius: 8, marginTop: 50 }]}
                     rounded
                 >
-                    <Text style={styles.backButtonText}>
-                        {locales('titles.previousStep')}
-                    </Text>
                     <FontAwesome5
                         name='arrow-right'
                         size={15}
                         color='#909090'
                     />
-                </Button>
+                    <Text style={styles.backButtonText}>
+                        {locales('titles.previousStep')}
+                    </Text>
+                </BuskoolButton>
             }
         </ScrollView>
     );
@@ -2425,6 +2418,8 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         elevation: 0,
         borderWidth: 1,
+        height: 45,
+        flexDirection: 'row-reverse',
         borderColor: '#BEBEBE',
         width: deviceWidth * 0.4,
         backgroundColor: 'white',
@@ -2455,6 +2450,8 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         backgroundColor: '#E0E0E0',
         elevation: 0,
+        height: 45,
+        flexDirection: 'row-reverse',
         width: deviceWidth * 0.4,
         color: 'white',
         alignItems: 'center',
@@ -2466,6 +2463,8 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         backgroundColor: '#FF9828',
         elevation: 0,
+        height: 45,
+        flexDirection: 'row-reverse',
         borderRadius: 8,
         width: deviceWidth * 0.4,
         color: 'white',
