@@ -1,10 +1,11 @@
 import React, { useRef, useState } from 'react';
 import { TouchableOpacity, Modal, View, Text, Image, StyleSheet, ScrollView } from 'react-native';
-import { Button } from 'native-base';
 import RBSheet from "react-native-raw-bottom-sheet";
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import EvilIcons from 'react-native-vector-icons/dist/EvilIcons';
+
+import { BuskoolButton } from '../../components';
 
 const ValidatedUserIcon = props => {
 
@@ -220,8 +221,15 @@ export const ValidatedUserDescription = ({ showModal, onRequestClose, navigation
                 </View>
 
 
-                <Button
-                    style={[styles.loginButton, { width: '80%', marginBottom: 10, alignSelf: 'center' }]}
+                <BuskoolButton
+                    style={[styles.loginButton, {
+                        width: '80%',
+                        marginBottom: 10,
+                        alignSelf: 'center',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        height: 45
+                    }]}
                     onPress={_ => {
                         onRequestClose();
                         navigation.navigate('Authentication')
@@ -229,7 +237,7 @@ export const ValidatedUserDescription = ({ showModal, onRequestClose, navigation
                 >
                     <Text style={[styles.buttonText, { alignSelf: 'center' }]}>  {locales('labels.authenticationButton')}
                     </Text>
-                </Button>
+                </BuskoolButton>
 
 
                 <Text style={{
