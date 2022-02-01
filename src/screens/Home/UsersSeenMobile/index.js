@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { View, Text, FlatList } from 'react-native';
-import { Button, Toast } from 'native-base';
+import { Toast } from 'native-base';
 import Jmoment from 'moment-jalaali';
 
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
@@ -9,6 +9,7 @@ import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import * as profileActions from '../../../redux/profile/actions';
 import { deviceWidth, deviceHeight, dataGenerator } from '../../../utils';
 import Header from '../../../components/header';
+import { BuskoolButton } from '../../../components';
 
 const UsersSeenMobile = props => {
 
@@ -133,7 +134,7 @@ const UsersSeenMobile = props => {
                             })}
                         />
                         : null}
-                    <Button
+                    <BuskoolButton
                         onPress={_ => props.navigation.navigate('Chat', { contact })}
                         style={{
                             borderRadius: 12,
@@ -162,7 +163,7 @@ const UsersSeenMobile = props => {
                         >
                             {locales('titles.sendMessage')}
                         </Text>
-                    </Button>
+                    </BuskoolButton>
                 </View>
             </>
         )
@@ -211,7 +212,7 @@ const UsersSeenMobile = props => {
                     {locales('labels.emptySeenUsersList')}
                 </Text>
 
-                <Button
+                <BuskoolButton
                     onPress={_ => props.navigation.navigate('ContactInfoGuid')}
                     style={{
                         borderRadius: 12,
@@ -237,7 +238,7 @@ const UsersSeenMobile = props => {
                     >
                         {locales('labels.contactInfoShowingGuid')}
                     </Text>
-                </Button>
+                </BuskoolButton>
 
             </View>
         )

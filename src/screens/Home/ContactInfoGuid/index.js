@@ -1,11 +1,9 @@
 import React from 'react';
 import { View, Text, ScrollView } from 'react-native';
-import { Button } from 'native-base';
-
-import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 
 import { deviceWidth } from '../../../utils';
 import Header from '../../../components/header';
+import { BuskoolButton } from '../../../components';
 
 const ContactInfoGuid = props => {
     return (
@@ -63,7 +61,7 @@ const ContactInfoGuid = props => {
                         >
                             {locales('labels.promoteRegistrationInBuskool')}
                         </Text>
-                        <Button
+                        <BuskoolButton
                             onPress={_ => props.navigation.navigate('PromoteRegistration')}
                             style={{
                                 backgroundColor: '#21AD93',
@@ -84,7 +82,7 @@ const ContactInfoGuid = props => {
                             >
                                 {locales('titles.promoteRegistration')}
                             </Text>
-                        </Button>
+                        </BuskoolButton>
                     </View>
 
 
@@ -108,7 +106,7 @@ const ContactInfoGuid = props => {
                         >
                             {locales('labels.increaseWalletValueInBuskool')}
                         </Text>
-                        <Button
+                        <BuskoolButton
                             onPress={_ => props.navigation.navigate('Wallet')}
                             style={{
                                 backgroundColor: '#1DA1F2',
@@ -129,7 +127,7 @@ const ContactInfoGuid = props => {
                             >
                                 {locales('titles.increaseInventory')}
                             </Text>
-                        </Button>
+                        </BuskoolButton>
                     </View>
 
 

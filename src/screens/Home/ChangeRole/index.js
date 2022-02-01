@@ -2,13 +2,13 @@ import React, { Component } from 'react';
 import { Text, View, BackHandler, StyleSheet, ActivityIndicator } from 'react-native';
 import { connect } from 'react-redux';
 import { useScrollToTop } from '@react-navigation/native';
-import { Button } from 'native-base';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 
 import * as authActions from '../../../redux/auth/actions';
 import * as profileActions from '../../../redux/profile/actions';
 import { deviceWidth, deviceHeight } from '../../../utils/deviceDimenssions';
 import Header from '../../../components/header';
+import { BuskoolButton } from '../../../components';
 class ChangeRole extends Component {
 
     homeRef = React.createRef();
@@ -126,8 +126,13 @@ class ChangeRole extends Component {
                         alignItems: 'center',
                         justifyContent: 'center'
                     }}>
-                        <Button
-                            style={[styles.modalButton, styles.greenButton]}
+                        <BuskoolButton
+                            style={[styles.modalButton, styles.greenButton, {
+                                flexDirection: 'row-reverse',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                height: 45
+                            }]}
                             onPress={this.changeRole}
                         >
 
@@ -135,7 +140,7 @@ class ChangeRole extends Component {
                                 {locales('titles.changeRole')}
 
                             </Text>
-                        </Button>
+                        </BuskoolButton>
                     </View>
                 </View>
 
