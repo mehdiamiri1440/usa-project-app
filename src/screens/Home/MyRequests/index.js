@@ -6,10 +6,11 @@ import {
     Pressable,
     StyleSheet,
     ActivityIndicator,
+    Modal,
     Image
 } from 'react-native';
 import { connect } from 'react-redux';
-import { Card, CardItem, Body, Button } from 'native-base';
+import { Card, CardItem, Body } from 'native-base';
 import { Dialog, Portal, Paragraph } from 'react-native-paper';
 import Jmoment from 'moment-jalaali';
 
@@ -20,6 +21,7 @@ import Fontisto from 'react-native-vector-icons/dist/Fontisto';
 import * as requestsActions from '../../../redux/buyAdRequest/actions';
 import { deviceHeight, deviceWidth, formatter } from '../../../utils';
 import Header from '../../../components/header';
+import { BuskoolButton } from '../../../components';
 
 const MyRequests = props => {
 
@@ -56,90 +58,97 @@ const MyRequests = props => {
 
         return (
             <>
-                <Portal
-                    style={{
-                        padding: 0,
-                        margin: 0
 
-                    }}>
-                    <Dialog
+                {deleteModalFlag ?
+                    <Modal
                         visible={deleteModalFlag}
+                        transparent={true}
+                        animationType="fade"
                         onDismiss={_ => setDeleteModalFlag(false)}
-                        style={styles.dialogWrapper}
+                        onRequestClose={_ => setDeleteModalFlag(false)}
                     >
-                        <Dialog.Actions
-                            style={styles.dialogHeader}
+                        <Dialog
+                            visible={deleteModalFlag}
+                            onDismiss={_ => setDeleteModalFlag(false)}
+                            style={styles.dialogWrapper}
                         >
-                            <Button
-                                onPress={_ => setDeleteModalFlag(false)}
-                                style={styles.closeDialogModal}>
-                                <FontAwesome5 name="times" color="#777" solid size={18} />
-                            </Button>
-                            <Paragraph style={styles.headerTextDialogModal}>
-                                {locales('labels.deleteBuyAd')}
-                            </Paragraph>
-                        </Dialog.Actions>
+                            <Dialog.Actions
+                                style={styles.dialogHeader}
+                            >
+                                <BuskoolButton
+                                    onPress={_ => setDeleteModalFlag(false)}
+                                    style={styles.closeDialogModal}>
+                                    <FontAwesome5 name="times" color="#777" solid size={18} />
+                                </BuskoolButton>
+                                <Paragraph style={styles.headerTextDialogModal}>
+                                    {locales('labels.deleteBuyAd')}
+                                </Paragraph>
+                            </Dialog.Actions>
 
 
 
-                        <View
-                            style={{
+                            <View
+                                style={{
+                                    width: '100%',
+                                    alignItems: 'center'
+                                }}>
+
+                                <AntDesign name="exclamation" color="#f8bb86" size={70} style={[styles.dialogIcon, {
+                                    borderColor: '#facea8',
+                                }]} />
+
+                            </View>
+                            <Dialog.Actions style={styles.mainWrapperTextDialogModal}>
+
+                                <Text style={styles.mainTextDialogModal}>
+                                    {locales('titles.sureToDeleteBuyAd')}
+                                </Text>
+
+                            </Dialog.Actions>
+
+                            <View style={{
                                 width: '100%',
+                                textAlign: 'center',
                                 alignItems: 'center'
                             }}>
+                                <BuskoolButton
+                                    style={[styles.modalButton, styles.redButton, {
+                                        width: '60%', flexDirection: 'row-reverse', alignItems: 'center',
+                                        justifyContent: 'center', height: 45
+                                    }]}
+                                    onPress={_ => deleteBuyAd(id)}
+                                >
 
-                            <AntDesign name="exclamation" color="#f8bb86" size={70} style={[styles.dialogIcon, {
-                                borderColor: '#facea8',
-                            }]} />
+                                    <ActivityIndicator size={20} color='white'
+                                        animating={!!deleteBuyAdLoading}
+                                        style={{
+                                            position: 'relative',
+                                            width: 10, height: 10, borderRadius: 5,
+                                            marginLeft: -10,
+                                            marginRight: 10
+                                        }}
+                                    />
+                                    <Text style={styles.buttonText}>{locales('titles.deleteIt')}</Text>
+                                </BuskoolButton>
+                            </View>
 
-                        </View>
-                        <Dialog.Actions style={styles.mainWrapperTextDialogModal}>
+                            <Dialog.Actions style={{
+                                justifyContent: 'center',
+                                width: '100%',
+                                padding: 0
+                            }}>
+                                <BuskoolButton
+                                    style={styles.modalCloseButton}
+                                    onPress={_ => setDeleteModalFlag(false)}
+                                >
 
-                            <Text style={styles.mainTextDialogModal}>
-                                {locales('titles.sureToDeleteBuyAd')}
-                            </Text>
-
-                        </Dialog.Actions>
-
-                        <View style={{
-                            width: '100%',
-                            textAlign: 'center',
-                            alignItems: 'center'
-                        }}>
-                            <Button
-                                style={[styles.modalButton, styles.redButton, { width: '60%' }]}
-                                onPress={_ => deleteBuyAd(id)}
-                            >
-
-                                <ActivityIndicator size={20} color='white'
-                                    animating={!!deleteBuyAdLoading}
-                                    style={{
-                                        position: 'relative',
-                                        width: 10, height: 10, borderRadius: 5,
-                                        marginLeft: -10,
-                                        marginRight: 10
-                                    }}
-                                />
-                                <Text style={styles.buttonText}>{locales('titles.deleteIt')}</Text>
-                            </Button>
-                        </View>
-
-                        <Dialog.Actions style={{
-                            justifyContent: 'center',
-                            width: '100%',
-                            padding: 0
-                        }}>
-                            <Button
-                                style={styles.modalCloseButton}
-                                onPress={_ => setDeleteModalFlag(false)}
-                            >
-
-                                <Text style={styles.closeButtonText}>{locales('titles.close')}
-                                </Text>
-                            </Button>
-                        </Dialog.Actions>
-                    </Dialog>
-                </Portal >
+                                    <Text style={styles.closeButtonText}>{locales('titles.close')}
+                                    </Text>
+                                </BuskoolButton>
+                            </Dialog.Actions>
+                        </Dialog>
+                    </Modal > : null
+                }
 
                 <Card
                     style={{
@@ -462,13 +471,14 @@ const MyRequests = props => {
                     >
                         {locales('labels.afterRegisterRequestPressButton')}
                     </Text>
-                    <Button
+                    <BuskoolButton
                         onPress={_ => props.navigation.navigate('RegisterRequestStack', { screen: 'RegisterRequest' })}
                         style={{
                             flexDirection: 'row-reverse',
                             justifyContent: 'center',
                             alignItems: 'center',
                             alignSelf: "center",
+                            height: 45,
                             width: '50%',
                             borderRadius: 10,
                             backgroundColor: "#FF9828",
@@ -497,7 +507,7 @@ const MyRequests = props => {
                         >
                             {locales('titles.registerBuyAdRequest')}
                         </Text>
-                    </Button>
+                    </BuskoolButton>
                 </View>
                 : null
         )
