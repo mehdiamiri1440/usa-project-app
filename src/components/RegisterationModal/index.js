@@ -31,6 +31,7 @@ import {
 import analytics from '@react-native-firebase/analytics';
 import Svg, { Path, G, Ellipse } from "react-native-svg";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import SmsListener from 'react-native-android-sms-listener'
 
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 
@@ -573,9 +574,26 @@ const GetVerificationCode = props => {
 
 
     useEffect(_ => {
+        let subscription = SmsListener.addListener(onSmsListened)
         if (props.verificationCode && props.verificationCode.length)
             setValue(props.verificationCode);
+        return _ => subscription.remove();
     }, []);
+
+    const onSmsListened = (message = {}) => {
+        const {
+            body = ''
+        } = message;
+
+        if (body && body.length) {
+            let oneTimeCode = body.match(/\d+/g);
+            if (oneTimeCode && oneTimeCode.length) {
+                setValue(oneTimeCode[0]);
+                onVerificationCodeSubmited(oneTimeCode[0]);
+            }
+        }
+
+    };
 
     const onVerificationCodeSubmited = (value) => {
         if (!value) {

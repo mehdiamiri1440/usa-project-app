@@ -18,6 +18,7 @@ import { StackActions } from '@react-navigation/native';
 import { Button, Label } from 'native-base';
 import { connect } from 'react-redux';
 import analytics from '@react-native-firebase/analytics';
+import SmsListener from 'react-native-android-sms-listener'
 
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 
@@ -27,7 +28,7 @@ import * as authActions from '../../../redux/auth/actions';
 import * as productsListActions from '../../../redux/productsList/actions';
 import * as profileActions from '../../../redux/profile/actions';
 import ENUMS from '../../../enums';
-import SmsListener from 'react-native-android-sms-listener'
+
 const EnterActivisionCode = (props) => {
 
 
