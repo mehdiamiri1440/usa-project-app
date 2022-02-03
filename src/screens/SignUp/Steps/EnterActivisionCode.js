@@ -18,7 +18,7 @@ import { StackActions } from '@react-navigation/native';
 import { Button, Label } from 'native-base';
 import { connect } from 'react-redux';
 import analytics from '@react-native-firebase/analytics';
-import SmsListener from 'react-native-android-sms-listener'
+import RNOtpVerify from 'react-native-otp-verify';
 
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 
@@ -48,27 +48,36 @@ const EnterActivisionCode = (props) => {
 
 
     useEffect(() => {
-        let subscription = SmsListener.addListener(onSmsListened)
-        if (!!verificationCode) {
-            setValue(verificationCode);
-        }
-        return _ => subscription.remove();
+        RNOtpVerify.getHash().then(hash => {
+            RNOtpVerify.getOtp()
+                .then(p => {
+                    RNOtpVerify.addListener(otpHandler);
+                }
+                )
+                .catch(_ => { });
+
+            if (!!verificationCode) {
+                setValue(verificationCode);
+            }
+        })
+            .catch(hash => console.log('hash in error is ->', hash))
+        _ => RNOtpVerify.removeListener();
     }, [])
 
-    const onSmsListened = (message = {}) => {
-        const {
-            body = ''
-        } = message;
 
-        if (body && body.length) {
-            let oneTimeCode = body.match(/\d+/g);
-            if (oneTimeCode && oneTimeCode.length) {
-                setValue(oneTimeCode[0]);
-                onSubmit(oneTimeCode[0]);
-            }
+    const otpHandler = (body) => {
+        let oneTimeCode = body.match(/\d+/g);
+        console.log('code', oneTimeCode)
+        if (oneTimeCode && oneTimeCode.length) {
+            setValue(oneTimeCode[0]);
+            onSubmit(oneTimeCode[0]);
         }
+    }
 
-    };
+    onChangeText = (value) => {
+        setValue(value);
+    }
+
 
     const onSubmit = (value) => {
         if (!value || value.length != 4) {
