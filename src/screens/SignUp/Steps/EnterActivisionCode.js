@@ -27,7 +27,7 @@ import * as authActions from '../../../redux/auth/actions';
 import * as productsListActions from '../../../redux/productsList/actions';
 import * as profileActions from '../../../redux/profile/actions';
 import ENUMS from '../../../enums';
-
+import SmsListener from 'react-native-android-sms-listener'
 const EnterActivisionCode = (props) => {
 
 
@@ -47,10 +47,27 @@ const EnterActivisionCode = (props) => {
 
 
     useEffect(() => {
+        let subscription = SmsListener.addListener(onSmsListened)
         if (!!verificationCode) {
             setValue(verificationCode);
         }
+        return _ => subscription.remove();
     }, [])
+
+    const onSmsListened = (message = {}) => {
+        const {
+            body = ''
+        } = message;
+
+        if (body && body.length) {
+            let oneTimeCode = body.match(/\d+/g);
+            if (oneTimeCode && oneTimeCode.length) {
+                setValue(oneTimeCode[0]);
+                onSubmit(oneTimeCode[0]);
+            }
+        }
+
+    };
 
     const onSubmit = (value) => {
         if (!value || value.length != 4) {

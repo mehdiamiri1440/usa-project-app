@@ -40,6 +40,7 @@
     "react": "^17.0.1",
     "react-content-loader": "^5.1.1",
     "react-native": "^0.63.4",
+    "react-native-android-sms-listener": "^0.8.0",
     "react-native-confirmation-code-field": "^6.5.1",
     "react-native-contacts": "^5.2.7",
     "react-native-device-info": "^7.3.1",
