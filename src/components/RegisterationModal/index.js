@@ -31,6 +31,7 @@ import {
 import analytics from '@react-native-firebase/analytics';
 import Svg, { Path, G, Ellipse } from "react-native-svg";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import RNOtpVerify from 'react-native-otp-verify';
 
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 
@@ -575,7 +576,22 @@ const GetVerificationCode = props => {
     useEffect(_ => {
         if (props.verificationCode && props.verificationCode.length)
             setValue(props.verificationCode);
+        RNOtpVerify.getHash()
+            .then(_ => {
+                RNOtpVerify.getOtp()
+                    .then(_ => RNOtpVerify.addListener(otpHandler))
+                    .catch(_ => { });
+            }).catch(_ => { })
+        _ => RNOtpVerify.removeListener();
     }, []);
+
+    const otpHandler = (body) => {
+        let oneTimeCode = body.match(/\d+/g);
+        if (oneTimeCode && oneTimeCode.length) {
+            setValue(oneTimeCode[0]);
+            onVerificationCodeSubmited(oneTimeCode[0]);
+        }
+    };
 
     const onVerificationCodeSubmited = (value) => {
         if (!value) {

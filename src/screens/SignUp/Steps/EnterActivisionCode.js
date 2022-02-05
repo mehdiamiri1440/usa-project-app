@@ -48,31 +48,26 @@ const EnterActivisionCode = (props) => {
 
 
     useEffect(() => {
-        RNOtpVerify.getHash().then(hash => {
-            RNOtpVerify.getOtp()
-                .then(p => {
-                    RNOtpVerify.addListener(otpHandler);
-                }
-                )
-                .catch(_ => { });
-
-            if (!!verificationCode) {
-                setValue(verificationCode);
-            }
-        })
-            .catch(hash => console.log('hash in error is ->', hash))
+        if (!!verificationCode) {
+            setValue(verificationCode);
+        }
+        RNOtpVerify.getHash()
+            .then(_ => {
+                RNOtpVerify.getOtp()
+                    .then(_ => RNOtpVerify.addListener(otpHandler))
+                    .catch(_ => { });
+            }).catch(_ => { })
         _ => RNOtpVerify.removeListener();
     }, [])
 
 
     const otpHandler = (body) => {
         let oneTimeCode = body.match(/\d+/g);
-        console.log('code', oneTimeCode)
         if (oneTimeCode && oneTimeCode.length) {
             setValue(oneTimeCode[0]);
             onSubmit(oneTimeCode[0]);
         }
-    }
+    };
 
     onChangeText = (value) => {
         setValue(value);
