@@ -67,6 +67,11 @@ const StepOne = props => {
 
     };
 
+    const removeImage = (event) => {
+        event.stopPropagation();
+        setIdCard({})
+    };
+
     return (
         <View
             style={{
@@ -78,7 +83,8 @@ const StepOne = props => {
                 style={{
                     fontSize: 18,
                     color: '#313A43',
-                    fontFamily: 'IRANSansWeb(FaNum)_Medium'
+                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                    textAlign: 'center'
                 }}
             >
                 {locales('labels.uploadIdCardLikeSample')}
@@ -87,35 +93,73 @@ const StepOne = props => {
             <Text
                 style={{
                     fontSize: 15,
-                    color: '#313A43',
-                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                    marginTop: 30
+                    color: 'rgba(0,0,0,0.7)',
+                    fontFamily: 'IRANSansWeb(FaNum)',
+                    marginTop: 10,
+                    marginRight: 20,
                 }}
             >
                 {locales('titles.idCardSample')}
             </Text>
             <View
                 style={{
+                    borderColor: '#00C569',
                     borderWidth: 1,
-                    borderRadius: 7,
-                    overflow: 'hidden',
-                    borderRadius: 12,
-                    borderColor: '#BDC4CC',
-                    alignSelf: 'center',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    marginTop: 10,
-                    width: '100%',
-                    height: deviceHeight * 0.3
+                    alignSelf: 'center',
+                    width: '80%',
+                    height: deviceHeight * 0.27,
+                    marginTop: 5,
+                    padding: 15
                 }}
             >
-
+                <View
+                    style={{
+                        width: 4,
+                        height: 100,
+                        position: 'absolute',
+                        backgroundColor: 'white',
+                        zIndex: 100000,
+                        left: -3
+                    }}
+                ></View>
+                <View
+                    style={{
+                        width: 4,
+                        height: 100,
+                        position: 'absolute',
+                        backgroundColor: 'white',
+                        zIndex: 100000,
+                        right: -3
+                    }}
+                ></View>
+                <View
+                    style={{
+                        width: 160,
+                        height: 4,
+                        position: 'absolute',
+                        backgroundColor: 'white',
+                        zIndex: 100000,
+                        top: -3
+                    }}
+                ></View>
+                <View
+                    style={{
+                        width: 160,
+                        height: 4,
+                        position: 'absolute',
+                        backgroundColor: 'white',
+                        zIndex: 100000,
+                        bottom: -3
+                    }}
+                ></View>
                 <Image
-                    resizeMode='cover'
                     source={require('../../../../assets/images/user-id-card.jpg')}
                     style={{
                         width: '100%',
-                        height: '100%'
+                        borderRadius: 6,
+                        resizeMode: 'contain'
                     }}
                 />
             </View>
@@ -123,11 +167,13 @@ const StepOne = props => {
             <Text
                 style={{
                     fontSize: 15,
-                    color: '#313A43',
-                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                    marginTop: 30
+                    color: 'rgba(0,0,0,0.7)',
+                    fontFamily: 'IRANSansWeb(FaNum)',
+                    marginTop: 30,
+                    marginRight: 25
                 }}
             >
+                {locales('titles.uploadIdCardSample')}
                 <Text
                     style={{
                         color: '#E41C38',
@@ -136,7 +182,6 @@ const StepOne = props => {
                 >
                     *
                 </Text>
-                {locales('titles.uploadIdCardSample')}
             </Text>
 
             {!!!idCard.uri ?
@@ -150,33 +195,59 @@ const StepOne = props => {
                             // flex: 3,
                             // marginHorizontal: 10,
                             height: deviceHeight * 0.3,
-                            width: '95%',
+                            width: '75%',
                             marginTop: 10,
                             alignSelf: 'center',
                             borderWidth: 1,
-                            borderRadius: 8,
+                            borderRadius: 20,
                             borderStyle: 'dashed',
-                            borderColor: '#BDC4CC',
-                            backgroundColor: '#fff',
+                            borderColor: '#699CFF',
+                            backgroundColor: '#f0f3f5',
                             zIndex: 1,
                             justifyContent: 'center',
                             alignItems: 'center',
                         }}>
                         <View>
-                            <View style={{
-                                backgroundColor: "white", width: 20, height: 20,
-                                borderWidth: 1, borderColor: 'white',
-                                position: 'absolute', top: -10, right: -10, borderBottomLeftRadius: 2, zIndex: 10,
-                                justifyContent: 'center'
-                            }}>
-                                <FontAwesome color='#00C569' name="plus-square" size={18} />
+                            <View
+                                style={{
+                                    position: 'absolute',
+                                    zIndex: 1,
+                                    alignSelf: 'center',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    borderRadius: 100000,
+                                    width: 20,
+                                    height: 20,
+                                    borderColor: 'white',
+                                    borderWidth: 2,
+                                    backgroundColor: '#140092',
+                                    bottom: -4,
+                                    right: -4
+                                }}
+                            >
+                                <FontAwesome
+                                    name="plus"
+                                    size={14}
+                                    style={{
+                                        color: 'white',
+                                    }}
+                                />
                             </View>
                             <FontAwesome5
-                                color='#323A42'
-                                name='camera' size={35} />
+                                color='#140092'
+                                name='camera'
+                                size={35}
+                            />
                         </View>
-                        <Text>
-                            {locales('labels.addImage')}
+                        <Text
+                            style={{
+                                marginTop: 5,
+                                color: '#140092',
+                                fontSize: 18,
+                                fontFamily: 'IRANSansWeb(FaNum)',
+                            }}
+                        >
+                            {locales('titles.yourNationalCardImage')}
                         </Text>
                     </Pressable>
                     <Text
@@ -184,7 +255,7 @@ const StepOne = props => {
                             color: '#e41c38',
                             fontSize: 15,
                             marginTop: 5,
-                            marginHorizontal: 10,
+                            marginHorizontal: 45,
                             fontFamily: 'IRANSansWeb(FaNum)_Light'
                         }}
                     >
@@ -203,13 +274,13 @@ const StepOne = props => {
                         borderWidth: 1,
                         borderRadius: 7,
                         overflow: 'hidden',
-                        borderRadius: 12,
+                        borderRadius: 20,
                         borderColor: '#BDC4CC',
                         alignSelf: 'center',
                         alignItems: 'center',
                         justifyContent: 'center',
                         marginTop: 10,
-                        width: '100%',
+                        width: '75%',
                         height: deviceHeight * 0.3
                     }}
                 >
@@ -222,6 +293,27 @@ const StepOne = props => {
                         }}
                         source={{ uri: idCard.uri }}
                     />
+                    <Pressable
+                        onPress={removeImage}
+                        style={{
+                            position: 'absolute',
+                            top: 5,
+                            left: 5,
+                            backgroundColor: 'rgba(0,0,0,0.6)',
+                            borderRadius: 1000,
+                            width: 40,
+                            height: 40,
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            padding: 10
+                        }}
+                    >
+                        <FontAwesome5
+                            size={22}
+                            name='trash-alt'
+                            color='white'
+                        />
+                    </Pressable>
                 </Pressable>
             }
 
