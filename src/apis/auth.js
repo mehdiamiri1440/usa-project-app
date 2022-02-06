@@ -84,6 +84,7 @@ export const checkAlreadySingedUpMobileNumber = (mobileNumber) => {
                 withAuth: false,
                 data: {
                     phone: mobileNumber,
+                    client: "mobile"
                 }
             })
             .then(result => {
