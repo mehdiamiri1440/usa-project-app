@@ -27,10 +27,10 @@ const Authentication = props => {
             number: 2,
             title: locales('titles.yourPhoto')
         },
-        {
-            number: 3,
-            title: locales('titles.relatedEvidences')
-        },
+        // {
+        //     number: 3,
+        //     title: locales('titles.relatedEvidences')
+        // },
     ];
 
     const {
@@ -123,6 +123,15 @@ const Authentication = props => {
 
     };
 
+    const renderColor = (number, type) => {
+        if (stepNumber == number)
+            return type == 'bg' ? 'white' : '#00C569';
+        else if (stepNumber < number)
+            return type == 'bg' ? '#BEBEBE' : 'white';
+        else
+            return type == 'bg' ? '#00C569' : 'white';
+    };
+
     return (
         <View
             style={{
@@ -174,18 +183,26 @@ const Authentication = props => {
                                     >
                                         <Text
                                             style={{
-                                                textAlign: 'center', color: 'white', alignItems: 'center', justifyContent: 'center',
-                                                alignSelf: 'center', alignContent: 'center',
+                                                textAlign: 'center',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                alignSelf: 'center',
+                                                alignContent: 'center',
                                                 fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                                                textAlignVertical: 'center', borderColor: '#FFFFFF',
-                                                backgroundColor: stepNumber >= item.number ? "#00C569" : '#BEBEBE',
-                                                width: 20, height: 20, borderRadius: 10,
+                                                textAlignVertical: 'center',
+                                                color: renderColor(item.number, 'c'),
+                                                borderColor: renderColor(item.number, 'c'),
+                                                borderWidth: 1,
+                                                backgroundColor: renderColor(item.number, 'bg'),
+                                                width: 20,
+                                                height: 20,
+                                                borderRadius: 10,
                                                 zIndex: 1
                                             }}
                                         >
                                             {item.number}
                                         </Text>
-                                        <Text
+                                        {/* <Text
                                             style={{
                                                 color: stepNumber >= item.number ? "#333333" : '#999999',
                                                 fontSize: 14,
@@ -193,7 +210,7 @@ const Authentication = props => {
                                             }}
                                         >
                                             {item.title}
-                                        </Text>
+                                        </Text> */}
                                         {index < stepsArray.length - 1 && <View
                                             style={{
                                                 position: 'absolute',
