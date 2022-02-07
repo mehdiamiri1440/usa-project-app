@@ -1,19 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Image, StyleSheet, Pressable, BackHandler } from 'react-native';
-import { ActionSheet, Button } from 'native-base';
-import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
+import { View, Text, Image, StyleSheet, Pressable, BackHandler, Modal, ActivityIndicator } from 'react-native';
+import { Button } from 'native-base';
+import ImageZoom from 'react-native-image-pan-zoom';
+import { connect } from 'react-redux';
 
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 
-import { deviceWidth, deviceHeight, permissions } from '../../../utils';
+import { deviceWidth, deviceHeight } from '../../../utils';
 import ChooseImage from '../../../components/cameraActionSheet';
 
 const StepTwo = props => {
 
+    const {
+        setEvidencesLoading = false
+    } = props;
+
     let [idCardWithOwner, setIdCardWithOwner] = useState({});
     let [idCardWithOwnerError, setIdCardWithOwnerError] = useState('');
+    let [fullScreenModal, setFullScreenModal] = useState(false);
 
 
     useEffect(() => {
@@ -69,6 +75,11 @@ const StepTwo = props => {
 
     };
 
+    const removeImage = (event) => {
+        event.stopPropagation();
+        setIdCardWithOwner({});
+    };
+
     return (
         <View
             style={{
@@ -76,60 +87,172 @@ const StepTwo = props => {
                 padding: 20,
             }}
         >
+            <Modal
+                transparent={false}
+                onDismiss={_ => setFullScreenModal(false)}
+                onRequestClose={_ => setFullScreenModal(false)}
+                animationType='fade'
+                visible={fullScreenModal}
+            >
+                <View style={{
+                    backgroundColor: 'rgba(59,59,59,0.85)',
+                    height: deviceHeight,
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                }}>
+                    <View
+                        style={{
+                            alignSelf: 'flex-end',
+                            justifyContent: 'center',
+                            position: 'absolute',
+                            right: 10,
+                            top: 10,
+                            backgroundColor: 'rgba(0,0,0,0.7)',
+                            borderRadius: 100,
+                            padding: 5
+                        }}
+                    >
+                        <AntDesign
+                            name='close'
+                            size={20}
+                            color='white'
+
+                            onPress={() => setFullScreenModal(false)}
+                        />
+                    </View>
+                    <ImageZoom
+                        cropWidth={deviceWidth}
+                        cropHeight={deviceHeight * 0.9}
+                        imageWidth={deviceWidth}
+                        imageHeight={deviceHeight * 0.6}
+                    >
+                        <Image
+                            style={{
+                                alignSelf: 'center', width: deviceWidth,
+                                height: '100%',
+                                resizeMode: 'contain'
+                            }}
+                            source={require('../../../../assets/images/22-01-30-17-50-22-815_deco-01.jpg')} />
+                    </ImageZoom>
+                </View>
+            </Modal>
             <Text
                 style={{
-                    fontSize: 18,
-                    color: '#313A43',
-                    fontFamily: 'IRANSansWeb(FaNum)_Medium'
+                    fontSize: 16,
+                    color: 'black',
+                    fontFamily: 'IRANSansWeb(FaNum)'
                 }}
             >
-                {locales('labels.uploadIdCardWithOwnerLikeSample')}
+                {locales('labels.authFirstHelp')}
+            </Text>
+            <Text
+                style={{
+                    fontSize: 16,
+                    color: 'black',
+                    fontFamily: 'IRANSansWeb(FaNum)'
+                }}
+            >
+                {locales('labels.authSecondHelp')}
+            </Text>
+            <Text
+                style={{
+                    fontSize: 16,
+                    color: '#140092',
+                    textAlign: 'center',
+                    fontFamily: 'IRANSansWeb(FaNum)_Light',
+                    marginTop: 10
+                }}
+            >
+                "{locales('labels.iUploadMyIdCardForBuskool')}"
             </Text>
 
             <Text
                 style={{
-                    fontSize: 15,
-                    color: '#313A43',
-                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
-                    marginTop: 30
+                    fontSize: 16,
+                    color: 'rgba(0,0,0,0.7)',
+                    fontFamily: 'IRANSansWeb(FaNum)_Light',
+                    marginTop: 10,
+                    marginRight: 15,
                 }}
             >
-                {locales('titles.idCardSampleWithOwner')}
+                {locales('labels.authenticaitonSample')}
             </Text>
-
-            <View
+            <Pressable
+                onPress={_ => setFullScreenModal(true)}
                 style={{
+                    borderColor: '#00C569',
                     borderWidth: 1,
-                    borderRadius: 12,
-                    borderColor: '#BDC4CC',
-                    alignSelf: 'center',
+                    marginTop: 5,
                     alignItems: 'center',
                     justifyContent: 'center',
-                    marginTop: 10,
-                    width: '60%',
-                    overflow: 'hidden',
-                    height: deviceHeight * 0.4
+                    alignSelf: 'center',
+                    width: deviceWidth * 0.6,
+                    height: deviceHeight * 0.45,
+                    marginTop: 5,
+                    padding: 15
                 }}
             >
-
+                <View
+                    style={{
+                        width: 4,
+                        height: 100,
+                        position: 'absolute',
+                        backgroundColor: 'white',
+                        zIndex: 100000,
+                        left: -3
+                    }}
+                ></View>
+                <View
+                    style={{
+                        width: 4,
+                        height: 100,
+                        position: 'absolute',
+                        backgroundColor: 'white',
+                        zIndex: 100000,
+                        right: -3
+                    }}
+                ></View>
+                <View
+                    style={{
+                        width: 160,
+                        height: 4,
+                        position: 'absolute',
+                        backgroundColor: 'white',
+                        zIndex: 100000,
+                        top: -3
+                    }}
+                ></View>
+                <View
+                    style={{
+                        width: 160,
+                        height: 4,
+                        position: 'absolute',
+                        backgroundColor: 'white',
+                        zIndex: 100000,
+                        bottom: -3
+                    }}
+                ></View>
                 <Image
-                    resizeMode='cover'
-                    source={require('../../../../assets/images/verifi-user-image.jpg')}
+                    source={require('../../../../assets/images/22-01-30-17-50-22-815_deco-01.jpg')}
                     style={{
                         width: '100%',
-                        height: '100%',
+                        borderRadius: 6,
+                        resizeMode: 'contain'
                     }}
                 />
-            </View>
+            </Pressable>
+
 
             <Text
                 style={{
-                    fontSize: 15,
-                    color: '#313A43',
-                    fontFamily: 'IRANSansWeb(FaNum)_Medium',
+                    fontSize: 16,
+                    color: 'rgba(0,0,0,0.7)',
+                    fontFamily: 'IRANSansWeb(FaNum)_Light',
                     marginTop: 30,
+                    marginRight: 15,
                 }}
             >
+                {locales('labels.uploadAuthenticationEvidence')}
                 <Text
                     style={{
                         color: '#E41C38',
@@ -138,7 +261,6 @@ const StepTwo = props => {
                 >
                     *
                 </Text>
-                {locales('titles.uploadIdCardWithOwnerSample')}
             </Text>
 
             {!!!idCardWithOwner.uri ?
@@ -149,43 +271,71 @@ const StepTwo = props => {
                         }}
                         onPress={chooseImage}
                         style={{
-                            borderWidth: 1,
-                            borderRadius: 12,
-                            borderColor: '#BDC4CC',
-                            alignSelf: 'center',
-                            alignItems: 'center',
-                            justifyContent: 'center',
+                            // flex: 3,
+                            // marginHorizontal: 10,
+                            height: deviceHeight * 0.4,
+                            width: deviceWidth * 0.56,
                             marginTop: 10,
+                            alignSelf: 'center',
+                            borderWidth: 1,
+                            borderRadius: 20,
                             borderStyle: 'dashed',
-                            width: '60%',
-                            overflow: 'hidden',
-                            height: deviceHeight * 0.4
+                            borderColor: '#699CFF',
+                            backgroundColor: '#f0f3f5',
+                            zIndex: 1,
+                            justifyContent: 'center',
+                            alignItems: 'center',
                         }}>
                         <View>
-                            <View style={{
-                                backgroundColor: "white", width: 20, height: 20,
-                                borderWidth: 1, borderColor: 'white',
-                                position: 'absolute', top: -10, right: -10, borderBottomLeftRadius: 2, zIndex: 10,
-                                justifyContent: 'center'
-                            }}>
-                                <FontAwesome color='#00C569' name="plus-square" size={18} />
+                            <View
+                                style={{
+                                    position: 'absolute',
+                                    zIndex: 1,
+                                    alignSelf: 'center',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    borderRadius: 100000,
+                                    width: 20,
+                                    height: 20,
+                                    borderColor: 'white',
+                                    borderWidth: 2,
+                                    backgroundColor: '#140092',
+                                    bottom: -4,
+                                    right: -4
+                                }}
+                            >
+                                <FontAwesome
+                                    name="plus"
+                                    size={14}
+                                    style={{
+                                        color: 'white',
+                                    }}
+                                />
                             </View>
                             <FontAwesome5
-                                color='#323A42'
-                                name='camera' size={35} />
+                                color='#140092'
+                                name='camera'
+                                size={35}
+                            />
                         </View>
-                        <Text>
-                            {locales('labels.addImage')}
+                        <Text
+                            style={{
+                                marginTop: 5,
+                                color: '#140092',
+                                fontSize: 16,
+                                fontFamily: 'IRANSansWeb(FaNum)',
+                            }}
+                        >
+                            {locales('labels.imageOfAuthenticationEvidence')}
                         </Text>
                     </Pressable>
                     <Text
                         style={{
                             color: '#e41c38',
-                            textAlign: 'center',
                             fontSize: 15,
                             marginTop: 5,
-                            fontFamily: 'IRANSansWeb(FaNum)_Light',
-                            marginHorizontal: 10
+                            marginHorizontal: 45,
+                            fontFamily: 'IRANSansWeb(FaNum)_Light'
                         }}
                     >
                         {idCardWithOwnerError}
@@ -216,9 +366,33 @@ const StepTwo = props => {
                         style={{
                             width: '100%',
                             height: '100%',
+                            ...StyleSheet.absoluteFillObject
                         }}
                         source={{ uri: idCardWithOwner.uri }}
                     />
+                    <View style={styles.overlay} />
+                    <Pressable
+                        onPress={removeImage}
+                        style={{
+                            position: 'absolute',
+                            top: 5,
+                            left: 5,
+                            backgroundColor: 'rgba(0,0,0,0.6)',
+                            borderRadius: 1000,
+                            width: 40,
+                            height: 40,
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            padding: 10
+                        }}
+                    >
+                        <FontAwesome5
+                            size={22}
+                            solid
+                            name='trash-alt'
+                            color='white'
+                        />
+                    </Pressable>
                 </Pressable>
             }
             <View
@@ -235,18 +409,50 @@ const StepTwo = props => {
                     style={(!!!idCardWithOwner.uri || idCardWithOwnerError) ? styles.disableLoginButton : styles.loginButton}
                     rounded
                 >
-                    <AntDesign name='arrowleft' size={25} color='white' />
-                    <Text style={styles.buttonText}>
-                        {locales('titles.nextStep')}
+                    {setEvidencesLoading ?
+                        <ActivityIndicator
+                            size={25}
+                            color='white'
+                            animating={!!setEvidencesLoading}
+                        />
+                        :
+                        <AntDesign
+                            name='check'
+                            size={25}
+                            color={(!!!idCardWithOwner.uri || idCardWithOwnerError) ? '#00000061' : 'white'}
+                        />
+                    }
+                    <Text style={styles.buttonText(idCardWithOwner, idCardWithOwnerError)}>
+                        {locales('titles.finalSubmit')}
                     </Text>
                 </Button>
                 <Button
                     onPress={() => props.changeStep(1)}
-                    style={styles.backButtonContainer}
+                    style={{
+                        borderColor: '#FF9828',
+                        borderWidth: 1,
+                        borderRadius: 12,
+                        backgroundColor: 'white',
+                        elevation: 0,
+                        width: deviceWidth * 0.4,
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                    }}
                     rounded
                 >
-                    <Text style={styles.backButtonText}>{locales('titles.previousStep')}</Text>
-                    <AntDesign name='arrowright' size={25} color='#7E7E7E' />
+                    <Text
+                        style={{
+                            color: '#FF9828',
+                            fontSize: 16,
+                            fontFamily: 'IRANSansWeb(FaNum)_Bold'
+                        }}
+                    >{locales('titles.previousStep')}
+                    </Text>
+                    <AntDesign
+                        name='arrowright'
+                        size={20}
+                        color='#FF9828'
+                    />
                 </Button>
             </View>
         </View>
@@ -255,6 +461,10 @@ const StepTwo = props => {
 
 
 const styles = StyleSheet.create({
+    overlay: {
+        ...StyleSheet.absoluteFillObject,
+        backgroundColor: 'rgba(0,0,0,0.3)'
+    },
     loginFailedContainer: {
         backgroundColor: '#F8D7DA',
         padding: 10,
@@ -265,12 +475,12 @@ const styles = StyleSheet.create({
         width: deviceWidth,
         color: '#761C24'
     },
-    buttonText: {
-        color: 'white',
+    buttonText: (idCardWithOwner, idCardWithOwnerError) => ({
+        color: (!!!idCardWithOwner.uri || idCardWithOwnerError) ? '#00000061' : 'white',
         width: '60%',
         textAlign: 'center',
         fontFamily: 'IRANSansWeb(FaNum)_Bold'
-    },
+    }),
     backButtonText: {
         color: '#7E7E7E',
         width: '60%',
@@ -291,9 +501,9 @@ const styles = StyleSheet.create({
     disableLoginButton: {
         textAlign: 'center',
         width: deviceWidth * 0.4,
-        borderRadius: 5,
+        borderRadius: 12,
         elevation: 0,
-        color: 'white',
+        color: 'rgba(0,0,0,0.38)',
         alignItems: 'center',
         backgroundColor: '#e0e0e0',
         alignSelf: 'flex-start',
@@ -303,9 +513,9 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         backgroundColor: '#FF9828',
         elevation: 0,
-        borderRadius: 5,
+        borderRadius: 12,
         width: deviceWidth * 0.4,
-        color: 'white',
+        color: '#FF9828',
         alignItems: 'center',
         alignSelf: 'flex-start',
         justifyContent: 'center'
@@ -392,4 +602,18 @@ const styles = StyleSheet.create({
     }
 });
 
-export default StepTwo
+const mapStateToProps = (state) => {
+    const {
+        authReducer
+    } = state;
+
+    const {
+        setEvidencesLoading,
+    } = authReducer;
+
+    return {
+        setEvidencesLoading,
+    }
+};
+
+export default connect(mapStateToProps)(StepTwo);

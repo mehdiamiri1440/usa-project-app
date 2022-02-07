@@ -94,9 +94,9 @@ const StepOne = props => {
                 style={{
                     fontSize: 15,
                     color: 'rgba(0,0,0,0.7)',
-                    fontFamily: 'IRANSansWeb(FaNum)',
+                    fontFamily: 'IRANSansWeb(FaNum)_Light',
                     marginTop: 10,
-                    marginRight: 20,
+                    marginRight: 15,
                 }}
             >
                 {locales('titles.idCardSample')}
@@ -168,9 +168,9 @@ const StepOne = props => {
                 style={{
                     fontSize: 15,
                     color: 'rgba(0,0,0,0.7)',
-                    fontFamily: 'IRANSansWeb(FaNum)',
+                    fontFamily: 'IRANSansWeb(FaNum)_Light',
                     marginTop: 30,
-                    marginRight: 25
+                    marginRight: 15
                 }}
             >
                 {locales('titles.uploadIdCardSample')}
@@ -255,8 +255,8 @@ const StepOne = props => {
                             color: '#e41c38',
                             fontSize: 15,
                             marginTop: 5,
-                            marginHorizontal: 45,
-                            fontFamily: 'IRANSansWeb(FaNum)_Light'
+                            fontFamily: 'IRANSansWeb(FaNum)_Light',
+                            textAlign: 'center'
                         }}
                     >
                         {idCardError}
@@ -290,9 +290,11 @@ const StepOne = props => {
                         style={{
                             width: '100%',
                             height: '100%',
+                            ...StyleSheet.absoluteFillObject
                         }}
                         source={{ uri: idCard.uri }}
                     />
+                    <View style={styles.overlay} />
                     <Pressable
                         onPress={removeImage}
                         style={{
@@ -310,6 +312,7 @@ const StepOne = props => {
                     >
                         <FontAwesome5
                             size={22}
+                            solid
                             name='trash-alt'
                             color='white'
                         />
@@ -326,8 +329,12 @@ const StepOne = props => {
                     style={(!!!idCard.uri || idCardError) ? styles.disableLoginButton : styles.loginButton}
                     rounded
                 >
-                    <AntDesign name='arrowleft' size={25} color='white' />
-                    <Text style={styles.buttonText}>
+                    <FontAwesome5
+                        name='long-arrow-alt-left'
+                        size={20}
+                        color={(!!!idCard.uri || idCardError) ? '#00000061' : 'white'}
+                    />
+                    <Text style={styles.buttonText(idCard, idCardError)}>
                         {locales('titles.nextStep')}
                     </Text>
                 </Button>
@@ -337,6 +344,10 @@ const StepOne = props => {
 };
 
 const styles = StyleSheet.create({
+    overlay: {
+        ...StyleSheet.absoluteFillObject,
+        backgroundColor: 'rgba(0,0,0,0.3)'
+    },
     loginFailedContainer: {
         backgroundColor: '#F8D7DA',
         padding: 10,
@@ -347,12 +358,12 @@ const styles = StyleSheet.create({
         width: deviceWidth,
         color: '#761C24'
     },
-    buttonText: {
-        color: 'white',
+    buttonText: (idCard, idCardError) => ({
+        color: (!!!idCard.uri || idCardError) ? '#00000061' : 'white',
         width: '60%',
         textAlign: 'center',
         fontFamily: 'IRANSansWeb(FaNum)_Bold'
-    },
+    }),
     backButtonText: {
         fontFamily: 'IRANSansWeb(FaNum)_Light',
         color: '#7E7E7E',
@@ -366,6 +377,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         alignItems: 'center',
         borderRadius: 5,
+        height: 50,
         justifyContent: 'center',
         width: '37%',
         elevation: 0,
@@ -373,12 +385,13 @@ const styles = StyleSheet.create({
     disableLoginButton: {
         textAlign: 'center',
         marginVertical: 10,
-        width: deviceWidth * 0.4,
-        borderRadius: 5,
+        width: deviceWidth * 0.35,
+        borderRadius: 12,
         elevation: 0,
+        height: 50,
         color: 'white',
         alignItems: 'center',
-        backgroundColor: '#e0e0e0',
+        backgroundColor: '#C2C9D1',
         alignSelf: 'flex-start',
         justifyContent: 'center'
     },
@@ -387,8 +400,8 @@ const styles = StyleSheet.create({
         marginVertical: 10,
         backgroundColor: '#FF9828',
         elevation: 0,
-        borderRadius: 5,
-        width: deviceWidth * 0.4,
+        borderRadius: 12,
+        width: deviceWidth * 0.35,
         color: 'white',
         alignItems: 'center',
         alignSelf: 'flex-start',

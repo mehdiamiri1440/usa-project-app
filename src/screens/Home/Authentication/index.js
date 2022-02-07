@@ -67,20 +67,25 @@ const Authentication = props => {
 
     const handleIdCardWithOwnerChange = cardWithOwner => {
         setIdCardWithOwner(cardWithOwner);
-        changeStep(3);
+        let data = new FormData();
+        data.append("images_count", 2);
+        data.append("image_" + 0, idCard);
+        data.append("image_" + 1, cardWithOwner);
+
+        return props.setEvidences(data).then(_ => changeStep(4));
     };
 
     const handleEvidenceChange = uploadedEvidence => {
 
         setEvidence(uploadedEvidence);
 
-        let data = new FormData();
-        data.append("images_count", 3);
-        data.append("image_" + 0, idCard);
-        data.append("image_" + 1, idCardWithOwner);
-        data.append("image_" + 2, uploadedEvidence);
+        // let data = new FormData();
+        // data.append("images_count", 3);
+        // data.append("image_" + 0, idCard);
+        // data.append("image_" + 1, idCardWithOwner);
+        // data.append("image_" + 2, uploadedEvidence);
 
-        return props.setEvidences(data).then(_ => changeStep(4));
+        // return props.setEvidences(data).then(_ => changeStep(4));
     };
 
     const renderSteps = _ => {
@@ -127,7 +132,7 @@ const Authentication = props => {
         if (stepNumber == number)
             return type == 'bg' ? 'white' : '#00C569';
         else if (stepNumber < number)
-            return type == 'bg' ? '#BEBEBE' : 'white';
+            return type == 'bg' ? '#979797' : 'white';
         else
             return type == 'bg' ? '#00C569' : 'white';
     };
@@ -179,7 +184,11 @@ const Authentication = props => {
                             {stepsArray.map((item, index) => {
                                 return (
                                     <View key={index}
-                                        style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
+                                        style={{
+                                            flex: 1,
+                                            justifyContent: 'center',
+                                            alignItems: 'center'
+                                        }}
                                     >
                                         <Text
                                             style={{
@@ -214,11 +223,11 @@ const Authentication = props => {
                                         {index < stepsArray.length - 1 && <View
                                             style={{
                                                 position: 'absolute',
-                                                height: 2,
+                                                height: 3,
                                                 width: '100%',
                                                 top: 8,
                                                 right: '50%',
-                                                backgroundColor: stepNumber - 1 >= item.number ? "#00C569" : '#BEBEBE',
+                                                backgroundColor: stepNumber - 1 >= item.number ? "#00C569" : '#979797',
                                             }}>
                                         </View>
                                         }
