@@ -58,6 +58,7 @@ const Authentication = props => {
 
     const changeStep = step => {
         setStepNumber(step);
+        scrollViewRef?.current?.scrollTo({ x: 0, y: 0, animated: true });
     };
 
     const handleIdCardChange = card => {
