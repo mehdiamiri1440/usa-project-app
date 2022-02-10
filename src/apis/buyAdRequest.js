@@ -1,12 +1,13 @@
 import { requester } from '../utils';
 
-export const fetchAllBuyAdRequests = (isLoggedIn) => {
+export const fetchAllBuyAdRequests = (data = { from: 0, to: 20 }, isLoggedIn) => {
     return new Promise((resolve, reject) => {
         requester
             .fetchAPI({
                 route: !!isLoggedIn ? `get_related_buyAds_list_to_the_seller` : `get_buyAd_list`,
                 method: 'POST',
                 withAuth: !!isLoggedIn,
+                data
             })
             .then(result => {
                 resolve(result)
