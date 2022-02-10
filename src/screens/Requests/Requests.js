@@ -1,5 +1,5 @@
 import React, { PureComponent, createRef } from 'react';
-import { Text, View, Modal, FlatList, StyleSheet, Image, ImageBackground, Pressable } from 'react-native';
+import { Text, View, Modal, FlatList, StyleSheet, Image, ActivityIndicator, Pressable } from 'react-native';
 import { Dialog, Portal, Paragraph } from 'react-native-paper';
 import { Icon, InputGroup, Input, Button } from 'native-base';
 import RBSheet from "react-native-raw-bottom-sheet";
@@ -14,6 +14,7 @@ import ContentLoader, { Rect } from "react-content-loader/native"
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import LinearGradient from 'react-native-linear-gradient';
 import Svg, { Path, G, Defs, ClipPath, } from 'react-native-svg';
+import ShadowView from '@vikasrg/react-native-simple-shadow-view';
 
 import { deviceWidth, deviceHeight, enumHelper, dataGenerator } from '../../utils';
 import * as homeActions from '../../redux/home/actions';
@@ -38,8 +39,6 @@ class Requests extends PureComponent {
         super(props);
         this.state = {
             selectedButton: null,
-            from: 0,
-            to: 15,
             loaded: false,
 
             showToast: false,
@@ -62,14 +61,18 @@ class Requests extends PureComponent {
             scrollOffset: 0,
             categoriesList: [],
             isFilterApplied: false,
-            modals: []
+            modals: [],
+            from_record_number: 0,
+            to_record_number: 5,
+            category_id: null,
+            selectedCategoryName: ''
         }
     }
 
     serachInputRef = createRef();
 
-    requestsRef = React.createRef();
-    updateFlag = React.createRef();
+    requestsRef = createRef();
+    updateFlag = createRef();
     categoryFiltersRef = createRef();
 
     is_mounted = false;
@@ -118,6 +121,7 @@ class Requests extends PureComponent {
             prevProps.route && !prevProps.route.params)
             || (this.props.route && this.props.route.params && prevProps.route && prevProps.route.params &&
                 this.props.route?.params?.subCategoryId != prevProps.route?.params?.subCategoryId)) {
+            console.log('in if')
             this.checkForFiltering()
         }
     }
@@ -130,12 +134,10 @@ class Requests extends PureComponent {
 
     initialCalls = () => {
         return new Promise((resolve, reject) => {
-            const {
-                loggedInUserId
-            } = this.props;
+
             this.props.fetchAllCategories()
                 .then(result => this.setState({ categoriesList: result.payload.categories }));
-            this.props.fetchAllBuyAdRequests(!!loggedInUserId).then(() => {
+            this.fetchAllRequests().then(() => {
                 this.checkForFiltering()
             }).catch(error => reject(error));
         })
@@ -166,8 +168,78 @@ class Requests extends PureComponent {
         })
     };
 
+    fetchAllRequests = (itemFromResult, scrollObject = {}) => {
+        return new Promise((resolve, reject) => {
+            const {
+                from_record_number,
+                to_record_number,
+                sort_by,
+                searchText,
+                category_id
+            } = this.state;
+
+            const {
+                loggedInUserId
+            } = this.props;
+
+            let item = {
+                from_record_number,
+                sort_by,
+                to_record_number,
+            };
+
+            if (!!itemFromResult)
+                item = itemFromResult;
+
+            if (searchText && searchText.length) {
+                item = {
+                    ...item,
+                    search_text: searchText,
+                };
+            };
+
+            if (category_id)
+                item = {
+                    ...item,
+                    category_id
+                }
+            this.props.fetchAllBuyAdRequests(item, !!loggedInUserId)
+                .then(result => {
+
+                    this.setState({
+                        from_record_number: 0,
+                        to_record_number: 5,
+
+                        searchLoader: false,
+
+                        sortModalFlag: false,
+
+                        subCategoriesModalFlag: false,
+
+                        totalCategoriesModalFlag: false,
+
+
+                        preFetchLoading: false,
+
+                        buyAdRequestsList: [...result?.payload?.buyAds]
+                    }, _ => {
+                        this.scrollToTop({ ...scrollObject, result });
+                        resolve(true)
+                    });
+                })
+                .catch(error => {
+                    this.setState({
+                        searchFlag: false,
+                        subCategoriesModalFlag: false,
+                        sortModalFlag: false
+                    }, _ => reject(false))
+                });
+        })
+    };
+
     checkForFiltering = async () => {
         let isFilter = await this.checkForFilterParamsAvailability();
+        console.log('is filter', isFilter)
         if (isFilter) {
             this.selectedFilter(this.props.route?.params?.subCategoryId, this.props.route?.params?.subCategoryName)
         }
@@ -322,6 +394,7 @@ class Requests extends PureComponent {
             buyAdRequestsList = []
         } = this.props;
 
+        console.log('id', id, 'name', name)
         if (!id || !name)
             return this.setState({ buyAdRequestsList });
 
@@ -331,7 +404,8 @@ class Requests extends PureComponent {
         this.setState({
             selectedFilterName: name,
             selectedFilterId: id,
-            searchText: name,
+            selectedCategoryName: name,
+            category_id: id,
             modals: [],
             isFilterApplied: true,
             totalCategoriesModalFlag: false,
@@ -346,56 +420,67 @@ class Requests extends PureComponent {
     };
 
     handleSearch = (text) => {
-        const {
-            buyAdRequestsList = []
-        } = this.props;
 
-        let tempList = [...buyAdRequestsList];
-
-        if (text && text.length)
-            tempList = [...tempList.filter(item => item.subcategory_name.includes(text) || (!!item.name && item.name.includes(text)))];
-        else
-            tempList = [...buyAdRequestsList];
+        clearTimeout(myTimeout)
+        const { sort_by } = this.state;
 
         this.setState({
-            selectedFilterName: '',
-            selectedFilterId: '',
             searchText: text,
-            isFilterApplied: false
-        }, _ => {
-            this.setState({
-                buyAdRequestsList: [...tempList],
-                isFilterApplied: false
-            }, _ => this.scrollToTop());
+            searchLoader: true,
+            isFilterApplied: false,
+            category_id: null
         });
+        let item = {
+            sort_by,
+            from_record_number: 0,
+            to_record_number: 5
+        };
+        if (text)
+            item = {
+                ...item,
+                search_text: text,
+                sort_by,
+            };
+        myTimeout = setTimeout(() => {
+
+            this.setState({ buyAdRequestsList: [] })
+            this.fetchAllRequests(item);
+            // this.setState({ searchFlag: true, to_record_number: 16, from_record_number: 0, searchLoader: false })
+        }, 1500);
+
     };
 
     handleSortItemClick = value => {
         const {
-            buyAdRequestsList = [],
-            selectedFilterId,
-            searchText
+            searchText,
+            category_id
         } = this.state;
 
-        let tempList = [...buyAdRequestsList];
-
-        if (!!value && value != 'BM') {
-            tempList.forEach(item => item.date = new Date(item.created_at));
-            tempList = tempList.sort((a, b) => b.date - a.date);
-        }
-
-        else {
-            tempList = [...this.props.buyAdRequestsList];
-        }
-
-        if (selectedFilterId) {
-            tempList = tempList.filter(item => item.category_id == selectedFilterId);
-        }
-
-        if (searchText)
-            tempList = [...tempList.filter(item => item.subcategory_name.includes(searchText) || (!!item.name && item.name.includes(searchText)))];
-
-        this.setState({ sort_by: value, sortModalFlag: false, buyAdRequestsList: tempList }, _ => this.scrollToTop());
+        this.setState({
+            sort_by: value,
+            sortModalFlag: false,
+            buyAdRequestsList: []
+        }, () => {
+            let searchItem = {
+                from_record_number: 0,
+                sort_by: value,
+                to_record_number: 5,
+            };
+            if (searchText && searchText.length) {
+                searchItem = {
+                    from_record_number: 0,
+                    sort_by: value,
+                    search_text: searchText,
+                    to_record_number: 5
+                }
+            }
+            if (category_id)
+                searchItem = {
+                    ...searchItem,
+                    category_id
+                }
+            this.fetchAllRequests(searchItem);
+        })
     };
 
     renderItemSeparatorComponent = index => {
@@ -1035,7 +1120,7 @@ class Requests extends PureComponent {
                     color: '#ededed',
                     radius: 12
                 }}
-                onPress={() => this.setState({ showFilters: true })}
+                onPress={() => this.setState({ totalCategoriesModalFlag: true })}
                 style={{
                     borderRadius: 12,
                     marginTop: 7,
@@ -1086,7 +1171,6 @@ class Requests extends PureComponent {
                 this.handleSubCategoryItemClick({ id, category_name, subcategories: [], ...rest })
         })
     };
-
 
     renderCategoriesListItem = (item, isFromModal) => {
         if (!isFromModal)
@@ -1148,31 +1232,31 @@ class Requests extends PureComponent {
         )
     };
 
-
     removeFilter = _ => {
 
-        this.setState({ isFilterApplied: false, searchText: null, productsListArray: [] }, _ => {
+        this.setState({
+            isFilterApplied: false,
+            category_id: null,
+            selectedFilterName: '',
+            buyAdRequestsList: []
+        }, _ => {
             const {
-                province,
-                city,
                 sort_by,
-                selectedFilterId,
-                selectedFilterName
+                searchText
             } = this.state;
 
             let searchItem = {
                 from_record_number: 0,
                 sort_by,
-                to_record_number: 16,
+                to_record_number: 5,
             };
 
-            if (province) {
-                searchItem = { ...searchItem, province_id: province }
-            }
-            if (city) {
-                searchItem = { ...searchItem, city_id: city }
-            }
-            this.selectedFilter();
+            if (searchText)
+                searchItem = {
+                    ...searchItem,
+                    search_text: searchText
+                }
+            this.fetchAllRequests(searchItem);
         });
 
     };
@@ -1181,7 +1265,8 @@ class Requests extends PureComponent {
 
         const {
             isFilterApplied,
-            searchText,
+            selectedCategoryName,
+            category_id
         } = this.state;
 
         return (
@@ -1198,7 +1283,7 @@ class Requests extends PureComponent {
             >
                 {this.renderSortIcons()}
 
-                {isFilterApplied && searchText ?
+                {isFilterApplied && category_id ?
                     <Pressable
                         android_ripple={{
                             color: '#ededed',
@@ -1228,7 +1313,7 @@ class Requests extends PureComponent {
                                 fontFamily: 'IRANSansWeb(FaNum)',
                             }}
                         >
-                            {searchText}
+                            {selectedCategoryName}
                         </Text>
                         <FontAwesome5 name='times' size={12} color='#F24E1E' />
                     </Pressable>
@@ -1291,19 +1376,15 @@ class Requests extends PureComponent {
     handleSubCategoryItemClick = item => {
         const {
             sort_by,
-            province,
-            city,
             subCategoriesList = [],
         } = this.state;
 
-        analytics().logEvent('apply_sort', {
-            sort_type: item.name
-        });
-
         if (!subCategoriesList.length) {
             this.setState({
-                searchText: item.category_name,
-                productsListArray: [],
+                category_id: item.id,
+                selectedCategoryName: item.category_name,
+                searchText: null,
+                buyAdRequestsList: [],
                 modals: [],
                 isFilterApplied: true,
                 totalCategoriesModalFlag: false,
@@ -1312,26 +1393,19 @@ class Requests extends PureComponent {
                 let searchItem = {
                     from_record_number: 0,
                     sort_by,
-                    search_text: item.category_name,
-                    to_record_number: 16,
+                    category_id: item.id,
+                    to_record_number: 5,
                 };
-                if (province) {
-                    searchItem = { ...searchItem, province_id: province }
-                }
-                if (city) {
-                    searchItem = { ...searchItem, city_id: city }
-                }
 
-                this.categoryFiltersRef?.current.scrollToOffset({ animated: true, offset: 0 });
+                // this.categoryFiltersRef?.current.scrollToOffset({ animated: true, offset: 0 });
 
-                this.selectedFilter(item.id, item.category_name);
+                this.fetchAllRequests(searchItem, { needsTimeout: true });
             });
         }
         else {
             this.sortProducts(item)
         }
     };
-
 
     renderSubCategoriesListItem = ({ item }) => {
         return (
@@ -1459,6 +1533,99 @@ class Requests extends PureComponent {
         )
     };
 
+    onEndOfListReached = _ => {
+        const {
+            buyAdRequestsList,
+            loaded,
+        } = this.state;
+
+        if (loaded && buyAdRequestsList.length >= this.state.to_record_number)
+            this.setState({
+                from_record_number: this.state.from_record_number + 5,
+                to_record_number: this.state.to_record_number + 5,
+            }, () => {
+                const {
+                    to_record_number,
+                    from_record_number,
+                    category_id,
+                    sort_by,
+                    searchText
+                } = this.state;
+
+                const {
+                    loggedInUserId
+                } = this.props;
+
+                let item = {
+                    from_record_number,
+                    sort_by,
+                    to_record_number,
+                };
+                if (searchText && searchText.length) {
+                    item = {
+                        ...item,
+                        search_text: searchText
+                    }
+                }
+                if (category_id)
+                    item = {
+                        ...item,
+                        category_id
+                    }
+                this.props.fetchAllBuyAdRequests(item, !!loggedInUserId).then((result = { payload: { buyAds: [] } }) => {
+                    this.setState({ buyAdRequestsList: [...this.state.buyAdRequestsList, ...result.payload.buyAds] })
+                }).catch(error => {
+                    this.setState({
+                        searchFlag: false, subCategoriesModalFlag: false, sortModalFlag: false
+                    })
+                });
+            })
+    };
+
+
+    renderListFooterComponent = _ => {
+        const {
+            loaded
+        } = this.state;
+
+        const {
+            buyAdRequestLoading
+        } = this.props;
+
+        if (loaded && buyAdRequestLoading)
+            return (
+                <View
+                    style={{
+                        textAlign: 'center',
+                        alignItems: 'center',
+                        marginBottom: 15
+                    }}>
+                    <ShadowView
+                        style={{
+                            backgroundColor: 'white',
+                            shadowColor: 'black',
+                            shadowOpacity: 0.13,
+                            shadowRadius: 1,
+                            shadowOffset: { width: 0, height: 2 },
+                            zIndex: 999,
+                            width: 50,
+                            height: 50,
+                            borderRadius: 50,
+                            padding: 0,
+                        }}
+                    >
+                        <ActivityIndicator size="small" color="#00C569"
+                            style={{
+                                top: 14
+                            }}
+                        />
+                    </ShadowView>
+                </View>
+            )
+        return null;
+    };
+
+
     render() {
 
         let {
@@ -1474,6 +1641,7 @@ class Requests extends PureComponent {
             sortModalFlag,
             isFilterApplied,
             categoriesList,
+            totalCategoriesModalFlag,
             modals
         } = this.state;
 
@@ -1504,6 +1672,28 @@ class Requests extends PureComponent {
                     />
                     :
                     null}
+
+                {!!totalCategoriesModalFlag ?
+                    <Modal
+                        animationType="fade"
+                        visible={!!totalCategoriesModalFlag}
+                        onRequestClose={() => this.setState({ totalCategoriesModalFlag: false })}>
+
+                        <Header
+                            title={locales('titles.allOfTheCategories')}
+                            onBackButtonPressed={_ => this.setState({ totalCategoriesModalFlag: false })}
+                            {...this.props}
+                        />
+
+                        <FlatList
+                            data={categoriesList}
+                            style={{ marginVertical: 8 }}
+                            keyExtractor={(_, index) => index.toString()}
+                            renderItem={({ item }) => this.renderCategoriesListItem(item, true)}
+                        />
+
+                    </Modal>
+                    : null}
 
                 {sortModalFlag ?
                     <Modal
@@ -1662,7 +1852,7 @@ class Requests extends PureComponent {
                             style={{ fontFamily: 'IRANSansWeb(FaNum)_Bold', color: '#e41c38', paddingHorizontal: 15, textAlign: 'center' }}>
                             {accessToContactInfoErrorMessage}
                         </Paragraph> */}
-                            <View style={{
+                            {active_pakage_type == 0 ? <View style={{
                                 width: '100%',
                                 textAlign: 'center',
                                 alignItems: 'center'
@@ -1680,6 +1870,7 @@ class Requests extends PureComponent {
                                     </Text>
                                 </Button>
                             </View>
+                                : null}
                         </Dialog>
                     </Modal >
                     : null
@@ -1975,13 +2166,14 @@ class Requests extends PureComponent {
                 >
 
                     {this.renderAllCategoriesIcon()}
-                    {showFilters ?
+
+                    {/* {showFilters ?
                         <Filters
                             selectedFilter={this.selectedFilter}
                             closeFilters={this.closeFilters}
                             showFilters={showFilters}
                         />
-                        : null}
+                        : null} */}
                     {this.renderFilterHeaderComponent()}
 
                 </View>
@@ -2004,6 +2196,9 @@ class Requests extends PureComponent {
                     windowSize={10}
                     initialNumToRender={3}
                     maxToRenderPerBatch={3}
+                    onEndReached={this.onEndOfListReached}
+                    onEndReachedThreshold={0.5}
+                    ListFooterComponent={this.renderListFooterComponent}
                 />
                 {/* 
                 <View style={{
@@ -2323,7 +2518,7 @@ const mapStateToProps = ({
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        fetchAllBuyAdRequests: (isLoggedIn) => dispatch(buyAdRequestActions.fetchAllBuyAdRequests(isLoggedIn)),
+        fetchAllBuyAdRequests: (data, isLoggedIn) => dispatch(buyAdRequestActions.fetchAllBuyAdRequests(data, isLoggedIn)),
         fetchUserProfile: _ => dispatch(profileActions.fetchUserProfile()),
         fetchAllDashboardData: _ => dispatch(homeActions.fetchAllDashboardData()),
         isUserAllowedToSendMessage: (id) => dispatch(profileActions.isUserAllowedToSendMessage(id)),
