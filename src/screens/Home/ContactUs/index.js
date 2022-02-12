@@ -46,7 +46,6 @@ class ContactUs extends React.Component {
             default:
                 break;
         };
-
         return Linking.canOpenURL(url).then((supported) => {
             if (!!supported)
                 Linking.openURL(url)
@@ -254,7 +253,7 @@ class ContactUs extends React.Component {
                                 {locales('titles.telegram')}
                             </Text>
                         </Pressable>
-
+                        {/* 
                         <Pressable
                             style={{
                                 alignItems: 'center',
@@ -296,7 +295,7 @@ class ContactUs extends React.Component {
                             >
                                 09118413054
                             </Text>
-                        </Pressable>
+                        </Pressable> */}
                     </View>
                 </View>
             </>
