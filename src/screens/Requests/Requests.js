@@ -63,7 +63,7 @@ class Requests extends PureComponent {
             isFilterApplied: false,
             modals: [],
             from_record_number: 0,
-            to_record_number: 5,
+            to_record_number: 20,
             category_id: null,
             selectedCategoryName: ''
         }
@@ -208,7 +208,7 @@ class Requests extends PureComponent {
 
                     this.setState({
                         from_record_number: 0,
-                        to_record_number: 5,
+                        to_record_number: 20,
 
                         searchLoader: false,
 
@@ -433,7 +433,7 @@ class Requests extends PureComponent {
         let item = {
             sort_by,
             from_record_number: 0,
-            to_record_number: 5
+            to_record_number: 20
         };
         if (text)
             item = {
@@ -445,7 +445,7 @@ class Requests extends PureComponent {
 
             this.setState({ buyAdRequestsList: [] })
             this.fetchAllRequests(item);
-            // this.setState({ searchFlag: true, to_record_number: 16, from_record_number: 0, searchLoader: false })
+            // this.setState({ searchFlag: true, to_record_number: 20, from_record_number: 0, searchLoader: false })
         }, 1500);
 
     };
@@ -464,14 +464,14 @@ class Requests extends PureComponent {
             let searchItem = {
                 from_record_number: 0,
                 sort_by: value,
-                to_record_number: 5,
+                to_record_number: 20,
             };
             if (searchText && searchText.length) {
                 searchItem = {
                     from_record_number: 0,
                     sort_by: value,
                     search_text: searchText,
-                    to_record_number: 5
+                    to_record_number: 20
                 }
             }
             if (category_id)
@@ -1248,7 +1248,7 @@ class Requests extends PureComponent {
             let searchItem = {
                 from_record_number: 0,
                 sort_by,
-                to_record_number: 5,
+                to_record_number: 20,
             };
 
             if (searchText)
@@ -1394,7 +1394,7 @@ class Requests extends PureComponent {
                     from_record_number: 0,
                     sort_by,
                     category_id: item.id,
-                    to_record_number: 5,
+                    to_record_number: 20,
                 };
 
                 // this.categoryFiltersRef?.current.scrollToOffset({ animated: true, offset: 0 });
@@ -1541,8 +1541,8 @@ class Requests extends PureComponent {
 
         if (loaded && buyAdRequestsList.length >= this.state.to_record_number)
             this.setState({
-                from_record_number: this.state.from_record_number + 5,
-                to_record_number: this.state.to_record_number + 5,
+                from_record_number: this.state.from_record_number + 20,
+                to_record_number: this.state.to_record_number + 20,
             }, () => {
                 const {
                     to_record_number,
