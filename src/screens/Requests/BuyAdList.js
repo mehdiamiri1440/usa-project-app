@@ -5,6 +5,7 @@ import { Button, Toast } from 'native-base';
 import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import LinearGradient from 'react-native-linear-gradient';
+import Jalali from 'moment-jalaali';
 
 import { formatter } from '../../utils';
 import { deviceWidth, validator } from '../../utils';
@@ -395,7 +396,7 @@ const BuyAdList = props => {
                             fontFamily: 'IRANSansWeb(FaNum)_Bold', fontSize: 16,
                         }}
                     >
-                        {item.is_golden && active_pakage_type == 0 ? locales('labels.requestsBlurDate') : item.register_date}
+                        {item.is_golden && active_pakage_type == 0 ? locales('labels.requestsBlurDate') : Jalali(item.created_at).locale('fa').format('jDD jMMMM ، jYYYY')}
                     </Text>
                 </View>
             </View>
