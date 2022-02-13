@@ -121,7 +121,6 @@ class Requests extends PureComponent {
             prevProps.route && !prevProps.route.params)
             || (this.props.route && this.props.route.params && prevProps.route && prevProps.route.params &&
                 this.props.route?.params?.subCategoryId != prevProps.route?.params?.subCategoryId)) {
-            console.log('in if')
             this.checkForFiltering()
         }
     }
@@ -239,7 +238,6 @@ class Requests extends PureComponent {
 
     checkForFiltering = async () => {
         let isFilter = await this.checkForFilterParamsAvailability();
-        console.log('is filter', isFilter)
         if (isFilter) {
             this.selectedFilter(this.props.route?.params?.subCategoryId, this.props.route?.params?.subCategoryName)
         }
@@ -394,7 +392,6 @@ class Requests extends PureComponent {
             buyAdRequestsList = []
         } = this.props;
 
-        console.log('id', id, 'name', name)
         if (!id || !name)
             return this.setState({ buyAdRequestsList });
 
